@@ -1,17 +1,45 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, createBrowserRouter, RouterProvider } from 'react-router-dom';
 import SignIn from './component/Signin';
 import Login from './component/Login';
-import Home from './component/Home';
 import Viewblogs from './component/viewblogs';
+import Home from './component/Home';
+import CreatBlog from './component/CreateBlog';
+import Blog from './component/Blog';
+import Pagerror from './component/Pagerror';
+
 function App() {
+  const router= createBrowserRouter([
+    {
+      path:'/',
+      element:<Home/>,
+      errorElement:<Pagerror/>
+    },
+    {
+      path:'/SignIn',
+      element:<SignIn />,
+    },
+    {
+      path:'/Login',
+      element:<Login />,
+    },
+    {
+      path:'/Blogs',
+      element:<Viewblogs/>,
+      children:[
+        {
+          path:'/Blogs/createblog',
+          element:<CreatBlog/>,
+      },
+      {
+        path:"/Blogs",
+        element:<Blog/>
+      }
+      ]
+    }
+  ])
   return (
     <>
-      <Routes>
-        <Route path='/SignIn' element={<SignIn />} />
-        <Route path='/Login' element={<Login />} />
-        <Route path='/' element={<Home/>}/>
-        <Route path='/Blogs' element={<Viewblogs/>}/>
-      </Routes>
+    <RouterProvider router={router}/>
     </>
   );
 }

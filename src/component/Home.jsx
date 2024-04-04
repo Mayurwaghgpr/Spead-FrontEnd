@@ -4,7 +4,9 @@ function Home(){
     return(
         <>
         <Navbar />
-        <div> hello world</div>
+        <div className="vh-100 d-flex justify-content-center align-items-center Home-page">
+            <h1>Welcome Blogger </h1>
+        </div>
         </>
     )
 }

@@ -1,10 +1,11 @@
 import React from "react";
-import illestration from"../assets/images/siginimage.png"
-import googleicon from "../assets/images/search.png"
+import illestration from"../assets/siginimage.png"
+import googleicon from "../assets/search.png"
+import { Link } from "react-router-dom";
 function SignIn(){
     return( 
         <div className="container  d-flex flex-column justify-content-center align-items-center min-vh-100" tabIndex="-1">
-            <p className="w-100"><a href="/" className="text-start text-black fs-1 text-shadow text-decoration-none"><i className="bi bi-house"></i></a></p>
+            <p className="w-100"><Link to="/" className="text-start text-black fs-1 text-shadow text-decoration-none"><i className="bi bi-house"></i></Link></p>
            <h1 className="fs-3 mb-3">Welcome to blogger</h1>
             <div className="row rounded-5 p-3 bg-white shadow box-size box-area">
                 <div className="col-md-6 rounded-4 d-flex justify-content-center align-items-center flex-column left-box" style={{backgroundColor:"#f3ebe9"}}>
@@ -44,7 +45,7 @@ function SignIn(){
                                 <button className=" btn btn-lg btn-light d-flex gap-3 justify-content-center w-100 fs-6"><img height="24px"src={googleicon} alt="" /><small>Continue with Google</small></button>
                             </div>
                             <div className="row">
-                                <small>Already have Account? <a href="/Login">Login</a></small>
+                                <small>Already have Account? <Link to="/Login">Login</Link></small>
                             </div>
                         </div>
                     </div>

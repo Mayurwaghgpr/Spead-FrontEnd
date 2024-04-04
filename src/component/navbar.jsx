@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 function Navbar(){
 // const[hidden,setHidden] = useState(true);
@@ -17,7 +18,7 @@ function Navbar(){
 //     console.log(body[0].value)
 //    }
     return(
-        <nav className="navbar navbar-expand-lg bg-light bg-transparent">
+        <nav className="navbar navbar-expand-lg bg-light w-100 position-fixed">
             <div className="container-fluid">
                 <a className="navbar-brand fs-4 ms-4" href="#">Blogger</a>
                 <button className="navbar-toggler shadow-none border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
@@ -36,16 +37,16 @@ function Navbar(){
                 
                     <ul className="navbar-nav justify-content-start flex-grow-1 pe-3">
                     <li className="nav-item mx-2">
-                        <a className="nav-link active" aria-current="page" href="/">Home</a>
+                        <Link className="nav-link active" aria-current="page" to="/">Home</Link>
                     </li>
                     <li className="nav-item mx-2">
-                        <a className="nav-link" href="/blogs">Blogs</a>
+                        <Link className="nav-link" to="/Blogs">Blogs</Link>
                     </li>
                     <li className="nav-item mx-2">
-                        <a className="nav-link" href="/">link</a>
+                        <Link className="nav-link" to="/">link</Link>
                     </li>
                     <li className="nav-item mx-2">
-                        <a className="nav-link" href="/">Link</a>
+                        <Link className="nav-link" to="/">Link</Link>
                     </li>
                     </ul>
                     {/* <form onSubmit={handelform}className="d-flex  mt-2 ms-5 me-0" role="search">
@@ -53,11 +54,13 @@ function Navbar(){
                     <button className="btn btn-outline-red  h-75 pt-0" type="submit"></button></>}
                     </form>
                     <i onClick={handelhide} className="bi bi-search mt-2 mb-0 pb-0"></i> */}
-                    <div className="logandsign d-flex flex-column flex-lg-row justify-content-center align-items-center me-4">
-                    <a href="/Login"className='text-decoration-none px-3 border-1px'>Login</a>
-                    <a href="/SignIn" className='SingIn  text-decoration-none px-3 py-1 rounded-4'><i className="bi bi-door-open-fill"></i>SignIn</a>
-                    </div>
+                    
                 </div>
+                
+                </div>
+                <div className="logandsign d-flex flex-row flex-lg-row justify-content-center align-items-center me-4">
+                    <Link to="/Login"className='text-decoration-none px-3 border-1px'>Login</Link>
+                    <Link to="/SignIn" className='SingIn  text-decoration-none px-3 py-1 rounded-4'><i className="bi bi-door-open-fill"></i>SignIn</Link>
                 </div>
             </div>
         </nav>
