@@ -44,7 +44,7 @@ function CreatBlog() {
                 <h1 className="fs-3">New Blog Post</h1>
                 <form onSubmit={handleForm} className="form-floating w-100 d-flex justify-content-center flex-column gap-3" id="newPostForm" method="post" action="/api/posts">
                     <input onChange={Fillblog} className="form-control" type="text" name="title" placeholder="Title" value={blog.title} required />
-                    <textarea onChange={Fillblog} className="form-control h-0" id="floatingTextarea2" name="content" placeholder="Content" value={blog.content} required rows="50"></textarea>
+                    <textarea onChange={Fillblog} className="form-control max-vh-50" id="floatingTextarea2" name="content" placeholder="Content" value={blog.content} required rows="50"></textarea>
                     <small>{blog.author}</small>
                     <button className="btn" type="submit">POST</button>
                 </form>

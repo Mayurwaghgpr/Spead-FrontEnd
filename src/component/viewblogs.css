@@ -94,3 +94,27 @@
       width:100%;
      }
 }
+/* viewblogs.css */
+
+.horizontal-scroll {
+  height: 100%;
+  display: flex;
+  overflow-x: auto;
+  white-space: nowrap;
+  scroll-behavior: smooth;
+  -ms-overflow-style: none;
+  text-decoration: none;
+  list-style: none;
+}
+.horizontal-scroll::-webkit-scrollbar {
+  display: none; 
+}
+
+.nav-links {
+  padding: 0.5rem 1rem;
+}
+.login{
+  background-color: #f7f7f7;
+  text-align: center;
+  width: 80px;
+}

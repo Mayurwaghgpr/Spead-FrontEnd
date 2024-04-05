@@ -26,7 +26,7 @@ function Blog() {
 }, []);
 
   return(
-   <div className="col vh-100 d-flex justify-content-around gap-5 align-items-center flex-column overflow-y-auto border">
+   <div className="col vh-100  w-100 d-flex justify-content-around gap-5 align-items-center flex-column overflow-y-auto border">
    {data.map(data=>{return<div key={data.id} className='container d-flex flex-column gap-4 Blog-post p-4 border-bottom mb-3'>
            <label htmlFor="hedding">Toppic :</label><h1>{data.title}</h1>
             <div className=' image-container shadow'><img src={data.image} alt="" /></div> 
