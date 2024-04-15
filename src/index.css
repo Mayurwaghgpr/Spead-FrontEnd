@@ -1,107 +1,93 @@
-*{
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
-body{
+body {
     background-color: #fafafa;
     color: black;
 }
-/* .logandsign .SingIn{
 
-} */
-form .btn{
-    color: aliceblue;
-}
-.Home-page{
-    background-image: url("https://content-writing-india.com/blog/wp-content/uploads/2018/03/1080px.jpg");
-    background-repeat: no-repeat;
+.Home-page1{
+    /* background-color: #5e8af0; */
+    background-image: url(./assets/0132_637324252136928732.jpg);
+    background-size: cover;
     background-position: center;
-    background-attachment: fixed;
+    object-fit: fill;
+    color: white;
+    text-align: center;
+}
+.Home-page1 h1{
+    font-size: 50px;
+    -webkit-text-stroke: 2px white;
+    color: transparent;
 }
 
-@media(max-width:991px) {
-    .sidebar{
-        background-color: white;
-        opacity: .95;
-        backdrop-filter: blur(5px);
-    }
-}
-
-.box-size{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    width: 100%;
-
-    margin-bottom: 5rem;
-    padding: 10px;
-    gap: 2rem;
-}
-.right-box{
-    width: 100%;
+.pageerror{
     height: 100%;
-    padding: 2rem;
-
+    width: 100%;
 }
-.left-box{
-    height: 100%;
+/* General styles for form elements */
+.form-control {
+    width: 100%;
+    border: none;
     border-radius: 10px;
-padding: 2rem;
-}
-.left-box img{
-    width: 100%;
-    height: 100%;
-}
-
-
-@media only screen and (max-width:778px) {
-    .box-area{
-    
-        /* margin-bottom: auto; */
-    }
-    .box-size{
-        grid-template-columns: 1fr;
-        width: 100%;
-
-
-    }
-    .left-box{
-        
-        width: 100%;
-        /* overflow: hidden; */
-    }
-    .left-box img{
-        width: 100%;
-    }
-    .right-box{
-        width: 100%;
-        padding: 2rem;
-    }
-}.right-box .inp-pss ,.inp-ml{
-    width: 100%;
-    border:none;
-    border-radius: 10px;
-    padding: .5rem;
+    padding: 0.5rem;
     background-color: rgb(238, 237, 236);
+    margin-bottom: 1rem;
+}
 
-}
-.container-r{
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-    gap: 1rem;
-}
-.login-btn:hover{
-    background-color: darkturquoise;
-}
-.glog-btn,.login-btn{
+.btn {
     width: 100%;
     border: none;
     padding: 10px;
     border-radius: 10px;
+    background-color: #ededed;
+    color: #000000;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
-.pageerror img{
-    width: 100vw;
-    height: 100vh;
+
+.btn:hover {
+    background-color: #5e8af0;
+    color: #fff;
+}
+@media (min-width: 992px) {
+    .box-size {
+        padding: 20px;
+    }
+    .right-box {
+        padding: 1rem;
+    }
+    .form-control {
+        padding: 0.5rem;
+    }
+    .box-size {
+       width: 50%;
+        padding: 10px;
+        height: 50%;
+    }
+}
+
+
+/* Responsive styles */
+@media only screen and (max-width: 991px) {
+    .box-size {
+        grid-template-columns: 1fr;
+        margin-bottom: 2rem;
+    }
+}
+
+@media only screen and (max-width: 778px) {
+    .box-size {
+        display: flex;
+        flex-direction: column;
+        margin: 2rem;
+    }
+
+    .left-box img {
+        width: 100%;
+        height: auto;
+    }
 }

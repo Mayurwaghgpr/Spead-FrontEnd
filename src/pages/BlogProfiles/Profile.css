@@ -1,0 +1,29 @@
+.Main-Profile{
+    display: grid;
+    background-color: aqua;
+    grid-template-rows: 1fr auto;
+    row-gap: 1rem;
+    padding: 2rem;
+}
+.user-blog{
+    display: grid;
+    grid-template-rows:.3fr .5fr min-content;
+    background-color:yellow;
+    border-radius: 10px;
+}
+.blog-content{
+    padding: 20px 50px;
+    
+}
+.Comment-section{
+    border-radius: 10px;
+    background-color: red;
+}
+.blog-bigimage{
+    padding: 20px;
+}
+.blog-bigimage img{
+    display: block;
+   height: 100%;
+   width: 100%;
+}

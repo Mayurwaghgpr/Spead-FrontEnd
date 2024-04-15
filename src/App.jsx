@@ -1,22 +1,29 @@
 import { BrowserRouter, Routes, Route, createBrowserRouter, RouterProvider } from 'react-router-dom';
-import SignIn from './component/Signin';
-import Login from './component/Login';
+import SignUp from './pages/SignUp';
+import Login from './pages/Login';
 import Viewblogs from './component/viewblogs';
-import Home from './component/Home';
+import Home from './pages/Home';
 import CreatBlog from './component/CreateBlog';
 import Blog from './component/Blog';
-import Pagerror from './component/Pagerror';
+import Pagerror from './pages/Pagerror';
+import Blogprofile from './pages/BlogProfiles/Blogprofile';
 
 function App() {
   const router= createBrowserRouter([
     {
       path:'/',
       element:<Home/>,
+      children:[
+        {
+          path:'/createblog',
+          element:<CreatBlog/>,
+      },
+    ],
       errorElement:<Pagerror/>
     },
     {
-      path:'/SignIn',
-      element:<SignIn />,
+      path:'/SignUp',
+      element:<SignUp />,
     },
     {
       path:'/Login',
@@ -26,15 +33,15 @@ function App() {
       path:'/Blogs',
       element:<Viewblogs/>,
       children:[
-        {
-          path:'/Blogs/createblog',
-          element:<CreatBlog/>,
-      },
       {
         path:"/Blogs",
         element:<Blog/>
-      }
+      },
       ]
+    },
+    {
+      path:'/Profile',
+      element:<Blogprofile/>
     }
   ])
   return (

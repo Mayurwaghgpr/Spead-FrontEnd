@@ -25,18 +25,34 @@ function Blog() {
   return () => console.log("Unmounting component");
 }, []);
 
+const limitWordsAndAddEllipsis = (text, limit) => {
+  if(text){
+  const words = text.split(' ');
+  if (words.length > limit) {
+    return words.slice(0, limit).join(' ') + '...';
+  }
+  return text;
+  }
+};
   return(
-   <div className="col vh-100  w-100 d-flex justify-content-around gap-5 align-items-center flex-column overflow-y-auto border">
-   {data.map(data=>{return<div key={data.id} className='container d-flex flex-column gap-4 Blog-post p-4 border-bottom mb-3'>
-           <label htmlFor="hedding">Toppic :</label><h1>{data.title}</h1>
-            <div className=' image-container shadow'><img src={data.image} alt="" /></div> 
-            <div className=' d-flex h-100 justify-content-center align-items-start flex-wrap flex-column text-start'>
-            <p>{data.content}</p>
-            <label htmlFor="Author">Auther: </label><small> {data.author}</small>
+   <div className="vh-100  w-100 gap-5 overflow-y-auto border blog-area">
+   {data.map(data=>{return<div key={data.id} className='container gap-4 Blog-post p-4 border-bottom mb-3 shadow '>
+           <label htmlFor="heading">Toppic :</label><h1 className='fs-6'>{data.title}</h1>
+            <div className='image-container shadow'><img src={data.image} alt="" /></div> 
+            <div className='text-start blog-content'>
+            <p>{limitWordsAndAddEllipsis(data.content,20)}</p>
+            <div className='auther-detail'>
+            <label htmlFor="Author">Auther: {data.author}</label>
+            <label htmlFor="Date">Date: {data.date}</label>
+            </div>
+            <div>
+            <button >Read More...</button>
+            </div>
           </div>
+          
         </div>})}
     </div>
   )
 }
 
-export default Blog
+export default Blog;

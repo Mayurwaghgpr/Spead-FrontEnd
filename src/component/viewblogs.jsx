@@ -20,18 +20,7 @@ function Viewblogs() {
                   }
                   to="/Blogs"
                 >
-                  <span className="fs-4 d-none d-sm-inline">Social</span>
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink
-                  className={({ isActive }) =>
-                    `nav-link ${isActive ? "text-black" : ""}`
-                  }
-                  to="/Blogs/createblog"
-                >
-                  <i className="bi bi-file-post fs-4"></i>
-                  <span className="fs-4 d-none d-sm-inline">Create Blog</span>
+                  <span className="fs-4 d-none d-sm-inline">All</span>
                 </NavLink>
               </li>
             </ul>
@@ -47,42 +36,7 @@ function Viewblogs() {
               <ul className=" container-fluid w-100 h-100 d-flex justify-content-around horizontal-scroll">
                 <li className="nav-item">
                   <NavLink className="nav-links" to="/Blogs">
-                    Social
-                  </NavLink>
-                </li>
-                <li className="nav-item">
-                  <NavLink className="nav-links" to="/Blogs/createblog">
-                    Create Blog
-                  </NavLink>
-                </li>
-                <li className="nav-item">
-                  <NavLink className="nav-links" to="/Blogs">
-                    Social
-                  </NavLink>
-                </li>
-                <li className="nav-item">
-                  <NavLink className="nav-links" to="/Blogs/createblog">
-                    Create Blog
-                  </NavLink>
-                </li>
-                <li className="nav-item">
-                  <NavLink className="nav-links" to="/Blogs">
-                    Social
-                  </NavLink>
-                </li>
-                <li className="nav-item">
-                  <NavLink className="nav-links" to="/Blogs/createblog">
-                    Create Blog
-                  </NavLink>
-                </li>
-                <li className="nav-item">
-                  <NavLink className="nav-links" to="/Blogs">
-                    Social
-                  </NavLink>
-                </li>
-                <li className="nav-item">
-                  <NavLink className="nav-links" to="/Blogs/createblog">
-                    Create Blog
+                    All
                   </NavLink>
                 </li>
               </ul>

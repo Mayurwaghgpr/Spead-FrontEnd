@@ -6,7 +6,8 @@ function CreatBlog() {
         id: 1,
         title: "",
         content: "",
-        author: "mayur",
+        author: "Mayur",
+        date: new Date(),
     });
 
     function Fillblog(el) {
@@ -40,16 +41,20 @@ function CreatBlog() {
 
     return (
         <div className="col vh-100 d-flex justify-content-center align-items-center flex-column overflow-x-hidden overflow-y-auto">
-            <div className="container d-flex bg-white flex-column m-5 max-vw-50 p-5 justify-content-center align-items-center rounded-3 shadow creat-blog">
-                <h1 className="fs-3">New Blog Post</h1>
-                <form onSubmit={handleForm} className="form-floating w-100 d-flex justify-content-center flex-column gap-3" id="newPostForm" method="post" action="/api/posts">
-                    <input onChange={Fillblog} className="form-control" type="text" name="title" placeholder="Title" value={blog.title} required />
-                    <textarea onChange={Fillblog} className="form-control max-vh-50" id="floatingTextarea2" name="content" placeholder="Content" value={blog.content} required rows="50"></textarea>
-                    <small>{blog.author}</small>
-                    <button className="btn" type="submit">POST</button>
-                </form>
-            </div>
+        <div className="container d-flex bg-white flex-column m-5 max-vw-50 p-5 justify-content-center align-items-center rounded-3 shadow creat-blog">
+            <h1 className="fs-3">New Blog Post</h1>
+            <form onSubmit={handleForm} className="form w-100 d-flex justify-content-center flex-column gap-3" id="newPostForm" method="post" action="/api/posts">
+                <label htmlFor="title" className="form-label">Title:</label>
+                <input onChange={Fillblog} className="form-control rounded-1 mb-3" type="text" name="title" id="title" placeholder="Title" value={blog.title} required />
+                <label htmlFor="content" className="form-label">Content:</label>
+                <textarea onChange={Fillblog} className="form-control rounded-1  mb-3" id="content" name="content" placeholder="Content" value={blog.content} required></textarea>
+                <small>{blog.author}</small>
+                <button className="btn rounded-1 mt-3" type="submit">POST</button>
+            </form>
         </div>
+    </div>
+    
+
     );
 }
 
