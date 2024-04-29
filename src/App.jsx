@@ -6,47 +6,42 @@ import Home from './pages/Home';
 import CreatBlog from './component/CreateBlog';
 import Blog from './component/Blog';
 import Pagerror from './pages/Pagerror';
-import Blogprofile from './pages/BlogProfiles/Blogprofile';
 
 function App() {
-  const router= createBrowserRouter([
+  const router = createBrowserRouter([
     {
-      path:'/',
-      element:<Home/>,
-      children:[
+      path: '/',
+      element: <Home />,
+      children: [
         {
-          path:'/createblog',
-          element:<CreatBlog/>,
-      },
-    ],
-      errorElement:<Pagerror/>
+          path: '/createblog',
+          element: <CreatBlog />,
+        },
+      ],
+      errorElement: <Pagerror />
     },
     {
-      path:'/SignUp',
-      element:<SignUp />,
+      path: '/SignUp',
+      element: <SignUp />,
     },
     {
-      path:'/Login',
-      element:<Login />,
+      path: '/Login',
+      element: <Login />,
     },
     {
-      path:'/Blogs',
-      element:<Viewblogs/>,
-      children:[
-      {
-        path:"/Blogs",
-        element:<Blog/>
-      },
+      path: '/Blogs',
+      element: <Viewblogs />,
+      children: [
+        {
+          path: "/Blogs",
+          element: <Blog />
+        }
       ]
     },
-    {
-      path:'/Profile',
-      element:<Blogprofile/>
-    }
   ])
   return (
     <>
-    <RouterProvider router={router}/>
+      <RouterProvider router={router} />
     </>
   );
 }

@@ -1,21 +1,32 @@
 import React from 'react';
 import './Profile.css';
 import image from "../../assets/siginimage.png";
-function Blogprofile() {
+import Comment from '../../component/comment';
+function Blogprofile(props) {
   return (
     <div className='Main-Profile'>
+      {/* <div className='left'></div> */}
+      <div className='blog-container'>
         <div className='user-blog'>
-            <h1 className=''>Topic</h1>
-            <div className='blog-bigimage'>
-              <img src={image} alt="" />
+          <div className='profil-close-bt'><button onClick={props.onClose}><i className="bi bi-chevron-compact-left"></i></button></div>
+          <div className='profile-heading'>
+            <h1 className=''>{props.post.title}</h1>
+            <div className='profile-auther'>
+              <label htmlFor="label">Author:</label>
+              <small>{props.post.author}</small>
             </div>
-            <div className='blog-content'>
-              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius accusamus itaque sit molestias obcaecati amet soluta libero voluptate, eaque voluptates? Odit, maxime labore itaque consequuntur id quas nobis deleniti dicta? Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam autem eligendi tempora quo repudiandae facilis quaerat fugit vitae, architecto, culpa perferendis corporis dolorum sit harum neque laboriosam adipisci natus! Voluptas! Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita obcaecati dicta, cumque cupiditate officia optio illum repellendus accusamus architecto iste sapiente laudantium excepturi corporis enim natus. Molestias animi voluptatum dolorum.lorem Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius accusamus itaque sit molestias obcaecati amet soluta libero voluptate, eaque voluptates? Odit, maxime labore itaque consequuntur id quas nobis deleniti dicta? Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam autem eligendi tempora quo repudiandae facilis quaerat fugit vitae, architecto, culpa perferendis corporis dolorum sit harum neque laboriosam adipisci natus! Voluptas! Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita obcaecati dicta, cumque cupiditate officia optio illum repellendus accusamus architecto iste sapiente laudantium excepturi corporis enim natus. Molestias animi voluptatum dolorum.loremLorem ipsum dolor sit amet consectetur adipisicing elit. Eius accusamus itaque sit molestias obcaecati amet soluta libero voluptate, eaque voluptates? Odit, maxime labore itaque consequuntur id quas nobis deleniti dicta? Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam autem eligendi tempora quo repudiandae facilis quaerat fugit vitae, architecto, culpa perferendis corporis dolorum sit harum neque laboriosam adipisci natus! Voluptas! Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita obcaecati dicta, cumque cupiditate officia optio illum repellendus accusamus architecto iste sapiente laudantium excepturi corporis enim natus. Molestias animi voluptatum dolorum.loremLorem ipsum dolor sit amet consectetur adipisicing elit. Eius accusamus itaque sit molestias obcaecati amet soluta libero voluptate, eaque voluptates? Odit, maxime labore itaque consequuntur id quas nobis deleniti dicta? Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam autem eligendi tempora quo repudiandae facilis quaerat fugit vitae, architecto, culpa perferendis corporis dolorum sit harum neque laboriosam adipisci natus! Voluptas! Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita obcaecati dicta, cumque cupiditate officia optio illum repellendus accusamus architecto iste sapiente laudantium excepturi corporis enim natus. Molestias animi voluptatum dolorum.loremLorem ipsum dolor sit amet consectetur adipisicing elit. Eius accusamus itaque sit molestias obcaecati amet soluta libero voluptate, eaque voluptates? Odit, maxime labore itaque consequuntur id quas nobis deleniti dicta? Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam autem eligendi tempora quo repudiandae facilis quaerat fugit vitae, architecto, culpa perferendis corporis dolorum sit harum neque laboriosam adipisci natus! Voluptas! Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita obcaecati dicta, cumque cupiditate officia optio illum repellendus accusamus architecto iste sapiente laudantium excepturi corporis enim natus. Molestias animi voluptatum dolorum.loremLorem ipsum dolor sit amet consectetur adipisicing elit. Eius accusamus itaque sit molestias obcaecati amet soluta libero voluptate, eaque voluptates? Odit, maxime labore itaque consequuntur id quas nobis deleniti dicta? Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam autem eligendi tempora quo repudiandae facilis quaerat fugit vitae, architecto, culpa perferendis corporis dolorum sit harum neque laboriosam adipisci natus! Voluptas! Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita obcaecati dicta, cumque cupiditate officia optio illum repellendus accusamus architecto iste sapiente laudantium excepturi corporis enim natus. Molestias animi voluptatum dolorum.loremLorem ipsum dolor sit amet consectetur adipisicing elit. Eius accusamus itaque sit molestias obcaecati amet soluta libero voluptate, eaque voluptates? Odit, maxime labore itaque consequuntur id quas nobis deleniti dicta? Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam autem eligendi tempora quo repudiandae facilis quaerat fugit vitae, architecto, culpa perferendis corporis dolorum sit harum neque laboriosam adipisci natus! Voluptas! Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita obcaecati dicta, cumque cupiditate officia optio illum repellendus accusamus architecto iste sapiente laudantium excepturi corporis enim natus. Molestias animi voluptatum dolorum.loremLorem ipsum dolor sit amet consectetur adipisicing elit. Eius accusamus itaque sit molestias obcaecati amet soluta libero voluptate, eaque voluptates? Odit, maxime labore itaque consequuntur id quas nobis deleniti dicta? Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam autem eligendi tempora quo repudiandae facilis quaerat fugit vitae, architecto, culpa perferendis corporis dolorum sit harum neque laboriosam adipisci natus! Voluptas! Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita obcaecati dicta, cumque cupiditate officia optio illum repellendus accusamus architecto iste sapiente laudantium excepturi corporis enim natus. Molestias animi voluptatum dolorum.loremLorem ipsum dolor sit amet consectetur adipisicing elit. Eius accusamus itaque sit molestias obcaecati amet soluta libero voluptate, eaque voluptates? Odit, maxime labore itaque consequuntur id quas nobis deleniti dicta? Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam autem eligendi tempora quo repudiandae facilis quaerat fugit vitae, architecto, culpa perferendis corporis dolorum sit harum neque laboriosam adipisci natus! Voluptas! Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita obcaecati dicta, cumque cupiditate officia optio illum repellendus accusamus architecto iste sapiente laudantium excepturi corporis enim natus. Molestias animi voluptatum dolorum.lorem </p>
-            </div>
+            <div className='blog-date'>{props.post.date}</div>
+          </div>
+          <div className='blog-bigimage'>
+            <img src={props.post.image} alt="" />
+          </div>
+          <div className='profile-content'>
+            <p>{props.post.content}</p>
+          </div>
         </div>
-        <div className='Comment-section'>
-          <h1>Comments</h1>
-        </div>
+        <Comment />
+      </div>
+      {/* <div className='right'></div> */}
     </div>
   )
 }
