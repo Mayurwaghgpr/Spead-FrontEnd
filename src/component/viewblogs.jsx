@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "./viewblogs.css";
 import { Link, NavLink, Outlet } from "react-router-dom";
+import Login from "../pages/Login";
 
 function Viewblogs() {
+      const [login,setlogin]=useState(false);
   const [data, setData] = useState([]);
   const [category, setCategory] = useState("All");
 
@@ -33,105 +35,44 @@ function Viewblogs() {
   }, [category]);
 
   return (
-    <div className="container-fluid">
-      <div className="row w-20">
-        <div className="col-12 col-md-2 vh-100 d-none d-md-block">
-          <div className="">
-            <Link to="/" className="d-flex text-decoration-none mt-1">
-              <i className="bi bi-house fs-4 text-black"></i>
-              <span className="fs-4 d-none d-sm-inline text-black">Home</span>
-            </Link>
-            <ul className="nav nav-pills flex-column mt-4 text-start">
-              <li className="nav-item">
-                <NavLink
-                  to="/Blogs"
-                  className="t-btn"
-                  onClick={() => setCategory("All")}
-                >
-                  <span className="fs-4 d-none d-sm-inline">All</span>
+    <>
+      <div className=" h-lvh text-black">
+        <div className="flex justify-between"><h1>{"{...Spread}"}</h1> <button onClick={()=>{setlogin(true);setsingup(false)}} className="text-decoration-none login p-2 rounded-border-1px">Login</button></div>
+        <div className=" pl-5">
+           <Link to="/" className="d-flex text-decoration-none mt-1">
+          <i className="bi bi-house fs-4 text-black"></i>
+          <span className="fs-4 d-none d-sm-inline text-black">Home</span>
+          </Link>
+          <ul>
+            <li>
+              <NavLink to="/Blogs" className="t-btn" onClick={()=> setCategory("All")}>ALL</NavLink>
+            </li>
+             <li>
+               <NavLink to="/Blogs" className="t-btn" onClick={()=> setCategory("Sci")}
+                  >
+                  <span className="">Science</span>
                 </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink
-                  to="/Blogs"
-                  className="t-btn"
-                  onClick={() => setCategory("Sci")}
-                >
-                  <span className="fs-4 d-none d-sm-inline">Science</span>
+            </li>
+            <li>
+              <NavLink to="/Blogs" className="t-btn" onClick={()=> setCategory("It")}>
+                <span className="">IT</span>
+            </NavLink>
+            </li>
+            <li>
+              <NavLink to="/Blogs" className="t-btn" onClick={()=> setCategory("Space")}
+                  >
+                  <span className="">Space</span>
                 </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink
-                  to="/Blogs"
-                  className="t-btn"
-                  onClick={() => setCategory("It")}
-                >
-                  <span className="fs-4 d-none d-sm-inline">IT</span>
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink
-                  to="/Blogs"
-                  className="t-btn"
-                  onClick={() => setCategory("Space")}
-                >
-                  <span className="fs-4 d-none d-sm-inline">Space</span>
-                </NavLink>
-              </li>
-            </ul>
-          </div>
+            </li>
+           
+          </ul>
         </div>
-        <div className="col-12 col-md-10">
-          <nav className="container-fluid w-100 bg-light d-md-none">
-            <div className="container-fluid">
-              <Link to="/" className="fs-4 text-decoration-none  text-black">Home</Link>
-              <div className="logandsign d-flex flex-row flex-lg-row justify-content-end align-items-center">
-                <Link to="/Login" className="text-decoration-none login p-2 rounded-4 border-1px">Login</Link>
-              </div>
-              <ul className="d-flex justify-content-around horizontal-scroll">
-                <li className="nav-item">
-                  <NavLink
-                    to="/Blogs"
-                    className="t-btn"
-                    onClick={() => setCategory("All")}
-                  >
-                    <span className="fs-4 d-none d-sm-inline">All</span>
-                  </NavLink>
-                </li>
-                <li className="nav-item">
-                  <NavLink
-                    to="/Blogs"
-                    className="t-btn"
-                    onClick={() => setCategory("Sci")}
-                  >
-                    <span className="fs-4 d-none d-sm-inline">Science</span>
-                  </NavLink>
-                </li>
-                <li className="nav-item">
-                  <NavLink
-                    to="/Blogs"
-                    className="t-btn"
-                    onClick={() => setCategory("It")}
-                  >
-                    <span className="fs-4 d-none d-sm-inline">IT</span>
-                  </NavLink>
-                </li>
-                <li className="nav-item">
-                  <NavLink
-                    to="/Blogs"
-                    className="t-btn"
-                    onClick={() => setCategory("Space")}
-                  >
-                    <span className="fs-4 d-none d-sm-inline">Space</span>
-                  </NavLink>
-                </li>
-              </ul>
-            </div>
-          </nav>
-          <Outlet context={data} />
+        <div>
+        {/* <Outlet context={data} /> */}
+        {login?<Login onclose={()=>setlogin(false)}/>:null}
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

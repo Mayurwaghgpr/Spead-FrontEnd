@@ -1,7 +1,6 @@
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
-
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 * {
     margin: 0;
     padding: 0;
@@ -106,5 +105,87 @@ body {
     .left-box img {
         width: 100%;
         height: auto;
+    }
+}
+
+/* user profile section */
+.user-profile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+    color: black;
+    padding: 3rem 0 0 0;
+}
+
+
+.user-profile .user-Prof-info {
+    height: 30vh;
+    max-width: 900px;
+    width: 100%;
+    padding: 2rem;
+    background-color: yellow;
+    gap: 3rem;
+}
+
+.user-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 100px;
+    /* border: 1px solid black; */
+    gap: 3rem;
+}
+
+.user-image {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 2rem;
+    width: 50%;
+}
+
+.post-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+}
+
+.user-image img {
+    border: 5px solid white;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+}
+
+.user-info {}
+
+.user-blogs {
+    height: 70vh;
+    max-width: 900px;
+    width: 100%;
+    background-color: #fff;
+}
+
+@media only screen and (max-width: 778px) {
+    .user-profile {
+        display: flex;
+        justify-content: center;
+        background-color: wheat;
+        width: 100%;
+        color: black;
+        padding: 3rem 0 0 0;
+    }
+
+    .user-profile .user-Prof-info {
+        width: 100%;
+    }
+
+    .user-blogs {
+        width: 100%;
     }
 }

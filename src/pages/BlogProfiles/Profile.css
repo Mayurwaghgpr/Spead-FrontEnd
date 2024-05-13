@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 .Main-Profile {
   position: fixed;
   top: 0;
@@ -14,6 +18,7 @@
   padding: 2rem;
   overflow-x: auto;
   overflow-x: hidden;
+  z-index: 100;
 }
 
 

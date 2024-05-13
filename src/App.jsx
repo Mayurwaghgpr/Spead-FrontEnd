@@ -4,19 +4,29 @@ import Login from './pages/Login';
 import Viewblogs from './component/viewblogs';
 import Home from './pages/Home';
 import CreatBlog from './component/CreateBlog';
-import Blog from './component/Blog';
 import Pagerror from './pages/Pagerror';
+import Navbar from './component/navbar';
+import Profile from './pages/userProfile/Profile';
+import Privcard from './component/Privcard';
 
 function App() {
   const router = createBrowserRouter([
     {
       path: '/',
-      element: <Home />,
+      element: <Navbar />,
       children: [
+        {
+          path: '/',
+          element: <Home />
+        },
         {
           path: '/createblog',
           element: <CreatBlog />,
         },
+        {
+          path: '/my-profile',
+          element: <Profile />
+        }
       ],
       errorElement: <Pagerror />
     },
@@ -34,7 +44,7 @@ function App() {
       children: [
         {
           path: "/Blogs",
-          element: <Blog />
+          element: <Privcard />
         }
       ]
     },
