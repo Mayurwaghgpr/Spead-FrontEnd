@@ -1,61 +1,85 @@
 import React, { useState } from "react";
+import axios from "axios";
 
-function CreatBlog() {
-    const [Newblog, setNewblog] = useState([]);
+function CreateBlog() {
     const [blog, setBlog] = useState({
-        id: 1,
         title: "",
         content: "",
-        author: "Mayur",
-        date: new Date(),
+        image: null
     });
+    const [errorMessage, setErrorMessage] = useState("");
+    const imageInputRef = React.useRef();
 
-    function Fillblog(el) {
-        const { value, name } = el.target;
-        setBlog(prevState => ({
-            ...prevState,
-            [name]: value,
-        }));
+    function fillBlog(event) {
+        const { value, name, files } = event.target;
+        if (name === 'image') {
+            setBlog(prevState => ({
+                ...prevState,
+                image: files[0],
+            }));
+        } else {
+            setBlog(prevState => ({
+                ...prevState,
+                [name]: value,
+            }));
+        }
     }
 
-    function handleForm(e) {
-        e.preventDefault();
-        setNewblog(prevState => [...prevState, blog]);
-
-        fetch('http://localhost:4000/posts', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(blog),
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                console.log("oops")
+    async function handleForm(event) {
+        event.preventDefault();
+        const token = localStorage.getItem('token');
+        const formData = new FormData();
+        formData.append('title', blog.title);
+        formData.append('content', blog.content);
+        formData.append('image', blog.image);
+        console.log(formData)
+        try {
+            const response = await axios.post('http://localhost:3000/posts/posts',formData, {
+                headers: {
+                    Authorization: 'Bearer ' + token,
+                    'Content-Type': 'multipart/form-data'
+                },
             });
+            if (response.status === 200) {
+                console.log('Success:', response.data);
+                // Handle successful response
+            }
+        } catch (error) {
+            if (error.response) {
+                setErrorMessage(error.response.data.error);
+            } else {
+                setErrorMessage('An error occurred. Please try again.');
+            }
+        }
+    }
+
+    function handleRemoveImage() {
+        setBlog(prevState => ({ ...prevState, image: null }));
+        imageInputRef.current.value = null;  // Reset file input value
     }
 
     return (
         <div className="col h-screen flex justify-center items-center flex-col overflow-x-hidden overflow-y-auto">
-            <div className="container flex flex-col bg-white m-5 max-w-screen-md p-5 justify-center items-center rounded-lg shadow creat-blog">
+            <div className="container flex flex-col m-5 max-w-screen-md p-5 justify-center items-center creat-blog">
                 <h1 className="text-lg">New Blog Post</h1>
-                <form onSubmit={handleForm} className="form w-full flex flex-col gap-3" id="newPostForm" method="post" action="/api/posts">
+                {errorMessage && <div className="text-red-500">{errorMessage}</div>}
+                <div className="form w-full flex flex-col gap-3" id="newPostForm">
                     <label htmlFor="title" className="form-label">Title:</label>
-                    <input onChange={Fillblog} className="form-input rounded-md mb-3" type="text" name="title" id="title" placeholder="Title" value={blog.title} required />
-                    <label htmlFor="Image" className="form-label">Image:</label>
-                    <input type="file" accept="image/*" onChange={Fillblog} />
+                    <input onChange={fillBlog} className="form-input rounded-md mb-3" type="text" name="title" id="title" placeholder="Title" value={blog.title} required />
+                    <label htmlFor="image" className="cursor-pointer text-2xl form-label"><i className="bi bi-images"></i><i className="bi bi-plus"></i></label>
+                    <input ref={imageInputRef} className='hidden border-none' name="image" type="file" id="image" accept="image/*" onChange={fillBlog} required />
+                    {blog.image && (
+                        <div onClick={handleRemoveImage} className="h-[150px] w-[150px] relative">
+                            <img className='h-[100%]' src={URL.createObjectURL(blog.image)} alt="Preview" />
+                        </div>
+                    )}
                     <label htmlFor="content" className="form-label">Content:</label>
-                    <textarea onChange={Fillblog} className="form-textarea rounded-md mb-3" id="content" name="content" placeholder="Content" value={blog.content} required></textarea>
-                    <small>{blog.author}</small>
-                    <button className="btn rounded-md mt-3" type="submit">POST</button>
-                </form>
+                    <textarea onChange={fillBlog} className="form-textarea rounded-md mb-3" id="content" name="content" placeholder="Content" value={blog.content} required></textarea>
+                    <button onClick={handleForm} className="btn rounded-md mt-3" type="submit">POST</button>
+                </div>
             </div>
         </div>
     );
 }
 
-export default CreatBlog;
+export default CreateBlog;

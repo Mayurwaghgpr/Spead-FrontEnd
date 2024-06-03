@@ -1,58 +1,71 @@
-import { BrowserRouter, Routes, Route, createBrowserRouter, RouterProvider } from 'react-router-dom';
-import SignUp from './pages/SignUp';
-import Login from './pages/Login';
-import Viewblogs from './component/viewblogs';
+import React,{useContext} from 'react';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import SignUp from './pages/auth/SignUp';
+import Login from './pages/auth/Login';
+import ViewBlogs from './component/ViewBlogs';
 import Home from './pages/Home';
-import CreatBlog from './component/CreateBlog';
-import Pagerror from './pages/Pagerror';
-import Navbar from './component/navbar';
+import CreateBlog from './component/CreateBlog';
+import PageError from './pages/PageError';
+import MainNavBar from './component/MainNavBar';
 import Profile from './pages/userProfile/Profile';
-import Privcard from './component/Privcard';
+import PostPreview from './component/PostPreview';
+// import ProtectedRoutes from './utils/ProtectedRoutes';
+import Usercontext from "./context/UserContext";
 
 function App() {
+   const { isLogin } = useContext(Usercontext)
   const router = createBrowserRouter([
     {
       path: '/',
-      element: <Navbar />,
+      element: <MainNavBar />,
+      errorElement: <PageError />,
       children: [
         {
           path: '/',
-          element: <Home />
+          element: <Home />,
         },
         {
-          path: '/createblog',
-          element: <CreatBlog />,
+          path: '/write',
+          children: [
+            {
+              path: '',
+              element: isLogin? <CreateBlog />:<Login/>,
+            },
+          ],
         },
         {
           path: '/my-profile',
-          element: <Profile />
-        }
+          children: [
+            {
+              path: '',
+              element:isLogin? <Profile />:<Login/>,
+            },
+          ],
+        },
+   
       ],
-      errorElement: <Pagerror />
+    }, {
+      path: '/blogs',
+      element: <ViewBlogs />,
+      children: [
+        {
+          path: '',
+          element: isLogin ? <PostPreview /> : <Login />,
+        },
+      ],
     },
     {
-      path: '/SignUp',
+      path: '/signup',
       element: <SignUp />,
     },
     {
-      path: '/Login',
+      path: '/login',
       element: <Login />,
     },
-    {
-      path: '/Blogs',
-      element: <Viewblogs />,
-      children: [
-        {
-          path: "/Blogs",
-          element: <Privcard />
-        }
-      ]
-    },
-  ])
+  ]);
+
   return (
-    <>
       <RouterProvider router={router} />
-    </>
   );
 }
 

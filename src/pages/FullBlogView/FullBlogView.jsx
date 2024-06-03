@@ -2,7 +2,7 @@ import React from 'react';
 import './Profile.css';
 import image from "../../assets/siginimage.png";
 import Comment from '../../component/comment';
-function Blogprofile(props) {
+function FullBlogView(props) {
   return (
     <div className='Main-Profile'>
       {/* <div className='left'></div> */}
@@ -13,12 +13,12 @@ function Blogprofile(props) {
             <h1 className=''>{props.post.title}</h1>
             <div className='profile-auther'>
               <label htmlFor="label">Author:</label>
-              <small>{props.post.author}</small>
+              <small>{props.post.User.username}</small>
             </div>
-            <div className='blog-date'>{props.post.date}</div>
+            <div className='blog-date'>{props.post.date?.split('T')[0]}</div>
           </div>
           <div className='blog-bigimage'>
-            <img src={props.post.image} alt="" />
+            <img src={'http://localhost:3000/'+props.post.imageUrl} alt="" />
           </div>
           <div className='profile-content'>
             <p>{props.post.content}</p>
@@ -31,4 +31,4 @@ function Blogprofile(props) {
   )
 }
 
-export default Blogprofile
+export default FullBlogView

@@ -1,5 +1,4 @@
 import React from "react";
-import Navbar from "../component/navbar";
 import { Outlet } from 'react-router-dom';
 function Home() {
     return (

@@ -1,52 +1,43 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState,Suspense ,lazy} from 'react'
 import image from "../../assets/siginimage.png";
-import Privcard from '../../component/Privcard';
+ import PostPriview from '../../component/PostPreview';
 function Profile() {
     const [data, setData] = useState([]);
     useEffect(() => {
-        // console.log("set", category);
-        fetch(`http://localhost:3000/posts?type=${'All'}`)
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
-                return response.json();
-            })
-            .then((data) => {
-                setData(data);
-                console.log(data);
-            })
-            .catch((error) => {
-                console.error("Error:", error);
-                setData([
-                    {
-                        id: 0,
-                        title: "server down",
-                        image: "https://ginbits.com/wp-content/uploads/2021/08/How-to-Fix-500-Internal-Server-Error.png",
-                    },
-                ]);
-                console.log("oops");
-            });
+        const token =localStorage.getItem('token')
+        ; (async () => {
+           const respons= await fetch(`http://localhost:3000/profile`, {
+                headers: {
+                    Authorization:'Bearer '+token
+               }
+           })
+            console.log("respons",respons)
+    })()
+            return()=>{console.log('unmounting....')}
     }, []);
 
     return (
-        <main className='Profile-container'>
-            <div className='user-profile  bg-red-100'>
-                <div className='user-Prof-info'>
-                    <div className='user-heading'>
-                        <div className='user-image'>
-                            <img src={image} alt="" />
-                            <small>mayur wagh</small>
+        <main className='grid  grid-cols-10   h-screen '>
+            <div className='h-screen col-start-3 col-span-6 bg-red-100'>
+                <div className='flex flex-col gap-4 bg-white border-b'>
+                    <div className='grid grid-flow-col grid-cols-5 items-center '>
+                        <div className='flex p-3 flex-col col-span-1 gap-2 justify-center items-center'>
+                            <div className='relative flex justify-center  items-center h-[90px] w-[90px] rounded-full bg-slate-500'>
+                                <img className='h-[80px] w-[80px] rounded-full' src={image} alt="" />
+                                <span className='absolute flex justify-center items-center bg-lime-200 rounded-full h-[20px] w-[20px] bottom-0 right-1'>+</span>
+                            </div>
+                            <h1 className=''>Mayur Wagh</h1>
                         </div>
-                        <div className='post-info'>
+                        <div className='flex col-span-4 ps-5 justify-start items-center text-3xl'>
                             <h1>Posts <span>1</span></h1>
                         </div>
                     </div>
-                    <div className='user-info'></div>
+                    <div className='h-full'>
+                        
+                    </div>
                 </div>
                 <div className='user-blogs'>
-                    <div><label htmlFor="mypost" className='px-4'>Posts</label></div>
-                    <Privcard data={data} editemod={true} />
+                        <PostPriview data={data} editemod={true} />
                 </div>
             </div>
         </main>

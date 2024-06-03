@@ -184,3 +184,6 @@
   border: none;
   text-decoration: none;
 }
+.border-b{
+  border-bottom: .2;
+}
