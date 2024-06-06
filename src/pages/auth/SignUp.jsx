@@ -55,14 +55,14 @@ function SignUP(props) {
     }
 
     return (
-        <div className="relative sm:flex justify-center items-center  bg-transparent">
+        <div className="relative sm:flex justify-center items-center backdrop-blur-lg">
             <div className="w-full sm:hidden absolute"><button onClick={() => { navigate(-1) }} className=" text-black text-3xl absolute -top-12 right-3 text-shadow text-decoration-none"><i className="bi bi-x-circle"></i></button></div>
-                <div className="sm:p-3 p-2 sm:mt-12 mt-14 bg-white rounded-2xl  sm:w-[600px] sm:h-[600px] ">
+                <div className="sm:p-3 p-2 sm:mt-12 mt-14 bg-white rounded-2xl  sm:w-[600px] sm:h-[650px] ">
                     <div className="w-full hidden sm:block relative"><button onClick={() => { navigate(-1) }} className=" text-black text-3xl absolute top-2 right-5 text-shadow text-decoration-none"><i className="bi bi-x-circle"></i></button></div>
                      <h1 className="text-2xl text-center flex justify-center items-center">Welcome to Spread..🖊️</h1>
                     <h1 className=" text-xl text-center m-4">Register</h1>
                     <div className="flex flex-col justify-center w-full sm:flex-row">
-                        <div className="flex flex-col p-2 items-center justify-center">
+                        <div className="flex flex-col items-center justify-center">
                             <div className="mb-4 flex justify-center">
                                 <input type="text" onChange={handelSignup} name="username" className="bg-gray-200 p-2 sm:p-3 w-[300px] sm:w-[400px]  rounded-full" placeholder="Username" value={SignUp.username} />
                             </div>
@@ -74,7 +74,7 @@ function SignUP(props) {
                                 <input type="password" onChange={handleConfirmPassword} name="confirmPassword" className="bg-gray-200 p-2 sm:p-3 sm:w-[400px] w-[300px] mt-2 rounded-full" placeholder="Confirm Password" value={confirmPassword} />
                                 <small className="text-red-500">{confirmPassword !== null  && SignUp.password !== confirmPassword && 'Passwords do not match'}</small>
                             </div>
-                            <div className="mb-4">
+                            <div className="mb-4 ps-2 w-full">
                                 <div className="flex w-[300px]">
                                     <input type="checkbox" className="form-checkbox h-4 w-4 text-gray-600" name="Password" />
                                     <label htmlFor="formCheck" className="ml-2 text-sm text-gray-600"><small>Remember me</small></label>

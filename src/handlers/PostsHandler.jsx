@@ -18,23 +18,24 @@ export const fetchDataByTopic = async (Topic) => {
             Authorization: 'Bearer ' + token,
           },
         });
-        if (!response.status== '404') {
-          throw new Error('Network response was not ok');
+        console.log(response)
+        if (response.status ==='404') {
+          return response
         }
           return response.data;
           
       } catch (error) {
-          throw(error)
+        return error
       }
 };
-export const fetchDataAll = async (Topic) => {
+export const fetchDataAll = async () => {
       try {
         const response = await axios.get(`http://localhost:3000/posts/posts`, {
           headers: {
             Authorization: 'Bearer ' + token,
           },
         });
-        if (!response.status== '404') {
+        if (response.status== '404') {
           throw new Error('Network response was not ok');
         }
           return response.data;

@@ -9,7 +9,7 @@ function MainNavBar() {
     console.log('isLogin', isLogin)
     return (
         <div>
-            <nav className="navbar navbar-expand-lg bg-light w-100 ">
+            <nav className="navbar navbar-expand-lg bg-slate-600 w-100">
                 <div className="container-fluid">
                     <a className="navbar-brand fs-4 ms-4" href="#">{"{...Spread}"}</a>
                     <button className="navbar-toggler shadow-none border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
@@ -37,12 +37,13 @@ function MainNavBar() {
                                         className={({ isActive }) =>
                                             `nav-link ${isActive ? "text-black" : ""}`
                                         }
-                                        to="/Write"
+                                        to="/write"
                                     >
                                         <i className="bi bi-file-post"></i>
                                         <span className=" d-none d-sm-inline">Write</span>
                                     </NavLink>}
-                                    </li>
+                                </li >
+                                <li className="nav-item mx-2"><Link to='/test'>test</Link></li>
 
                             </ul>
                             {/* <form onSubmit={handelform}className="d-flex  mt-2 ms-5 me-0" role="search">
@@ -57,7 +58,7 @@ function MainNavBar() {
                                             <img className=" rounded-full w-full h-full" src={image} alt={user.name} />
                                     </button>
                                 </div>
-                                {isMenuOpen&& <div className="absolute right-0 z-10 mt-2 min-w-[150px] origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabIndex="-1">
+                                {isMenuOpen&& <div className="absolute box-border -top-40 sm:top-14 right-3  mt-2 min-w-[150px] rounded-md before:w-[20px] before:absolute before:content-normal before:right-[5px] before:rotate-45 before:-top-[6px] before:rounded-r-lg before:bg-inherit  before:h-[20px]   border-dotted  bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabIndex="-1">
                                         <div className="py-1" role="none">
                                            <p className="text-gray-700  border-b px-4 py-2 text-sm "> {user.email}</p>
                                             <Link className="text-gray-700 block px-4 border-b py-2 text-sm" to="/my-profile">Profile</Link>
