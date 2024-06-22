@@ -1,134 +1,207 @@
-import React, { useContext, useEffect, useState } from 'react';
-import FullBlogView from '../pages/FullBlogView/FullBlogView';
-import { useOutletContext } from 'react-router-dom';
-import { format } from 'date-fns';
-import { DeletPostApi } from '../handlers/PostsHandler'
-import Usercontext from '../context/UserContext';
-import ConfirmationBox from '../component/ConfirmationBox';
+import React, {
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+  useRef,
+} from "react";
+import { format } from "date-fns";
+import { DeletPostApi, fetchDataById } from "../Handlers/PostsHandler";
+import UserContext from "../context/UserContext";
+import ConfirmationBox from "../component/ConfirmationBox";
+import { Navigate, useNavigate, Link } from "react-router-dom";
 
-function PostPreview(props) {
-  let did;
-  const { user} = useContext(Usercontext);
-  const [isConfirmBox, setConfirmBox] = useState({message:'',status:false})
-  const [isConfirm, setisConfirm] = useState(false)
-  const context = useOutletContext();
-  const [data, setData] = useState(props.data);
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedPost, setSelectedPost] = useState(null);
-  const [menuid, setmenuid] = useState('')
-  const [id,setId] = useState('')
+const PostPreview = () => {
+  const {
+    user,
+    setSelectedPost,
+    selectedPost,
+    data,
+    setData,
+    isConfirmBox,
+    setConfirmBox,
+    isConfirm,
+    setIsConfirm,
+    setTopiclist,
+    ProfileId,
+    setProfileId,
+  } = useContext(UserContext);
+  const menuRef = useRef();
+  const [menuId, setMenuId] = useState("");
+  const [postIdToDelete, setPostIdToDelete] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (context) {
-      setData(context);
+    if (isConfirm && postIdToDelete) {
+      handleDeletePost(postIdToDelete);
+      setPostIdToDelete("");
+      setIsConfirm(false);
+      setTopiclist([]);
+    } else {
+      console.log("first");
     }
-  }, [context]);
+  }, [isConfirm, postIdToDelete]);
 
-  useEffect(() => {
-    if (isConfirm) {
-      handleDeletionApi(id)
-    }
-  },[isConfirm])
+  const handleReadMore = useCallback(
+    async (postId) => {
+      const response = await fetchDataById(postId);
+      if (response) {
+        setSelectedPost(response);
+        localStorage.setItem("selectedPost", JSON.stringify(response));
+        navigate("/FullView");
+      }
+    },
+    [data, setSelectedPost]
+  );
 
-  const handleReadMore = (postId) => {
-    const post = data.find(post => post.id === postId);
-    setSelectedPost(post);
-    setIsOpen(true);
-  };
-
-  const limitWordsAndAddEllipsis = (text, limit) => {
+  const limitWordsAndAddEllipsis = useCallback((text, limit) => {
     if (text) {
-      const words = text.split(' ');
+      const words = text.split(" ");
       if (words.length > limit) {
-        return words.slice(0, limit).join(' ') + '...';
+        return words.slice(0, limit).join(" ") + "...";
       }
       return text;
     }
-  };
+  }, []);
 
-  const deletePost = (id) => {
-    console.log('deletpost',id)
-    setId(id)
-    setConfirmBox(prev => { return { ...prev, message: "Do you really want to delete the post?", status: true } })
-    setmenuid('');
-  }
-    // const confirmDeletion = window.confirm();
-  async function handleDeletionApi(id) {
-    console.log('handelPost',id)
-    try {
-      if (isConfirm) {
+  const confirmDeletePost = useCallback((id) => {
+    setPostIdToDelete(id);
+    setConfirmBox({
+      message: "Do you really want to delete the post?",
+      status: true,
+    });
+    setMenuId("");
+  }, []);
+
+  const handleDeletePost = useCallback(
+    async (id) => {
+      try {
         const response = await DeletPostApi(id);
         if (response.status === 200) {
-            setData(data.filter(p => p.id !== id));
+          setData((prevData) => prevData.filter((post) => post.id !== id));
         } else {
-          alert('Failed to delete the post.');
+          alert("Failed to delete the post.");
         }
-      }
       } catch (error) {
-        console.error('Error deleting the post:', error);
-        alert('An error occurred while deleting the post.');
+        console.error("Error deleting the post:", error);
+        alert("An error occurred while deleting the post.");
       }
-  };
+    },
+    [setData]
+  );
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuId("");
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [menuRef]);
 
   return (
     <>
       {data?.map((post) => (
-        <article key={post.id} className="border-b flex w-full mt-1 flex-col h-[250px] sm:h-75">
-          <div onClick={() => handleReadMore(post?.id)} className="p-3 flex flex-col gap-2">
-            <div className="flex gap-2 text-sm">
-              <div className="flex gap-3">
-                <img className="h-[30px] w-[30px] bg-slate-500 hover:opacity-75 cursor-pointer rounded-full" src={`http://localhost:3000/${post?.imageUrl}`} alt="Author" />
-                <label className="capitalize " htmlFor="Author">{post.User.username}</label>
+        <article key={post.id} className="border-b flex w-full mt-1 flex-col ">
+          <div className="p-3 flex flex-col h-full  gap-3">
+            <div className="flex gap-2  text-sm">
+              <Link
+                to="/profile"
+                state={{ id: post.User.id }}
+                className="flex gap-3"
+              >
+                <img
+                  className="h-[30px] w-[30px] hover:opacity-75 cursor-pointer rounded-full"
+                  src={`http://localhost:3000/${post?.titleImage}`}
+                  alt="Author"
+                />
+              </Link>
+              <div className="text-sm rounded-lg flex">
+                <p className="capitalize">{post.User.username}</p>
               </div>
-              <label className='text-slate-500' htmlFor="Date">{post?.createdAt ? format(new Date(post?.createdAt), 'LLL-dd-yyyy') : format(new Date(post?.date), 'LLL-dd-yyyy')}</label>
+              <h1 className="text-slate-700 text-sm rounded-lg">
+                {post.topic}
+              </h1>
             </div>
-            <div className="cursor-pointer grid grid-cols-10 p-2">
-              <div className="col-span-8 flex flex-col justify-center items-start gap-3 me-[4rem]">
-                <div className=' w-full '>
-                    <p className="font-extrabold text-lg break-words  block ">{post.title}</p>
+            <div
+              onClick={() => handleReadMore(post.id)}
+              className="cursor-pointer h-full grid grid-cols-12  p-2"
+            >
+              <div className=" col-span-9 flex flex-col gap-2 me-[4rem]">
+                <div className="w-full break-words">
+                  <p className="font-extrabold rounded-lg">{post.title}</p>
                 </div>
-                <div className=' w-full'>
-                    <p className="hidden sm:block">{limitWordsAndAddEllipsis(post?.content, 30)}</p>
+                <div className="w-full break-words ">
+                  <p className="hidden sm:block rounded-lg">
+                    {limitWordsAndAddEllipsis(post?.subtitelpagraph, 30)}
+                  </p>
                 </div>
               </div>
-              <div className=" col-span-2">
-                <img className="w-[100px] h-[100px]" src={`http://localhost:3000/${post?.imageUrl}`} alt="Post" />
+              <div className="col-span-3">
+                <img
+                  className="rounded-sm h-[100px] block"
+                  src={`http://localhost:3000/${post?.titleImage}`}
+                  alt="Post"
+                />
               </div>
             </div>
           </div>
           <div className="mb-1 flex w-full items-center sm:p-5 p-3">
-            <div className='w-[50%]'>
-              <h1 className=' text-slate-500 text-sm b'>{post.type}</h1>
-              </div>
-            <div className='relative w-[50%] flex justify-center items-center'>
-              <div className="relative group">
-                  <div className="absolute -top-5 -left-2 hidden bg-black z-50 group-hover:block">
-                    <small>more</small>
-                  </div>
-                </div>
-            <div className=''>
-              <button className='' onClick={()=>setmenuid(prev=> prev === '' ? prev = post.id : '')}  type="button">
-                <i className="bi bi-three-dots-vertical cursor-pointer "></i>
-              </button>
+            <div className="w-[50%]">
+              <p className="text-slate-700 text-sm mx-2 rounded-lg">
+                {post.createdAt
+                  ? format(new Date(post.createdAt), "LLL-dd-yyyy")
+                  : format(new Date(post.date), "LLL-dd-yyyy")}
+              </p>
             </div>
-           {menuid === post.id && <div id={post.id} className='absolute  sm:top-5 mt-2 p-1 bg-white border before:content-normal before:absolute before:-top-[0.3rem] before:right-[3rem] before:h-[10px] before:w-[10px] before:rotate-45 before:bg-white before:border-l before:border-t  border-gray-300 rounded-lg'>
-              <ul className='flex flex-col justify-center p-2 w-[100px]' >
-                <li>
-                  {post.User.id.toString() === user.id.toString().trim()  &&
-                    <button className=" " onClick={() => deletePost(post.id)}>Delete Post</button>
-                  }
-                </li>
-                <li>Edit</li>
-              </ul>
-            </div>}
+            <div className="relative w-[50%] flex justify-center items-center">
+              <button
+                onClick={() =>
+                  setMenuId((prev) => (prev === "" ? post.id : ""))
+                }
+                type="button"
+              >
+                <i className="bi bi-three-dots-vertical cursor-pointer"></i>
+              </button>
+              {menuId === post.id && (
+                <div
+                  id={post.id}
+                  className="absolute sm:top-5 mt-2 p-1 bg-white border before:content-normal before:absolute before:-top-[0.3rem] before:right-[3rem] before:h-[10px] before:w-[10px] before:rotate-45 before:bg-white before:border-l before:border-t border-gray-300 rounded-lg"
+                >
+                  <ul
+                    ref={menuRef}
+                    className=" z-40flex flex-col justify-center p-2 w-[100px]"
+                  >
+                    {post.User.id.toString() === user.id.toString().trim() && (
+                      <>
+                        <li>
+                          <button onClick={() => confirmDeletePost(post.id)}>
+                            Delete Post
+                          </button>
+                        </li>
+
+                        <li>Edit</li>
+                      </>
+                    )}
+                  </ul>
+                </div>
+              )}
             </div>
           </div>
         </article>
       ))}
-      {isOpen && <FullBlogView post={selectedPost} onClose={() => setIsOpen(false)} />}
-       {isConfirmBox.status && <ConfirmationBox isConfirmBox={isConfirmBox} setConfirmBox={setConfirmBox} setIsConfirm={setisConfirm} />}
+      {isConfirmBox.status && (
+        <ConfirmationBox
+          isConfirmBox={isConfirmBox}
+          setConfirmBox={setConfirmBox}
+          setIsConfirm={setIsConfirm}
+        />
+      )}
     </>
   );
-}
+};
 
 export default PostPreview;

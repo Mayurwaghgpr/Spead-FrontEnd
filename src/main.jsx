@@ -1,15 +1,16 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
-import './index.css'
-import UserContextProvider from './context/UserContexProvider';
-import { PrimeReactProvider } from 'primereact/api';
-ReactDOM.createRoot(document.getElementById('root')).render(
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App.jsx";
+import "./index.css";
+import UserContextProvider from "./context/UserContextProvider.jsx";
+import { BrowserRouter } from "react-router-dom";
+
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <UserContextProvider>
-      <PrimeReactProvider>
+    <BrowserRouter>
+      <UserContextProvider>
         <App />
-        </PrimeReactProvider>
       </UserContextProvider>
-  </React.StrictMode>,
-)
+    </BrowserRouter>
+  </React.StrictMode>
+);

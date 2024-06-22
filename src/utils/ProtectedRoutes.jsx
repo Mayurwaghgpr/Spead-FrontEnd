@@ -1,18 +1,14 @@
-import React, {useContext } from "react";
-import Usercontext from "../context/UserContext";
+import React, { useContext } from "react";
+import UserContext from "../context/UserContext";
 import { Navigate, Outlet, useOutletContext } from "react-router-dom";
 
-function ProtectedRoutes() {
-    const outContext =useOutletContext()
-    const { isLogin } = useContext(Usercontext)
-    console.log('pro',isLogin)
-    if (!isLogin) {
-        console.log('navigating...')
-        return <Navigate to={'/Login'} replace/>
-    }
-    return (
-        <Outlet context={outContext}/>
-  )
-}
+const ProtectedRoute = ({ children }) => {
+  const { isLogin } = useContext(UserContext);
 
-export default ProtectedRoutes
+  if (!isLogin) {
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+};
+
+export default ProtectedRoute;

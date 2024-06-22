@@ -40,3 +40,6 @@ body {
     /* display: none; */
     /* Initially hidden */
 }
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}

@@ -1,82 +1,69 @@
-import React,{useContext} from 'react';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import SignUp from './pages/auth/SignUp';
-import Login from './pages/auth/Login';
-import Viewblogs from './pages/ViewBlogs';
-import Home from './pages/Home';
-import CreateBlog from './component/CreateBlog';
-import PageError from './pages/PageError';
-import MainNavBar from './component/MainNavBar';
-import Profile from './pages/userProfile/Profile';
-import PostPreview from './component/PostPreview';
-
-// import ProtectedRoutes from './utils/ProtectedRoutes';
-import Usercontext from "./context/UserContext";
-import ConfirmationBox from './component/ConfirmationBox';
-import WritePannel from './pages/WritePannel/WriteEvn';
+import React, { useContext } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import SignUp from "./pages/auth/SignUp";
+import Login from "./pages/auth/Login";
+import Viewblogs from "./pages/ViewBlogs";
+import Home from "./pages/Home";
+import PageError from "./pages/PageError";
+import MainNavBar from "./component/MainNavBar";
+import Profile from "./pages/userProfile/Profile";
+import PostPreview from "./component/PostPreview";
+import UserContext from "./context/UserContext";
+import WritePannel from "./pages/WritePannel/WriteEvn";
+import FullBlogView from "./pages/FullBlogView/FullBlogView";
+import ProtectedRoute from "./utils/ProtectedRoutes";
 
 function App() {
-   const { isLogin } = useContext(Usercontext)
-  const router = createBrowserRouter([
-    {
-      path: '/',
-      element: <MainNavBar />,
-      errorElement: <PageError />,
-      children: [
-        {
-          path: '/',
-          element: <Home />,
-        },
-        {
-          path: '/write',
-          children: [
-            {
-              path: '',
-              element: isLogin ? <CreateBlog /> : <Login />,
-            },
-            
-          ],
-        },
-        
-        {
-          path: '/my-profile',
-          children: [
-            {
-              path: '',
-              element:isLogin? <Profile />:<Login/>,
-            },
-          ],
-        },
-        {
-       path: '/test',
-        element:<WritePannel/>,
-    },
-   
-      ],
-    },
-    
-    {
-      path: '/blogs',
-      element: isLogin ? <Viewblogs /> : <Login />,
-      children: [
-        {
-          path: '',
-          element: isLogin && <PostPreview /> ,
-        },
-      ],
-    },
-    {
-      path: '/signup',
-      element: <SignUp />,
-    },
-    {
-      path: '/login',
-      element: <Login />,
-    },
-  ]);
+  const { isLogin } = useContext(UserContext);
 
   return (
-      <RouterProvider router={router} />
+    <>
+      <MainNavBar />
+      <Routes>
+        <Route
+          path="/"
+          element={!isLogin ? <Home /> : <Navigate to="/blogs" replace />}
+        />
+        {!isLogin && <Route path="/login" element={<Login />} />}
+        {!isLogin && <Route path="/signup" element={<SignUp />} />}
+        <Route
+          path="/profile"
+          element={
+            isLogin ? (
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+        <Route
+          path="/write"
+          element={
+            isLogin ? (
+              <ProtectedRoute>
+                <WritePannel />
+              </ProtectedRoute>
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+        <Route
+          path="/blogs"
+          element={
+            <ProtectedRoute>
+              <Viewblogs />
+            </ProtectedRoute>
+          }
+        >
+          <Route path="" element={<PostPreview />} />
+        </Route>
+        <Route path="/FullView" element={<FullBlogView />} />
+        <Route path="*" element={<PageError />} />
+      </Routes>
+    </>
   );
 }
 
