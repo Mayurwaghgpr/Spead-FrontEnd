@@ -125,7 +125,7 @@ function WritePannel() {
         console.log("text", textElements);
         console.log("image", imageElements);
         formData.append("blog", JSON.stringify(textElements));
-        formData.append("Topic", "Science");
+        formData.append("Topic", "science");
         imageElements.forEach((element, index) => {
           console.log("this", element);
           formData.append(`image-${element.index}`, element.file);

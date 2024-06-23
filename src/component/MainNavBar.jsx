@@ -3,7 +3,8 @@ import { Link, Outlet, useLocation } from "react-router-dom";
 import image from "../assets/siginimage.png";
 import UserContext from "../context/UserContext";
 import ConfirmationBox from "./ConfirmationBox";
-
+import logoutIcon from "/logout.png";
+import profileIcon from "/user.png";
 function MainNavBar() {
   const { user, isLogin, logout, submit, setSubmit } = useContext(UserContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -41,7 +42,8 @@ function MainNavBar() {
       <header
         className={`flex w-full ${
           location.pathname === "/" ? "fixed" : ""
-        } justify-between border-b bg-white py-2 px-4 flex-col`}
+        } justify-between 
+         bg-white py-2 px-4 flex-col`}
       >
         <nav className="flex items-center w-full h-[4rem] justify-between">
           <Link to="/blogs" className="text-2xl">
@@ -85,58 +87,83 @@ function MainNavBar() {
                     alt={user?.name}
                   />
                 </button>
-                {isMenuOpen && (
-                  <div
-                    className="absolute box-border z-10 top-14 right-3 mt-2 min-w-[150px] rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-                    role="menu"
-                    aria-orientation="vertical"
-                    aria-labelledby="menu-button"
-                    tabIndex="-1"
-                  >
-                    <div className="py-1" role="none">
-                      <p className="text-gray-700 border-b px-4 py-2 text-sm">
-                        {user?.email}
-                      </p>
-                      <Link
-                        className="text-gray-700 block px-4 border-b py-2 text-sm"
-                        to="/profile"
-                        state={{ id: user.id }}
-                      >
-                        Profile
-                      </Link>
-                      <a
-                        href="#"
-                        className="text-gray-700 block px-4 border-b py-2 text-sm"
-                        role="menuitem"
-                        tabIndex="-1"
-                      >
-                        Support
-                      </a>
-                      <a
-                        href="#"
-                        className="text-gray-700 block px-4 py-2 border-b text-sm"
-                        role="menuitem"
-                        tabIndex="-1"
-                      >
-                        License
-                      </a>
-                      <button
-                        onClick={() =>
-                          setConfirmBox({
-                            message: "Want to LogOut?",
-                            status: true,
-                          })
+                <div
+                  className={`${
+                    isMenuOpen
+                      ? " transition-all duration-200 ease-linear translate-y-0 opacity-100"
+                      : "-translate-y-[10px] transition-all ease-linear duration-75 opacity-0"
+                  } absolute top-14 before:w-[20px] before:h-[20px] before:rotate-45 before:absolute before:right-[.2rem]  before:-top-[0.7rem] before:bg-inherit shadow-lg   right-3 mt-2 min-w-[150px] rounded-md bg-white`}
+                  role="menu"
+                  aria-orientation="vertical"
+                  aria-labelledby="menu-button"
+                  tabIndex="-1"
+                >
+                  <div className="py-1" role="none">
+                    <Link
+                      className="flex text-gray-700 gap-2 px-4 
+                       py-2 text-sm"
+                      to="/profile"
+                      state={{ id: user?.id }}
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <img
+                        className="w-5 hover:scale-110  transition-transform ease-linear duration-75"
+                        src={profileIcon}
+                        alt=""
+                      />
+                      Profile
+                    </Link>
+                    <a
+                      href="#"
+                      className="text-gray-700 block px-4 
+                       py-2 text-sm"
+                      role="menuitem"
+                      tabIndex="-1"
+                    >
+                      Support
+                    </a>
+                    <a
+                      href="#"
+                      className="text-gray-700 block px-4 py-2 
+                       text-sm"
+                      role="menuitem"
+                      tabIndex="-1"
+                    >
+                      License
+                    </a>
+                    <p className="text-gray-700  px-4 pt-2 text-sm">
+                      {(() => {
+                        const email = user?.email || "";
+                        if (email.length < 7) {
+                          return email;
                         }
-                        type="button"
-                        className="text-gray-700 block w-full px-4 py-2 text-left text-sm"
-                        role="menuitem"
-                        tabIndex="-1"
-                      >
-                        Sign out
-                      </button>
-                    </div>
+                        const emailArray = email.split("");
+                        emailArray.splice(2, 7, "*******");
+                        return emailArray.join("");
+                      })()}
+                    </p>
+
+                    <button
+                      onClick={() =>
+                        setConfirmBox({
+                          message: "Want to LogOut?",
+                          status: true,
+                        })
+                      }
+                      type="button"
+                      className="flex   text-gray-700 gap-2 w-full px-4 py-2 text-left text-sm"
+                      role="menuitem"
+                      tabIndex="-1"
+                    >
+                      <img
+                        className="w-5  hover:-translate-x-1"
+                        src={logoutIcon}
+                        alt=""
+                      />
+                      Sign out
+                    </button>
                   </div>
-                )}
+                </div>
               </div>
             ) : (
               <div className="flex gap-3">

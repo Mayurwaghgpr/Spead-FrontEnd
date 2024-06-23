@@ -55,7 +55,7 @@ function SignUp() {
       }
     } catch (error) {
       console.error("Error during registration:", error);
-      setError("Registration failed. Please try again.");
+      setError(error);
     }
   };
 

@@ -110,7 +110,7 @@ const PostPreview = () => {
             <div className="flex gap-2  text-sm">
               <Link
                 to="/profile"
-                state={{ id: post.User.id }}
+                state={{ id: post.User?.id }}
                 className="flex gap-3"
               >
                 <img
@@ -120,7 +120,7 @@ const PostPreview = () => {
                 />
               </Link>
               <div className="text-sm rounded-lg flex">
-                <p className="capitalize">{post.User.username}</p>
+                <p className="capitalize">{post.User?.username}</p>
               </div>
               <h1 className="text-slate-700 text-sm rounded-lg">
                 {post.topic}

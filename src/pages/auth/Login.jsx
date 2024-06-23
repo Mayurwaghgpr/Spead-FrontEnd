@@ -44,7 +44,7 @@ function Login(props) {
         }
       } catch (error) {
         console.error(error);
-        setError("Login failed. Please check your username and password.");
+        setError(error.response.data.message);
       } finally {
         setLoading(false);
       }

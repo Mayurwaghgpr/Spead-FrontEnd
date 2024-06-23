@@ -1,7 +1,7 @@
 import React, { useEffect, useState, Suspense, lazy, useContext } from "react";
 import image from "../../assets/siginimage.png";
 import PostPriview from "../../component/PostPreview";
-import { fetchUserProfile } from "../../Handlers/ProfileHandler";
+import { fetchUserData, fetchUserProfile } from "../../Handlers/ProfileHandler";
 import UserContext from "../../context/UserContext";
 import { useLocation, Link } from "react-router-dom";
 function Profile() {
@@ -10,8 +10,9 @@ function Profile() {
   const location = useLocation();
   const Admin = localStorage.getItem("Admin profile");
   const otherUser = localStorage.getItem("otherUser");
+
   const fetchUser = async (id, storagekey) => {
-    const response = await fetchUserProfile(location.state.id);
+    const response = await fetchUserProfile(id);
     if (response.status === 200) {
       localStorage.setItem(storagekey, JSON.stringify(response.data));
       setuserProfile(response.data);
@@ -31,7 +32,17 @@ function Profile() {
       setuserProfile(JSON.parse(otherUser));
     }
   }, [location.state.id, otherUser, Admin, setuserProfile]);
-  // useEffect(() => {}, []);
+  useEffect(() => {
+    try {
+      async function fetchdata() {
+        const result = await fetchUserData(location.state.id);
+        setData(result.data);
+      }
+      fetchdata();
+    } catch (err) {
+      console.log(err);
+    }
+  }, [location.state.id, setuserProfile]);
   console.log("this", userProfile[0]);
   return (
     <main className="grid  grid-cols-11   h-screen ">
@@ -39,17 +50,17 @@ function Profile() {
         <div className="flex flex-col gap-4 bg-white border-b">
           <div className="grid grid-flow-col grid-cols-5 items-center ">
             <div className="flex p-3 flex-col col-span-1 gap-2 justify-center items-center">
-              <div className="relative flex justify-center  items-center h-[90px] w-[90px] rounded-full bg-slate-500">
+              <div className="relative flex justify-center  items-center h-[85px] w-[85px] rounded-full bg-slate-500">
                 <img
                   className="h-[80px] w-[80px] rounded-full"
                   src={image}
                   alt=""
                 />
-                <span className="absolute flex justify-center items-center bg-lime-200 rounded-full h-[20px] w-[20px] bottom-0 right-1">
+                {/* <span className="absolute flex justify-center items-center bg-lime-200 rounded-full h-[20px] w-[20px] bottom-0 right-1">
                   +
-                </span>
+                </span> */}
               </div>
-              <h1 className="">{userProfile[0]?.username}</h1>
+              <h1 className=" text-[13px]">{userProfile[0]?.username}</h1>
             </div>
             <div className="flex col-span-4 ps-5 justify-start items-center text-3xl">
               <h1>

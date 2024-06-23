@@ -20,3 +20,18 @@ export const fetchUserProfile = async (id) => {
     return error.response;
   }
 };
+export const fetchUserData = async (userId) => {
+  const token = getToken();
+  try {
+    const response = await axios.get(`${BASE_URL}/userData/:${userId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (response.status == 200) {
+      return response;
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
