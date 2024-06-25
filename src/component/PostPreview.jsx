@@ -101,7 +101,7 @@ const PostPreview = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [menuRef]);
-
+  console.log("prev", data);
   return (
     <>
       {data?.map((post) => (
@@ -115,7 +115,7 @@ const PostPreview = () => {
               >
                 <img
                   className="h-[30px] w-[30px] hover:opacity-75 cursor-pointer rounded-full"
-                  src={`http://localhost:3000/${post?.titleImage}`}
+                  src={`http://localhost:3000/${post?.User?.userImage}`}
                   alt="Author"
                 />
               </Link>
@@ -173,7 +173,7 @@ const PostPreview = () => {
                 >
                   <ul
                     ref={menuRef}
-                    className=" z-40flex flex-col justify-center p-2 w-[100px]"
+                    className="flex flex-col justify-center p-2 w-[100px]"
                   >
                     {post.User.id.toString() === user.id.toString().trim() && (
                       <>

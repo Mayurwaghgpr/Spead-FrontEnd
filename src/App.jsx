@@ -12,6 +12,7 @@ import UserContext from "./context/UserContext";
 import WritePannel from "./pages/WritePannel/WriteEvn";
 import FullBlogView from "./pages/FullBlogView/FullBlogView";
 import ProtectedRoute from "./utils/ProtectedRoutes";
+import ProfileEditor from "./pages/userProfile/ProfileEditor";
 
 function App() {
   const { isLogin } = useContext(UserContext);
@@ -36,6 +37,14 @@ function App() {
             ) : (
               <Navigate to="/login" replace />
             )
+          }
+        />
+        <Route
+          path="/profileEditor"
+          element={
+            <ProtectedRoute>
+              <ProfileEditor />
+            </ProtectedRoute>
           }
         />
         <Route

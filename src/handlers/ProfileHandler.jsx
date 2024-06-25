@@ -35,3 +35,27 @@ export const fetchUserData = async (userId) => {
     console.log(err);
   }
 };
+
+export const EditeUserProfile = async (newData) => {
+  const token = getToken();
+  const formData = new FormData();
+  console.log("adat", newData.userImage);
+
+  newData.userImage && formData.append("userImage", newData.userImage);
+  newData.username && formData.append("username", newData.username);
+  newData.email && formData.append("email", newData.email);
+  newData.userInfo && formData.append("userInfo", newData.userInfo);
+
+  try {
+    const response = await axios.post(`${BASE_URL}/EditProfile`, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response;
+  } catch (err) {
+    console.error("Error updating profile:", err);
+    throw err;
+  }
+};

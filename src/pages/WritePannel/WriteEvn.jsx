@@ -113,30 +113,26 @@ function WritePannel() {
     }
     if (submit) {
       (async () => {
-        // const topic = prompt('Topic');
         abortControllerRef.current?.abort();
         abortControllerRef.current = new AbortController();
-        console.log("submit");
         const token = localStorage.getItem("token");
         const formData = new FormData();
 
         const textElements = elements.filter((el) => el.type !== "image");
         const imageElements = elements.filter((el) => el.type === "image");
-        console.log("text", textElements);
-        console.log("image", imageElements);
+
         formData.append("blog", JSON.stringify(textElements));
         formData.append("Topic", "science");
         imageElements.forEach((element, index) => {
-          console.log("this", element);
           formData.append(`image-${element.index}`, element.file);
           formData.append(`description-${element.index}`, element.data);
         });
 
-        for (let pair of formData.entries()) {
-          console.log(
-            pair[0] + ": " + (pair[1] instanceof File ? pair[1].name : pair[1])
-          );
-        }
+        // for (let pair of formData.entries()) {
+        //   console.log(
+        //     pair[0] + ": " + (pair[1] instanceof File ? pair[1].name : pair[1])
+        //   );
+        // }
 
         try {
           const response = await axios.post(
@@ -151,7 +147,6 @@ function WritePannel() {
             }
           );
           if (response.status === 201) {
-            console.log("Success:", response.data);
             alert("New Blog " + response.data.message + " fully created");
             setElements([{ type: "text", data: "", id: uuidv4(), index: 0 }]);
             setSubmit(false);

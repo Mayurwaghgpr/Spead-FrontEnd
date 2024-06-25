@@ -15,6 +15,7 @@ function UserContextProvider({ children }) {
   const [isOpen, setIsOpen] = useState(false);
   const [ProfileId, setProfileId] = useState();
   const [data, setData] = useState([]);
+  const [userProfile, setuserProfile] = useState([]);
   const [topiclist, setTopiclist] = useState(
     () => data?.map((el) => el.topic) || []
   );
@@ -83,6 +84,8 @@ function UserContextProvider({ children }) {
         setIsConfirm,
         ProfileId,
         setProfileId,
+        userProfile,
+        setuserProfile,
       }}
     >
       {children}

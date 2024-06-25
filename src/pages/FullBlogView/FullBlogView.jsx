@@ -63,7 +63,9 @@ function FullBlogView() {
                 {contentItems[0].titleImage && (
                   <img
                     className="w-[50px] rounded-full h-[50px]"
-                    src={"http://localhost:3000/" + contentItems[0].titleImage}
+                    src={
+                      "http://localhost:3000/" + contentItems[0].User.userImage
+                    }
                     alt="user"
                   />
                 )}
@@ -114,11 +116,13 @@ function FullBlogView() {
           {contentItems.map((item) => (
             <div key={item.id} className=" w-full ">
               {item.imageUrl && (
-                <img
-                  className="w-full max-h-[650px] px-2 my-3"
-                  src={"http://localhost:3000/" + item.imageUrl}
-                  alt="Content"
-                />
+                <figure className="w-full max-h-[650px] px-2 my-3">
+                  <img
+                    src={"http://localhost:3000/" + item.imageUrl}
+                    alt="Content"
+                  />
+                  <figcaption className="text-center">{item.title}</figcaption>
+                </figure>
               )}
               {item.Content && (
                 <p className="my-3">
