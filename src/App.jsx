@@ -1,42 +1,52 @@
-import React, { useContext } from "react";
+import React, { useEffect, useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
+
 import SignUp from "./pages/auth/SignUp";
 import Login from "./pages/auth/Login";
 import Viewblogs from "./pages/ViewBlogs";
 import Home from "./pages/Home";
-import PageError from "./pages/PageError";
+import PageError from "./pages/Page404";
 import MainNavBar from "./component/MainNavBar";
 import Profile from "./pages/userProfile/Profile";
 import PostPreview from "./component/PostPreview";
-import UserContext from "./context/UserContext";
-import WritePannel from "./pages/WritePannel/WriteEvn";
+import WriteEvn from "./pages/WritePannel/WriteEvn";
 import FullBlogView from "./pages/FullBlogView/FullBlogView";
 import ProtectedRoute from "./utils/ProtectedRoutes";
 import ProfileEditor from "./pages/userProfile/ProfileEditor";
+import { useSelector } from "react-redux";
+import ErrorNotification from "./component/ErrorNotification";
+import Notification from "./component/Notifiction";
+import PostPreviewEditor from "./pages/WritePannel/component/PostPreviewEditor";
+
+// import userStorage from "./userStorage";
 
 function App() {
-  const { isLogin } = useContext(UserContext);
+  const { isLogin } = useSelector((state) => state.auth);
 
   return (
     <>
       <MainNavBar />
+      <ErrorNotification />
+      <Notification />
       <Routes>
         <Route
           path="/"
-          element={!isLogin ? <Home /> : <Navigate to="/blogs" replace />}
+          element={isLogin ? <Navigate to="/blogs" replace /> : <Home />}
         />
-        {!isLogin && <Route path="/login" element={<Login />} />}
-        {!isLogin && <Route path="/signup" element={<SignUp />} />}
         <Route
-          path="/profile"
+          path="/login"
+          element={!isLogin ? <Login /> : <Navigate to="/blogs" replace />}
+        />
+        <Route
+          path="/signup"
+          element={!isLogin ? <SignUp /> : <Navigate to="/blogs" replace />}
+        />
+        <Route
+          path="/profile/:username/:id"
           element={
-            isLogin ? (
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            ) : (
-              <Navigate to="/login" replace />
-            )
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
           }
         />
         <Route
@@ -50,13 +60,9 @@ function App() {
         <Route
           path="/write"
           element={
-            isLogin ? (
-              <ProtectedRoute>
-                <WritePannel />
-              </ProtectedRoute>
-            ) : (
-              <Navigate to="/login" replace />
-            )
+            <ProtectedRoute>
+              <WriteEvn />
+            </ProtectedRoute>
           }
         />
         <Route
@@ -69,7 +75,8 @@ function App() {
         >
           <Route path="" element={<PostPreview />} />
         </Route>
-        <Route path="/FullView" element={<FullBlogView />} />
+        <Route path="/test" element={<PostPreviewEditor />} />
+        <Route path="/FullView/:username/:id" element={<FullBlogView />} />
         <Route path="*" element={<PageError />} />
       </Routes>
     </>

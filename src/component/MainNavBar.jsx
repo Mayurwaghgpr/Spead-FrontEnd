@@ -1,34 +1,47 @@
-import React, { useEffect, useState, useContext, useRef } from "react";
+import React, {
+  useEffect,
+  useState,
+  useContext,
+  useRef,
+  memo,
+  useMemo,
+} from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
-import UserContext from "../context/UserContext";
 import ConfirmationBox from "./ConfirmationBox";
-import logoutIcon from "/logout.png";
-import profileIcon from "/user.png";
 
+import { useDispatch, useSelector } from "react-redux";
+import { setConfirmBox, setIsConfirm } from "../redux/slices/uiSlice";
+import { setBeforeSubmit } from "../redux/slices/postSlice";
+import useLogout from "../utils/logout";
+import LoginMenu from "./loginMenu";
+// import { setIsLogin } from "../redux/slices/authSlice";
 function MainNavBar() {
   const Admin = JSON.parse(localStorage.getItem("Admin profile"));
-  const { user, isLogin, logout, submit, setSubmit } = useContext(UserContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isConfirmBox, setConfirmBox] = useState({
-    message: "",
-    status: false,
-  });
-  const [isConfirm, setIsConfirm] = useState(false);
+  const dispatch = useDispatch();
+  const { confirmBox, isConfirm } = useSelector((state) => state.ui);
+  const { isLogin, user } = useSelector((state) => state.auth);
   const location = useLocation();
-  const menuRef = useRef();
+  const loginMenuRef = useRef();
+  const Logout = useLogout();
 
+  console.log("nave bar render");
   useEffect(() => {
-    if (isConfirm) {
-      logout();
-      setConfirmBox({ message: "", status: false });
-      setIsConfirm(false);
+    console.log("log");
+    if (isConfirm.type === "logout") {
+      Logout();
+      dispatch(setConfirmBox({ message: "", status: false }));
+      dispatch(setIsConfirm(false));
       setIsMenuOpen(false);
     }
-  }, [isConfirm, logout]);
+  }, [isConfirm]);
 
   useEffect(() => {
     function handleClickOutside(event) {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
+      if (
+        loginMenuRef.current &&
+        !loginMenuRef.current.contains(event.target)
+      ) {
         setIsMenuOpen(false);
       }
     }
@@ -36,15 +49,16 @@ function MainNavBar() {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [menuRef]);
+  }, [loginMenuRef]);
 
-  const emailMasked = (() => {
-    const email = user?.email || "";
+  const emailMasked = useMemo(() => {
+    const email = Admin?.email || user?.email || "";
     if (email.length < 7) return email;
-    const emailArray = email.split("");
-    emailArray.splice(2, 7, "*******");
-    return emailArray.join("");
-  })();
+    const emailarr = email.split("");
+    emailarr.splice(2, 7, "******");
+    emailarr.join("");
+    return emailarr;
+  }, [Admin, user]);
 
   return (
     <div>
@@ -57,12 +71,13 @@ function MainNavBar() {
           <Link to="/blogs" className="text-2xl">
             {"{...Spread}"}
           </Link>
+          {/* <Link to={"/test"}>test</Link> */}
           <div className="pr-5 flex justify-center items-center gap-5">
             {location.pathname === "/write" && isLogin && (
               <div className="flex justify-center items-center w-[400px]">
                 <button
                   className="bg-amber-200 px-2 py-1 text-sm rounded-3xl"
-                  onClick={() => setSubmit((prev) => !prev)}
+                  onClick={() => dispatch(setBeforeSubmit(true))}
                 >
                   Publish
                 </button>
@@ -79,7 +94,10 @@ function MainNavBar() {
                 </Link>
               )}
             {isLogin ? (
-              <div className="relative inline-block text-left" ref={menuRef}>
+              <div
+                className="relative inline-block text-left"
+                ref={loginMenuRef}
+              >
                 <button
                   onClick={() => setIsMenuOpen((prev) => !prev)}
                   type="button"
@@ -91,74 +109,15 @@ function MainNavBar() {
                   <img
                     className="rounded-full w-full h-full"
                     title={user?.name}
-                    src={"http://localhost:3000/" + Admin[0].userImage}
+                    src={`${import.meta.env.VITE_BASE_URL}/${user?.userImage}`}
                     alt={user?.name}
                   />
                 </button>
-                <div
-                  className={`${
-                    isMenuOpen
-                      ? " transition-all duration-300 ease-linear sm:translate-y-0 lg:translate-y-0 opacity-100"
-                      : "transition-all ease-linear sm:-translate-y-[250px] -translate-y-56   duration-300 opacity-0 "
-                  } absolute z-10 top-14 sm:before:w-[20px]  sm:before:h-[20px] before:rotate-45 before:absolute before:right-[.2rem] before:-top-[0.7rem] before:bg-inherit shadow-lg right-3 mt-2 min-w-[150px] rounded-md bg-white`}
-                >
-                  <div
-                    className={`${isMenuOpen ? " flex" : "hidden"}py-1`}
-                    role="none"
-                  >
-                    <Link
-                      className="flex text-gray-700 gap-2 px-4 py-2 text-sm"
-                      to="/profile"
-                      state={{ id: user?.id }}
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      <img
-                        className="w-5 hover:scale-110 transition-transform ease-linear duration-75"
-                        src={profileIcon}
-                        alt=""
-                      />
-                      Profile
-                    </Link>
-                    <a
-                      href="#"
-                      className="text-gray-700 block px-4 py-2 text-sm"
-                      role="menuitem"
-                      tabIndex="-1"
-                    >
-                      Support
-                    </a>
-                    <a
-                      href="#"
-                      className="text-gray-700 block px-4 py-2 text-sm"
-                      role="menuitem"
-                      tabIndex="-1"
-                    >
-                      License
-                    </a>
-                    <p className="text-gray-700 px-4 pt-2 text-sm">
-                      {emailMasked}
-                    </p>
-                    <button
-                      onClick={() =>
-                        setConfirmBox({
-                          message: "Want to LogOut?",
-                          status: true,
-                        })
-                      }
-                      type="button"
-                      className="flex text-gray-700 gap-2 w-full px-4 py-2 text-left text-sm"
-                      role="menuitem"
-                      tabIndex="-1"
-                    >
-                      <img
-                        className="w-5 hover:-translate-x-1"
-                        src={logoutIcon}
-                        alt=""
-                      />
-                      Sign out
-                    </button>
-                  </div>
-                </div>
+                <LoginMenu
+                  user={user}
+                  MenuOpen={isMenuOpen}
+                  emailMasked={emailMasked}
+                />
               </div>
             ) : (
               <div className="flex gap-3">
@@ -180,15 +139,9 @@ function MainNavBar() {
         </nav>
       </header>
       <Outlet />
-      {isConfirmBox.status && (
-        <ConfirmationBox
-          isConfirmBox={isConfirmBox}
-          setConfirmBox={setConfirmBox}
-          setIsConfirm={setIsConfirm}
-        />
-      )}
+      {confirmBox.status && <ConfirmationBox />}
     </div>
   );
 }
 
-export default MainNavBar;
+export default memo(MainNavBar);

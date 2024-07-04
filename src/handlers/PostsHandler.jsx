@@ -1,19 +1,13 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:3000/posts";
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
-const getToken = () => localStorage.getItem("token");
+// const getToken = () => localStorage.getItem("token");
 
 export const DeletPostApi = async (id) => {
-  const token = getToken();
-  if (!token) {
-    throw new Error("No token found");
-  }
   try {
-    const response = await axios.delete(`${BASE_URL}/${id.trim()}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    const response = await axios.delete(`${BASE_URL}/posts/${id.trim()}`, {
+      withCredentials: true,
     });
     console.log("del", response);
     return response;
@@ -23,13 +17,11 @@ export const DeletPostApi = async (id) => {
 };
 
 export const fetchDataByTopic = async (Topic) => {
-  const token = getToken();
+  // const token = getToken();
   try {
-    const response = await axios.get(`${BASE_URL}/posts`, {
+    const response = await axios.get(`${BASE_URL}/posts/posts`, {
       params: { type: Topic },
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      withCredentials: true,
     });
     return response;
   } catch (error) {
@@ -38,12 +30,9 @@ export const fetchDataByTopic = async (Topic) => {
 };
 
 export const fetchDataAll = async () => {
-  const token = getToken();
   try {
-    const response = await axios.get(`${BASE_URL}/posts`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    const response = await axios.get(`${BASE_URL}/posts/posts`, {
+      withCredentials: true,
     });
     return response;
   } catch (error) {
@@ -51,12 +40,9 @@ export const fetchDataAll = async () => {
   }
 };
 export const fetchDataById = async (id) => {
-  const token = getToken();
   try {
-    const response = await axios.get(`${BASE_URL}/:${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    const response = await axios.get(`${BASE_URL}/posts/:${id}`, {
+      withCredentials: true,
     });
     console.log("podtbyis", response);
     if (response.status === 200) return response.data;

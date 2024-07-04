@@ -1,19 +1,22 @@
-function ConfirmationBox({ isConfirmBox, setConfirmBox, setIsConfirm }) {
-  const handleCancel = () => {
-    setIsConfirm(false);
-    setConfirmBox((prev) => ({
-      ...prev,
-      status: false,
-    }));
-  };
+import { useDispatch, useSelector } from "react-redux";
+import { setConfirmBox, setIsConfirm } from "../redux/slices/uiSlice";
+
+function ConfirmationBox() {
+  const dispatch = useDispatch();
+  const { confirmBox, isConfirm } = useSelector((state) => state.ui);
 
   const handleConfirm = () => {
-    setIsConfirm(true);
-    setConfirmBox((prev) => ({
-      ...prev,
-      status: false,
-    }));
+    // Logic for confirming action
+    dispatch(setIsConfirm({ status: true, type: confirmBox.type }));
+    dispatch(setConfirmBox({ message: "", status: false }));
   };
+
+  const handleCancel = () => {
+    // Logic for cancelling action
+    dispatch(setIsConfirm(false));
+    dispatch(setConfirmBox({ message: "", status: false }));
+  };
+  // console.log(confirmBox);
   return (
     <div className="flex justify-center transition-transform delay-700 items-center fixed top-0 bottom-0 left-0 right-0 z-10 backdrop-blur-md ">
       <div className="p-3 flex flex-col justify-between inset-0 self-center justify-self-center fixed backdrop-blur-xl bg-cyan-100 h-[200px] hover:border-double shadow-md sm:w-[400px] rounded-xl">
@@ -27,7 +30,7 @@ function ConfirmationBox({ isConfirmBox, setConfirmBox, setIsConfirm }) {
           </button>
         </div>
         <div className=" w-full">
-          <p>{isConfirmBox?.message}</p>
+          <p>{confirmBox?.message}</p>
         </div>
         <div className="flex justify-end gap-3 mb-0 w-full items-end ">
           <button

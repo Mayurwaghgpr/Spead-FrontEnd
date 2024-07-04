@@ -1,13 +1,18 @@
-import React, { useState, useContext } from "react";
-import Usercontext from "../../context/UserContext.jsx";
-import googleicon from "../../assets/search.png";
+import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { setIsLogin } from "../../redux/slices/authSlice.js";
+import { setErrNotify } from "../../redux/slices/uiSlice.js";
+import googleicon from "../../assets/search.png";
 import verify from "/verified.gif";
 
 function SignUp() {
-  const { setIsLogin } = useContext(Usercontext);
+  const { isLogin } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  let SignUpRef = useRef();
+  console.log("ref", SignUpRef);
   const [confirmPassword, setConfirmPassword] = useState("");
   const [success, setSuccess] = useState(false);
   const [signUpInfo, setSignUpInfo] = useState({
@@ -15,10 +20,10 @@ function SignUp() {
     email: "",
     password: "",
   });
-  const [error, setError] = useState("");
+  const [validator, setValidator] = useState("");
 
   const handleInputChange = (e) => {
-    setError("");
+    setValidator("");
     const { name, value } = e.target;
     setSignUpInfo((prev) => ({
       ...prev,
@@ -32,30 +37,44 @@ function SignUp() {
   };
 
   const register = async () => {
-    setError("");
+    setValidator("");
     if (!signUpInfo.username || !signUpInfo.email || !signUpInfo.password) {
-      return setError("Cannot send empty fields");
+      return setValidator("Cannot send empty fields");
     }
     if (signUpInfo.password !== confirmPassword) {
-      return setError("Passwords did not match");
+      return setValidator("Passwords did not match");
     }
+    if (SignUpRef.current === signUpInfo) {
+      return;
+    }
+    SignUpRef.current = signUpInfo;
     try {
       const response = await axios.put(
-        "http://localhost:3000/Register",
-        signUpInfo
+        `${import.meta.env.VITE_BASE_URL}/auth/SignUp`,
+        signUpInfo,
+        { withCredentials: true }
       );
       if (response.data.token && response.status === 201) {
         setSuccess(true);
         setTimeout(() => {
           setSuccess(false);
+          localStorage.setItem(
+            "Admin profile",
+            JSON.stringify(response.data.user)
+          );
           localStorage.setItem("token", response.data.token);
-          setIsLogin(true);
+          dispatch(setIsLogin(true));
           navigate("/blogs", { replace: true });
         }, 2000);
       }
     } catch (error) {
       console.error("Error during registration:", error);
-      setError(error);
+      dispatch(
+        setErrNotify({
+          message: error.response.data.message + " " + error.message,
+          status: true,
+        })
+      );
     }
   };
 
@@ -63,7 +82,7 @@ function SignUp() {
     <div className="sm:flex justify-center items-center fixed top-0 left-0 bottom-0 right-0 backdrop-blur-md">
       <div className="w-full sm:hidden absolute">
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => navigate("/")}
           className="text-black text-3xl absolute right-3"
         >
           <i className="bi bi-x-circle"></i>
@@ -72,7 +91,7 @@ function SignUp() {
       <div className="py-3 border-black border my-14 bg-white rounded-2xl min-w-[300px] sm:w-[600px]">
         <div className="w-full hidden sm:block relative">
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => navigate("/")}
             className="text-black text-3xl absolute top-0 right-5"
           >
             <i className="bi bi-x-circle"></i>
@@ -88,15 +107,15 @@ function SignUp() {
                 onChange={handleInputChange}
                 name="username"
                 className={`${
-                  error && !signUpInfo.username
-                    ? "transition-transform duration-700 border-2 border-dashed  border-red-400 "
+                  validator && !signUpInfo.username
+                    ? "transition-transform duration-700 border-2 border-dashed border-red-400"
                     : "border-none"
                 } focus:shadow-inner focus:shadow-slate-900 bg-gray-200 p-3 w-full rounded-full`}
                 placeholder="Username"
                 value={signUpInfo.username}
               />
-              {error && !signUpInfo.username ? (
-                <span className=" text-red-400">User Name is empty</span>
+              {validator && !signUpInfo.username ? (
+                <span className="text-red-400">User Name is empty</span>
               ) : null}
             </div>
             <div className="mb-3 w-full">
@@ -105,15 +124,15 @@ function SignUp() {
                 onChange={handleInputChange}
                 name="email"
                 className={`${
-                  error && !signUpInfo.email
+                  validator && !signUpInfo.email
                     ? "border-2 border-dashed border-red-400"
                     : "border-none"
                 } focus:shadow-inner focus:shadow-slate-900 bg-gray-200 p-3 w-full rounded-full`}
                 placeholder="Email"
                 value={signUpInfo.email}
               />
-              {error && !signUpInfo.email ? (
-                <span className=" text-red-400">email field is empty</span>
+              {validator && !signUpInfo.email ? (
+                <span className="text-red-400">Email field is empty</span>
               ) : null}
             </div>
             <div className="mb-3 w-full flex flex-col">
@@ -122,22 +141,22 @@ function SignUp() {
                 onChange={handleInputChange}
                 name="password"
                 className={`${
-                  error && !signUpInfo.password
+                  validator && !signUpInfo.password
                     ? "border-2 border-dashed border-red-400"
                     : "border-none"
                 } focus:shadow-inner focus:shadow-slate-900 bg-gray-200 p-3 w-full rounded-full`}
                 placeholder="Password"
                 value={signUpInfo.password}
               />
-              {error && !signUpInfo.password ? (
-                <span className=" text-red-400">password is empty</span>
+              {validator && !signUpInfo.password ? (
+                <span className="text-red-400">Password is empty</span>
               ) : null}
               <input
                 type="password"
                 onChange={handleConfirmPasswordChange}
                 name="confirmPassword"
                 className={`${
-                  error && !confirmPassword
+                  validator && !confirmPassword
                     ? "border-2 border-dashed border-red-400"
                     : "border-none"
                 } focus:shadow-inner mt-2 focus:shadow-slate-900 bg-gray-200 p-3 w-full rounded-full`}
@@ -150,7 +169,7 @@ function SignUp() {
                   signUpInfo.password !== confirmPassword &&
                   "Passwords do not match"}
               </small>
-              {error && <span className="text-red-500">{error}</span>}
+              {validator && <span className="text-red-500">{validator}</span>}
             </div>
             <div className="mb-4 w-full flex items-center">
               <input
