@@ -1,65 +1,50 @@
-import React, {
-  useEffect,
-  useState,
-  useContext,
-  useRef,
-  memo,
-  useMemo,
-} from "react";
+import React, { useEffect, useState, useRef, memo, useCallback } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
-import ConfirmationBox from "./ConfirmationBox";
-
 import { useDispatch, useSelector } from "react-redux";
+import ConfirmationBox from "./ConfirmationBox";
 import { setConfirmBox, setIsConfirm } from "../redux/slices/uiSlice";
 import { setBeforeSubmit } from "../redux/slices/postSlice";
 import useLogout from "../utils/logout";
 import LoginMenu from "./loginMenu";
-// import { setIsLogin } from "../redux/slices/authSlice";
+import profileIcon from "/user.png";
+
 function MainNavBar() {
-  const Admin = JSON.parse(localStorage.getItem("Admin profile"));
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const dispatch = useDispatch();
   const { confirmBox, isConfirm } = useSelector((state) => state.ui);
+  const { elements } = useSelector((state) => state.posts);
   const { isLogin, user } = useSelector((state) => state.auth);
   const location = useLocation();
   const loginMenuRef = useRef();
   const Logout = useLogout();
 
-  console.log("nave bar render");
-  useEffect(() => {
-    console.log("log");
+  const handleLogout = useCallback(() => {
     if (isConfirm.type === "logout") {
       Logout();
       dispatch(setConfirmBox({ message: "", status: false }));
       dispatch(setIsConfirm(false));
       setIsMenuOpen(false);
     }
-  }, [isConfirm]);
+  }, [isConfirm, Logout, dispatch]);
+
+  const handleClickOutside = useCallback((event) => {
+    if (loginMenuRef.current && !loginMenuRef.current.contains(event.target)) {
+      setIsMenuOpen(false);
+    }
+  }, []);
 
   useEffect(() => {
-    function handleClickOutside(event) {
-      if (
-        loginMenuRef.current &&
-        !loginMenuRef.current.contains(event.target)
-      ) {
-        setIsMenuOpen(false);
-      }
-    }
+    handleLogout();
+  }, [handleLogout]);
+
+  useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [loginMenuRef]);
+  }, [handleClickOutside]);
 
-  const emailMasked = useMemo(() => {
-    const email = Admin?.email || user?.email || "";
-    if (email.length < 7) return email;
-    const emailarr = email.split("");
-    emailarr.splice(2, 7, "******");
-    emailarr.join("");
-    return emailarr;
-  }, [Admin, user]);
-
+  console.log("nave");
   return (
     <div>
       <header
@@ -71,7 +56,6 @@ function MainNavBar() {
           <Link to="/blogs" className="text-2xl">
             {"{...Spread}"}
           </Link>
-          {/* <Link to={"/test"}>test</Link> */}
           <div className="pr-5 flex justify-center items-center gap-5">
             {location.pathname === "/write" && isLogin && (
               <div className="flex justify-center items-center w-[400px]">
@@ -109,14 +93,17 @@ function MainNavBar() {
                   <img
                     className="rounded-full w-full h-full"
                     title={user?.name}
-                    src={`${import.meta.env.VITE_BASE_URL}/${user?.userImage}`}
+                    src={
+                      user?.userImage
+                        ? `${import.meta.env.VITE_BASE_URL}/${user?.userImage}`
+                        : profileIcon
+                    }
                     alt={user?.name}
                   />
                 </button>
                 <LoginMenu
-                  user={user}
                   MenuOpen={isMenuOpen}
-                  emailMasked={emailMasked}
+                  setIsMenuOpen={setIsMenuOpen}
                 />
               </div>
             ) : (

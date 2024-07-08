@@ -18,15 +18,15 @@ const useLogout = () => {
       dispatch(setData(null));
       dispatch(setIsLogin(false));
       dispatch(setUser(null));
-      localStorage.removeItem("token");
+      localStorage.removeItem("AccessToken");
       localStorage.removeItem("selectedPost");
       localStorage.removeItem("Admin profile");
       localStorage.removeItem("otherUser");
       // Cookies.remove("token");
       setConfirmBox({});
       navigate("/");
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      console.log(error);
     }
   };
 

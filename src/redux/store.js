@@ -5,6 +5,7 @@ import postReducer from './slices/postSlice';
 import profileReducer from './slices/profileSlice'; // fixed typo in import
 import { postsApi } from './slices/postsApi'; // Import the API slice
 import { profileApi } from './slices/porfileApi';
+import { authApi } from './slices/authApi';
 
 const store = configureStore({
   reducer: {
@@ -13,11 +14,12 @@ const store = configureStore({
     posts: postReducer,
     profile: profileReducer,
     [postsApi.reducerPath]: postsApi.reducer, // Add the API reducer
-    [profileApi.reducerPath]:profileApi.reducer
+    [profileApi.reducerPath]: profileApi.reducer,
+    [authApi.reducerPath]:authApi.reducer
   },
   devTools: true,
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(postsApi.middleware,profileApi.middleware), // Add the API middleware
+    getDefaultMiddleware().concat(postsApi.middleware,profileApi.middleware,authApi.middleware), // Add the API middleware
 });
 
 export default store;

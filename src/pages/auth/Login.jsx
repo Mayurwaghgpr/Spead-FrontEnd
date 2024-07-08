@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import googleicon from "../../assets/search.png";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsLogin, setUser } from "../../redux/slices/authSlice";
+import { useLogInMutation } from "../../redux/slices/authApi";
 
 function Login() {
   const { isLogin } = useSelector((state) => state.auth);
+  const [logIn] = useLogInMutation();
   const dispatch = useDispatch();
   const [loginInfo, setLoginInfo] = useState({
     username: "",
@@ -25,51 +26,43 @@ function Login() {
   }
 
   async function loginUser() {
-    if (loginInfo.password === "" && loginInfo.username) {
-      setError("Cannot set empty inputs");
-    } else if (loginInfo.password === "") {
-      setError("Password cannot be empty");
-    } else if (loginInfo.username === "") {
-      setError("Please enter a username");
-    } else {
-      setLoading(true);
-      try {
-        const response = await axios.post(
-          "http://localhost:3000/auth/Login",
-          loginInfo,
-          { withCredentials: true }
-        );
-        console.log(response);
-        if (response.status === 200) {
-          console.log("first");
-          const token = response.data.token;
-          // console.log(decoded);
-          dispatch(setIsLogin(true));
-          dispatch(setUser(response.data.user));
-          localStorage.setItem("token", token);
-          localStorage.setItem(
-            "Admin profile",
-            JSON.stringify(response.data.user)
-          );
-          navigate("/blogs", { replace: true });
-        }
-      } catch (error) {
-        console.error(error);
-        setError(error.response.data.message);
-      } finally {
-        setLoading(false);
+    if (!loginInfo.username || !loginInfo.password) {
+      setError("Username and password cannot be empty");
+      return;
+    }
+
+    setLoading(true);
+    setError(""); // Clear previous errors
+
+    try {
+      const response = await logIn(loginInfo).unwrap();
+      console.log("Response:", response); // Log the response
+
+      const { AccessToken, RefreshToken, user } = response;
+
+      if (AccessToken) {
+        dispatch(setIsLogin(true));
+        dispatch(setUser(user));
+        localStorage.setItem("AccessToken", AccessToken);
+        localStorage.setItem("Admin profile", JSON.stringify(user));
+        navigate("/blogs", { replace: true });
+      } else {
+        setError("Login failed. Please check your credentials.");
       }
+    } catch (error) {
+      console.error("Login error:", error); // Log the error
+      setError(error.data?.message || "An error occurred during login");
+    } finally {
+      setLoading(false);
     }
   }
 
-  if (!isLogin)
+  if (!isLogin) {
     return (
       <div className="sm:flex justify-center items-center fixed top-0 left-0 bottom-0 right-0 backdrop-blur-md">
         <div className="w-full sm:hidden absolute">
           <button
-            onClick={() => {
-              navigate("/");
-            }}
+            onClick={() => navigate("/")}
             className="text-black text-3xl absolute right-3 text-shadow text-decoration-none"
           >
             <i className="bi bi-x-circle"></i>
@@ -78,9 +71,7 @@ function Login() {
         <div className="sm:p-3 border-black border py-4 sm:mt-12 mt-14 bg-white rounded-2xl min-w-[300px] sm:w-[600px]">
           <div className="w-full hidden sm:block relative">
             <button
-              onClick={() => {
-                navigate("/");
-              }}
+              onClick={() => navigate("/")}
               className="text-black text-3xl absolute top-2 right-5 text-shadow text-decoration-none"
             >
               <i className="bi bi-x-circle"></i>
@@ -126,7 +117,7 @@ function Login() {
                     Remember me
                   </label>
                 </div>
-                <div className="">
+                <div>
                   <small>
                     <Link to="">Forgot Password?</Link>
                   </small>
@@ -151,7 +142,7 @@ function Login() {
                   <img
                     style={{ height: "24px" }}
                     src={googleicon}
-                    alt=""
+                    alt="Google Icon"
                     className="h-6 mr-2"
                   />
                   <div className="w-full text-xs sm:text-inherit text-center">
@@ -163,12 +154,10 @@ function Login() {
                 <small>
                   Don't have an Account?{" "}
                   <button
-                    onClick={() => {
-                      navigate("/SignUp", { replace: true });
-                    }}
+                    onClick={() => navigate("/SignUp", { replace: true })}
                     className="text-blue-500"
                   >
-                    SignUp
+                    Sign Up
                   </button>
                 </small>
               </div>
@@ -177,6 +166,7 @@ function Login() {
         </div>
       </div>
     );
+  }
 
   return null;
 }

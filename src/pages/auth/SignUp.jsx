@@ -54,16 +54,16 @@ function SignUp() {
         signUpInfo,
         { withCredentials: true }
       );
-      if (response.data.token && response.status === 201) {
+      if (response.data.AccessToken && response.status === 201) {
         setSuccess(true);
+        dispatch(setIsLogin(true));
         setTimeout(() => {
           setSuccess(false);
           localStorage.setItem(
             "Admin profile",
             JSON.stringify(response.data.user)
           );
-          localStorage.setItem("token", response.data.token);
-          dispatch(setIsLogin(true));
+          localStorage.setItem("AccessToken", response.data.AccessToken);
           navigate("/blogs", { replace: true });
         }, 2000);
       }

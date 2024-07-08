@@ -19,7 +19,7 @@ export const fetchUserProfile = async (id) => {
 export const fetchUserData = async (userId) => {
   // const token = getToken();
   try {
-    const response = await axios.get(`${BASE_URL}/userData/:${userId}`, {
+    const response = await axios.get(`${BASE_URL}/user/userData/:${userId}`, {
       withCredentials: true,
     });
     console.log("hh", response);

@@ -77,7 +77,7 @@ function Viewblogs() {
             </div>
           </div>
         </aside>
-        <section className="grid grid-cols-12 h-screen sm:col-start-5 sm:col-span-8 col-span-full">
+        <section className="grid grid-cols-12 h-screen sm:col-start-5 sm:col-span-8  col-span-full">
           <ul className="flex border-b pl-5 pt-4 pb-2 h-[3rem] justify-start items-center gap-3 col-span-10 sm:col-span-9 row-span-1">
             <li className="rounded-full capitalize">
               <Link to="/blogs" className="t-btn" onClick={() => setTopic("")}>

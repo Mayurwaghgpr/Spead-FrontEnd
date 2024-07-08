@@ -1,25 +1,27 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {jwtDecode} from "jwt-decode";
+import { authApi } from "./authApi";
+import { setErrNotify } from "./uiSlice";
 
 // Retrieve admin profile and token from local storage
 const Admin = JSON.parse(localStorage.getItem("Admin profile"));
-const token = localStorage.getItem("token");
+const token = localStorage.getItem("AccessToken");
 
-// Function to check the validity of the token
-const tokenCheck = () => {
+// Async thunk for token validation
+export const tokenCheck = () => {
   if (token) {
     try {
       const decoded = jwtDecode(token);
-
-      if (decoded.exp * 1000 > Date.now()) {
+      if (decoded.exp * 1000 > Date.now()) { 
         return true;
       } else {
-        localStorage.removeItem("token");
+        // dispatch(setErrNotify({ message: "Token has expired", status: true }));
+        localStorage.removeItem("AccessToken");
         return false;
       }
     } catch (error) {
       console.error("Invalid token:", error);
-      localStorage.removeItem("token");
+      localStorage.removeItem("AccessToken");
       return false;
     }
   }
@@ -29,9 +31,9 @@ const tokenCheck = () => {
 // Initial state
 const initialState = {
   isLogin: tokenCheck(),
-  user: Admin || [],
+  user: Admin || {},
   loading: true,
-  token: token || null
+  token: token || null,
 };
 
 // Create a slice of the Redux store
@@ -50,12 +52,13 @@ const authSlice = createSlice({
     },
     logout: (state) => {
       state.isLogin = false;
-      state.user = [];
+      state.user = {};
       state.token = null;
-      localStorage.removeItem("token");
+      localStorage.removeItem("AccessToken");
       localStorage.removeItem("Admin profile");
     },
   },
+ 
 });
 
 // Export actions and reducer

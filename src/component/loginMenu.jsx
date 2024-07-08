@@ -1,43 +1,67 @@
-import React, { memo } from "react";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import React, { memo, useCallback } from "react";
+import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setConfirmBox, setIsConfirm } from "../redux/slices/uiSlice";
+import { setConfirmBox } from "../redux/slices/uiSlice";
 import logoutIcon from "/logout.png";
 import profileIcon from "/user.png";
 
-function LoginMenu({ user, emailMasked, MenuOpen }) {
+function LoginMenu({ MenuOpen, setIsMenuOpen }) {
+  const Admin = JSON.parse(localStorage.getItem("Admin profile"));
   const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
+
+  const emailMasked = useCallback(() => {
+    const email = Admin?.email || user?.email || "";
+    if (email.length < 7) return email;
+    const emailarr = email.split("");
+    emailarr.splice(2, 7, "******");
+    return emailarr.join("");
+  }, [Admin, user]);
   console.log(user.id);
+
   return (
     <div
       className={`${
-        MenuOpen ? "block" : " hidden"
-      } absolute  z-20  top-7  shadow-lg right-24 mt-2 min-w-[150px] rounded-md bg-white`}
+        MenuOpen ? "-translate-x-56 opacity-100" : "translate-x-96 opacity-10"
+      } fixed z-[100] shadow-lg h-screen top-0 mt-2 min-w-[100px] rounded-md bg-white transition-all duration-500 ease-linear`}
     >
-      <div
-        className={` flex  w-[300px] flex-col justify-start gap-3 py-3   items-start text-sm transition-all ease-linear duration-75`}
-      >
-        <div className=" flex gap-3 text-base  w-full  px-3 py-2">
-          <img
-            className=" size-[60px] rounded-full "
-            src={`${import.meta.env.VITE_BASE_URL}/${user?.userImage}`}
-            alt=""
-          />
-          <div className="flex flex-col gap-2 ">
-            <h1>{user?.username}</h1>
-            <Link
-              className="flex text-gray-700 gap-2  justify-center w-full hover:underline hover:text-blue-500   "
-              to={`/profile/@${user?.username
-                .split(" ")
-                .slice(0, user?.username.length - 1)
-                .join("")}/${user?.id}`}
-              onClick={() => setIsMenuOpen(false)}
-            >
-              View Your Profile
-            </Link>
+      <div className="flex w-[300px] flex-col justify-between pb-3 items-start text-sm transition-all ease-linear duration-75">
+        <div className="flex text-base items-center w-full px-3">
+          <div className="w-full flex gap-3 text-base items-center py-3">
+            <img
+              className="size-[30px] rounded-full"
+              src={
+                user?.userImage
+                  ? `${import.meta.env.VITE_BASE_URL}/${user?.userImage}`
+                  : profileIcon
+              }
+              alt=""
+            />
+            <div className="flex w-full gap-2">
+              <h1>{user?.username}</h1>
+            </div>
+          </div>
+          <div className="flex inset-0 h-full p-0">
+            <button onClick={() => setIsMenuOpen(false)} className="">
+              X
+            </button>
           </div>
         </div>
-        <div className=" flex flex-col border-t-2 border-b-2 w-full px-3 py-2 gap-3 ">
+
+        <div className="flex border-t w-full px-3 py-2 gap-2">
+          <img className="h-5 w-5" src={profileIcon} alt="" />
+          <Link
+            className="flex text-gray-700 gap-2 w-full hover:underline hover:text-blue-500"
+            to={`/profile/@${user?.username
+              .split(" ")
+              .slice(0, user?.username.length - 1)
+              .join("")}/${user?.id}`}
+            onClick={() => setIsMenuOpen(false)}
+          >
+            View Your Profile
+          </Link>
+        </div>
+        <div className="flex flex-col border-t border-b w-full px-3 py-2 gap-3">
           <a
             href="#"
             className="text-gray-700 block"
@@ -46,12 +70,12 @@ function LoginMenu({ user, emailMasked, MenuOpen }) {
           >
             Support
           </a>
-          <a href="#" className="text-gray-700 " role="menuitem" tabIndex="-1">
+          <a href="#" className="text-gray-700" role="menuitem" tabIndex="-1">
             License
           </a>
         </div>
-        <div className=" flex flex-col  w-full px-3 py-2 gap-3">
-          <p className="text-gray-700 ">{emailMasked}</p>
+        <div className="flex flex-col w-full px-3 py-2 gap-3">
+          <p className="text-gray-700">{emailMasked()}</p>
           <button
             onClick={() =>
               dispatch(
@@ -63,9 +87,9 @@ function LoginMenu({ user, emailMasked, MenuOpen }) {
               )
             }
             type="button"
-            className="flex text-gray-700 gap-2 w-full "
+            className="flex text-gray-700 gap-2 w-full"
           >
-            <img className="w-5 hover:-translate-x-1" src={logoutIcon} alt="" />
+            <img className="w-5" src={logoutIcon} alt="" />
             Sign out
           </button>
         </div>

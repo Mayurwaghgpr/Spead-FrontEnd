@@ -7,6 +7,7 @@ import { setErrNotify } from "../../redux/slices/uiSlice";
 import { setuserProfile } from "../../redux/slices/profileSlice";
 import { setData } from "../../redux/slices/postSlice";
 import { useFetchUserProfileQuery } from "../../redux/slices/porfileApi";
+import profileIcon from "/user.png";
 
 function Profile() {
   const dispatch = useDispatch();
@@ -16,10 +17,13 @@ function Profile() {
   const { isLogin, user } = useSelector((state) => state.auth);
 
   const [profileId, setProfileId] = useState(params.id || user.id);
-  const { data, isError, isLoading } = useFetchUserProfileQuery(profileId, {
-    skip: !profileId,
-  });
-
+  const { data, isError, isLoading, status } = useFetchUserProfileQuery(
+    profileId,
+    {
+      skip: !profileId,
+    }
+  );
+  console.log(status);
   useEffect(() => {
     if (data) {
       dispatch(setuserProfile(data));
@@ -68,9 +72,13 @@ function Profile() {
               <div className="relative flex justify-center min-w-[50px] h-[100px] w-[100px] lg:h-[150px] lg:w-[150px] items-center rounded-full">
                 <img
                   className="w-full h-full rounded-full"
-                  src={`${import.meta.env.VITE_BASE_URL}/${
+                  src={
                     userProfile?.userImage
-                  }`}
+                      ? `${import.meta.env.VITE_BASE_URL}/${
+                          userProfile?.userImage
+                        }`
+                      : profileIcon
+                  }
                   alt={userProfile?.username}
                 />
               </div>

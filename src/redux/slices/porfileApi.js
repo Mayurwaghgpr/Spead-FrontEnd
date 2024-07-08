@@ -10,7 +10,7 @@ export const profileApi = createApi({
     tagTypes: ['Profile'],
     endpoints: (builder) => ({
         fetchUserProfile: builder.query({
-            query: (userId) => `/profile/:${userId}`,
+            query: (userId) => `/user/profile/:${userId}`,
             providesTags:['Profile']
         })
     })

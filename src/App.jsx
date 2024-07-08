@@ -13,7 +13,7 @@ import WriteEvn from "./pages/WritePannel/WriteEvn";
 import FullBlogView from "./pages/FullBlogView/FullBlogView";
 import ProtectedRoute from "./utils/ProtectedRoutes";
 import ProfileEditor from "./pages/userProfile/ProfileEditor";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ErrorNotification from "./component/ErrorNotification";
 import Notification from "./component/Notifiction";
 import PostPreviewEditor from "./pages/WritePannel/component/PostPreviewEditor";
@@ -21,8 +21,8 @@ import PostPreviewEditor from "./pages/WritePannel/component/PostPreviewEditor";
 // import userStorage from "./userStorage";
 
 function App() {
+  const dispatch = useDispatch();
   const { isLogin } = useSelector((state) => state.auth);
-
   return (
     <>
       <MainNavBar />

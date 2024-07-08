@@ -1,19 +1,18 @@
-import React, { useRef, useState, useCallback, useEffect } from "react";
+import React, { useRef, useState, useCallback } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useSelector, useDispatch } from "react-redux";
-import { setSubmit, setElements } from "../../redux/slices/postSlice";
-import WriteElements from "./WriteElements";
-
+import { setElements } from "../../redux/slices/postSlice";
+import WriteElements from "./component/WriteElements";
 import { debounce } from "../../utils/debouce";
 import PostPreviewEditor from "./component/PostPreviewEditor";
 
-const DEFAULT_ELEMENT = { type: "text", data: "", id: uuidv4(), index: 0 };
-
 function WritePannel() {
-  const { submit, elements, beforsubmit } = useSelector((state) => state.posts);
+  const { elements, beforsubmit } = useSelector((state) => state.posts);
   const dispatch = useDispatch();
   const [isScale, setIsScale] = useState(false);
-  const [textTool, setTextTool] = useState(null);
+
+  const [focusedIndex, setFocusedIndex] = useState(null);
+  const [imageFiles, setImageFiles] = useState([]);
   const imageInputRef = useRef();
   const inputRefs = useRef([]);
 
@@ -23,47 +22,77 @@ function WritePannel() {
         type,
         data: "",
         id: uuidv4(),
-        index: elements.length,
       };
-      dispatch(setElements([...elements, newElement]));
+      let previousElements = [...elements];
+      let newIndex;
+      if (focusedIndex !== null) {
+        previousElements.splice(focusedIndex + 1, 0, newElement);
+        previousElements = previousElements.map((el, idx) => ({
+          ...el,
+          index: idx,
+        }));
+        newIndex = Number(focusedIndex) + 1;
+      } else {
+        newElement.index = elements.length;
+        previousElements.push(newElement);
+      }
+
+      dispatch(setElements(previousElements));
+
       setTimeout(() => {
-        if (inputRefs.current[elements.length]) {
-          inputRefs.current[elements.length].focus();
+        if (inputRefs.current[newIndex]) {
+          inputRefs.current[newIndex].focus();
         }
       }, 0);
+
       setIsScale(false);
     },
-    [elements, dispatch]
+    [elements, dispatch, focusedIndex]
   );
 
   const handleFileChange = useCallback(
     (event) => {
-      const file = event.target.files?.[0];
+      const file = event.target.files[0];
       if (file) {
         const newElement = {
           type: "image",
-          file,
+          file: URL.createObjectURL(file),
           data: "",
           id: uuidv4(),
-          index: elements.length,
         };
-        //adding image file element deppending on the last element in elements Array
-        const updatedElements =
-          elements[elements.length - 1]?.data === "" && //if last element data is empty
-          !elements[elements.length - 1]?.file //is last element is not file
-            ? [...elements.slice(0, -1), newElement] //then set new image on the last index
-            : [...elements, newElement]; //els add after the last element
 
-        dispatch(setElements(updatedElements));
+        let prevElements = [...elements];
+        let newIndex;
+
+        if (focusedIndex !== null) {
+          prevElements.splice(focusedIndex + 1, 0, newElement);
+          prevElements = prevElements.map((el, idx) => ({
+            ...el,
+            index: idx,
+          }));
+          newIndex = Number(focusedIndex) + 1;
+          setFocusedIndex(newIndex);
+        } else {
+          newIndex = Number(elements.length);
+          newElement.index = newIndex;
+          prevElements.push(newElement);
+        }
+
+        setImageFiles((prev) => [
+          ...prev,
+          { ...newElement, file: file, index: newIndex },
+        ]);
+        dispatch(setElements(prevElements));
         imageInputRef.current.value = null;
+
         setTimeout(() => {
-          if (inputRefs.current[elements.length]) {
-            inputRefs.current[elements.length].focus();
+          if (inputRefs.current[newIndex]) {
+            inputRefs.current[newIndex].focus();
           }
         }, 0);
       }
     },
-    [elements, dispatch]
+    [elements, dispatch, focusedIndex]
   );
 
   const debouncedUpdateElements = useCallback(
@@ -89,50 +118,56 @@ function WritePannel() {
         .filter((el) => el.id !== id)
         .map((el, idx) => ({ ...el, index: idx }));
       dispatch(setElements(updatedElements));
+      const updatedimagefile = imageFiles
+        .filter((el) => el.id !== id)
+        .map((el, idx) => ({ ...el, index: idx }));
+      setImageFiles(updatedimagefile);
+      setFocusedIndex(null);
     },
     [elements, dispatch]
   );
 
   const handleKeyDown = useCallback(
     (event, id, index) => {
-      if (event.key === "Backspace" && !event.target.value) {
+      console.log();
+      if (
+        event.key === "Backspace" &&
+        !event.target.innerText &&
+        elements.length > 1
+      ) {
         removeElement(id);
         setTimeout(() => {
           if (index > 0) {
-            const ref = event.target.file
-              ? imageInputRef.current[index - 1]
-              : inputRefs.current[index - 1];
+            const ref = inputRefs.current[index - 1];
             ref?.focus();
           }
         }, 0);
       } else if (event.key === "Enter") {
+        event.preventDefault();
         addElement("text");
-        setTimeout(() => {
-          inputRefs.current[index + 1]?.focus();
-        }, 0);
+        setFocusedIndex(index);
       }
     },
-    [removeElement, addElement]
+    [removeElement, addElement, elements]
   );
-
-  const handleTextSelection = useCallback((event) => {
-    const { selectionStart, selectionEnd } = event.target;
-    setTextTool(selectionStart !== selectionEnd ? event.target.id : null);
-  }, []);
+  // console.log(elements);
 
   const handleContentEditableChange = useCallback(
     (id, event) => {
       const value = event.target.textContent;
+      console.log(value);
       const updatedElements = elements.map((el) =>
         el.id === id ? { ...el, data: value } : el
       );
       dispatch(setElements(updatedElements));
+
+      setImageFiles(
+        imageFiles.map((el) => (el.id === id ? { ...el, data: value } : el))
+      );
     },
     [elements, dispatch]
   );
 
-  console.log(elements);
-  console.log("first");
   return (
     <main
       className={`grid grid-cols-10 ${
@@ -191,7 +226,7 @@ function WritePannel() {
             />
           </div>
         </div>
-        <div className="justify-center mt-4 flex sm:w-[900px] w-[100%]">
+        <div className="justify-center mt-4 flex sm:w-[900px] w-full">
           <div className="flex flex-col w-full gap-2">
             {elements.map((element, index) => (
               <WriteElements
@@ -200,11 +235,10 @@ function WritePannel() {
                 index={index}
                 handleTextChange={handleTextChange}
                 handleKeyDown={handleKeyDown}
-                handleTextSelection={handleTextSelection}
                 handleContentEditableChange={handleContentEditableChange}
                 inputRefs={inputRefs}
-                textTool={textTool}
                 isScale={isScale}
+                setFocusedIndex={setFocusedIndex}
               />
             ))}
           </div>
@@ -214,6 +248,8 @@ function WritePannel() {
         <PostPreviewEditor
           handleTextChange={handleTextChange}
           handleContentEditableChange={handleContentEditableChange}
+          imageFiles={imageFiles}
+          setImageFiles={setImageFiles}
         />
       )}
     </main>
