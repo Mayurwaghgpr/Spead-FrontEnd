@@ -1,29 +1,31 @@
 import React, { useEffect, useState } from "react";
-import { EditeUserProfile } from "../../Handlers/ProfileHandler";
+import { EditeUserProfile } from "../../Apis/ProfileApis";
 import { useDispatch, useSelector } from "react-redux";
 import { setuserProfile } from "../../redux/slices/profileSlice";
+import profileIcon from "/user.png";
 
 function ProfileEditor() {
-  const Admin = JSON.parse(localStorage.getItem("Admin profile")) || [];
-  // Access user profile from the Redux store
+  // Retrieve Admin profile from local storage
+  const Admin = JSON.parse(localStorage.getItem("AdminProfile")) || [];
   const { userProfile } = useSelector((state) => state.profile);
 
-  // Local state to hold new profile information and loading status
   const [newInfo, setNewInfo] = useState({ ...Admin });
   const [isLoading, setIsLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
 
-  // Retrieve Admin profile from local storage
-
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // Dispatch Admin profile to Redux store on component mount
     if (Admin && userProfile) {
-      console.log(Admin); // Debugging: Check Admin value
       dispatch(setuserProfile(Admin));
     }
-  }, []); // Empty dependency array to run only once
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (userProfile) {
+      setNewInfo({ ...userProfile });
+    }
+  }, [userProfile]);
 
   // Handle input changes
   const handleChange = (event) => {
@@ -33,7 +35,6 @@ function ProfileEditor() {
       const reader = new FileReader();
 
       reader.onloadend = () => {
-        // Update newInfo with image file and base64 string
         setNewInfo((prev) => ({
           ...prev,
           userImage: file,
@@ -42,9 +43,8 @@ function ProfileEditor() {
       };
 
       reader.readAsDataURL(file);
-      event.target.value = ""; // Reset file input
+      event.target.value = "";
     } else {
-      // Update newInfo with other input values
       setNewInfo((prev) => ({
         ...prev,
         [name]: value,
@@ -52,23 +52,20 @@ function ProfileEditor() {
     }
   };
 
-  // Trigger file input click
   const triggerFileInput = () => {
     document.getElementById("fileInput").click();
   };
 
-  // Handle profile save
   const handleSave = async () => {
     if (Object.keys(newInfo).length > 0) {
-      setIsLoading(true); // Set loading to true
-      setSuccessMessage(""); // Reset success message
+      setIsLoading(true);
+      setSuccessMessage("");
       try {
         const result = await EditeUserProfile(newInfo);
         if (result.status === 200) {
-          // Update Redux store and local storage with new profile data
-          dispatch(setuserProfile([result.data]));
-          localStorage.setItem("Admin profile", JSON.stringify(result.data));
-          setSuccessMessage("Profile updated successfully!"); // Set success message
+          dispatch(setuserProfile(result.data));
+          localStorage.setItem("AdminProfile", JSON.stringify(result.data));
+          setSuccessMessage("Profile updated successfully!");
         }
       } catch (err) {
         console.error("Error updating profile:", err);
@@ -78,12 +75,15 @@ function ProfileEditor() {
     }
   };
 
-  // Clear success message after 2 seconds
-  if (successMessage !== "") {
-    setTimeout(() => {
-      setSuccessMessage("");
-    }, 2000);
-  }
+  useEffect(() => {
+    if (successMessage !== "") {
+      const timer = setTimeout(() => {
+        setSuccessMessage("");
+      }, 2000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [successMessage]);
 
   const RemoveSelecteImage = () => {
     if (newInfo.userImage && newInfo.userImageFile) {
@@ -97,17 +97,15 @@ function ProfileEditor() {
       setNewInfo((prev) => ({ ...prev, removeImage: true }));
     }
   };
-  console.log("userp", userProfile);
-  console.log(newInfo);
 
   return (
-    <main className="flex h-screen justify-center items-start">
+    <div className="flex h-screen justify-center items-start">
       {isLoading ? (
         <div className="loader">Loading...</div>
       ) : (
         <article className="m-3 flex lg:items-start justify-center items-center flex-col p-5 gap-6">
           <div
-            className="border flex justify-start gap-5    w-full  rounded-full"
+            className="border flex justify-start gap-5 w-full rounded-full"
             aria-label="Upload profile picture"
           >
             {userProfile && (
@@ -119,12 +117,11 @@ function ProfileEditor() {
                   `${import.meta.env.VITE_BASE_URL}/${userProfile?.userImage}`
                 }
                 alt="Profile"
-                // loading="lazy"
               />
             )}
             <div className="py-1">
               <button
-                className=" rounded-xl px-2 "
+                className="rounded-xl px-2"
                 onClick={() => RemoveSelecteImage()}
               >
                 Remove
@@ -181,7 +178,7 @@ function ProfileEditor() {
           </div>
         </article>
       )}
-    </main>
+    </div>
   );
 }
 

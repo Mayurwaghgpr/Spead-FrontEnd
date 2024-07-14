@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { setConfirmBox, setIsConfirm } from "../redux/slices/uiSlice";
+import { setConfirmBox, setIsConfirm } from "../../redux/slices/uiSlice";
 
 function ConfirmationBox() {
   const dispatch = useDispatch();
@@ -7,7 +7,7 @@ function ConfirmationBox() {
 
   const handleConfirm = () => {
     // Logic for confirming action
-    dispatch(setIsConfirm({ status: true, type: confirmBox.type }));
+    dispatch(setIsConfirm({ type: confirmBox.type, status: true }));
     dispatch(setConfirmBox({ message: "", status: false }));
   };
 
@@ -18,8 +18,8 @@ function ConfirmationBox() {
   };
   // console.log(confirmBox);
   return (
-    <div className="flex justify-center transition-transform delay-700 items-center fixed top-0 bottom-0 left-0 right-0 z-10 backdrop-blur-md ">
-      <div className="p-3 flex flex-col justify-between inset-0 self-center justify-self-center fixed backdrop-blur-xl bg-cyan-100 h-[200px] hover:border-double shadow-md sm:w-[400px] rounded-xl">
+    <div className="flex justify-center z-[60]  transition-transform delay-700 items-center fixed top-0 bottom-0 left-0 right-0  backdrop-blur-md ">
+      <div className="p-3 flex flex-col justify-between inset-0 self-center justify-self-center fixed backdrop-blur-xl bg-sky-200 h-[200px] hover:border-double shadow-md sm:w-[400px] rounded-xl">
         <div className="text-lg flex justify-between">
           <h1>Confirmation</h1>
           <button

@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import googleicon from "../../assets/search.png";
+import googleIcon from "../../assets/search.png";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsLogin, setUser } from "../../redux/slices/authSlice";
 import { useLogInMutation } from "../../redux/slices/authApi";
 
-function Login() {
+function SignIn() {
   const { isLogin } = useSelector((state) => state.auth);
   const [logIn] = useLogInMutation();
   const dispatch = useDispatch();
@@ -38,13 +38,13 @@ function Login() {
       const response = await logIn(loginInfo).unwrap();
       console.log("Response:", response); // Log the response
 
-      const { AccessToken, RefreshToken, user } = response;
+      const { AccessToken, user } = response;
 
       if (AccessToken) {
         dispatch(setIsLogin(true));
         dispatch(setUser(user));
         localStorage.setItem("AccessToken", AccessToken);
-        localStorage.setItem("Admin profile", JSON.stringify(user));
+        localStorage.setItem("AdminProfile", JSON.stringify(user));
         navigate("/blogs", { replace: true });
       } else {
         setError("Login failed. Please check your credentials.");
@@ -59,11 +59,12 @@ function Login() {
 
   if (!isLogin) {
     return (
-      <div className="sm:flex justify-center items-center fixed top-0 left-0 bottom-0 right-0 backdrop-blur-md">
+      <section className="sm:flex justify-center items-center fixed top-0 left-0 bottom-0 right-0 backdrop-blur-[1.10px]">
         <div className="w-full sm:hidden absolute">
           <button
             onClick={() => navigate("/")}
             className="text-black text-3xl absolute right-3 text-shadow text-decoration-none"
+            aria-label="Close"
           >
             <i className="bi bi-x-circle"></i>
           </button>
@@ -73,36 +74,47 @@ function Login() {
             <button
               onClick={() => navigate("/")}
               className="text-black text-3xl absolute top-2 right-5 text-shadow text-decoration-none"
+              aria-label="Close"
             >
               <i className="bi bi-x-circle"></i>
             </button>
           </div>
-          <h1 className="text-2xl mb-6 text-center flex justify-center items-center">
+          <header className="text-2xl mb-6 text-center flex justify-center items-center">
             Welcome to Spread..🖊️
-          </h1>
-          <h1 className="text-xl text-center">Login</h1>
+          </header>
+          <h1 className="text-xl text-center">SignIn</h1>
           <div className="flex w-full h-full sm:p-3 justify-center">
-            <div className="flex flex-col p-5 justify-evenly w-full h-full">
+            <form className="flex flex-col p-5 justify-evenly w-full h-full">
               <div className="mb-4">
+                <label htmlFor="username" className="sr-only">
+                  Username
+                </label>
                 <input
                   type="text"
+                  id="username"
                   onChange={handleLogin}
                   name="username"
                   className="p-3 focus:shadow-inner outline-none focus:shadow-slate-900 bg-gray-200 w-full rounded-full"
                   placeholder="Username"
                   value={loginInfo.username}
                   disabled={loading}
+                  required
                 />
               </div>
               <div className="mb-3">
+                <label htmlFor="password" className="sr-only">
+                  Password
+                </label>
                 <input
                   type="password"
+                  id="password"
                   onChange={handleLogin}
                   name="password"
                   className="p-3 focus:shadow-inner outline-none focus:shadow-slate-900 bg-gray-200 w-full rounded-full"
                   placeholder="Password"
                   value={loginInfo.password}
                   disabled={loading}
+                  required
                 />
               </div>
               {error && <div className="text-red-500 mb-4">{error}</div>}
@@ -110,8 +122,8 @@ function Login() {
                 <div className="flex items-center">
                   <input
                     type="checkbox"
-                    className="form-checkbox text-gray-600"
                     id="rememberCheck"
+                    className="form-checkbox text-gray-600"
                   />
                   <label htmlFor="rememberCheck" className="ml-2 text-gray-600">
                     Remember me
@@ -141,16 +153,16 @@ function Login() {
                 <button className="bg-gray-200 min-w-[200px] flex items-center p-3 w-full justify-between rounded-full">
                   <img
                     style={{ height: "24px" }}
-                    src={googleicon}
+                    src={googleIcon}
                     alt="Google Icon"
                     className="h-6 mr-2"
                   />
-                  <div className="w-full text-xs sm:text-inherit text-center">
+                  <span className="w-full text-xs sm:text-inherit text-center">
                     Continue with Google
-                  </div>
+                  </span>
                 </button>
               </div>
-              <div className="text-center">
+              <footer className="text-center">
                 <small>
                   Don't have an Account?{" "}
                   <button
@@ -160,15 +172,15 @@ function Login() {
                     Sign Up
                   </button>
                 </small>
-              </div>
-            </div>
+              </footer>
+            </form>
           </div>
         </div>
-      </div>
+      </section>
     );
   }
 
   return null;
 }
 
-export default Login;
+export default SignIn;

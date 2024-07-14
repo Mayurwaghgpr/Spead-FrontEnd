@@ -4,15 +4,14 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsLogin } from "../../redux/slices/authSlice.js";
 import { setErrNotify } from "../../redux/slices/uiSlice.js";
-import googleicon from "../../assets/search.png";
+import googleIcon from "../../assets/search.png";
 import verify from "/verified.gif";
 
 function SignUp() {
   const { isLogin } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  let SignUpRef = useRef();
-  console.log("ref", SignUpRef);
+  const SignUpRef = useRef();
   const [confirmPassword, setConfirmPassword] = useState("");
   const [success, setSuccess] = useState(false);
   const [signUpInfo, setSignUpInfo] = useState({
@@ -39,10 +38,10 @@ function SignUp() {
   const register = async () => {
     setValidator("");
     if (!signUpInfo.username || !signUpInfo.email || !signUpInfo.password) {
-      return setValidator("Cannot send empty fields");
+      return setValidator("All fields are required");
     }
     if (signUpInfo.password !== confirmPassword) {
-      return setValidator("Passwords did not match");
+      return setValidator("Passwords do not match");
     }
     if (SignUpRef.current === signUpInfo) {
       return;
@@ -60,7 +59,7 @@ function SignUp() {
         setTimeout(() => {
           setSuccess(false);
           localStorage.setItem(
-            "Admin profile",
+            "AdminProfile",
             JSON.stringify(response.data.user)
           );
           localStorage.setItem("AccessToken", response.data.AccessToken);
@@ -71,7 +70,7 @@ function SignUp() {
       console.error("Error during registration:", error);
       dispatch(
         setErrNotify({
-          message: error.response.data.message + " " + error.message,
+          message: error.response.data.message || "Registration failed",
           status: true,
         })
       );
@@ -79,7 +78,7 @@ function SignUp() {
   };
 
   return (
-    <div className="sm:flex justify-center items-center fixed top-0 left-0 bottom-0 right-0 backdrop-blur-md">
+    <section className="sm:flex justify-center items-center fixed top-0 left-0 bottom-0 right-0 backdrop-blur-md">
       <div className="w-full sm:hidden absolute">
         <button
           onClick={() => navigate("/")}
@@ -97,15 +96,19 @@ function SignUp() {
             <i className="bi bi-x-circle"></i>
           </button>
         </div>
-        <h1 className="text-2xl text-center">Welcome to Spread..🖊️</h1>
+        <header className="text-2xl text-center">Welcome to Spread..🖊️</header>
         <h1 className="text-xl text-center m-4">Register</h1>
         <div className="flex flex-col justify-center w-full sm:flex-row">
           <div className="flex flex-col px-5 w-full items-center justify-center">
             <div className="mb-3 w-full">
+              <label htmlFor="username" className="sr-only">
+                Username
+              </label>
               <input
                 type="text"
                 onChange={handleInputChange}
                 name="username"
+                id="username"
                 className={`${
                   validator && !signUpInfo.username
                     ? "transition-transform duration-700 border-2 border-dashed border-red-400"
@@ -114,15 +117,19 @@ function SignUp() {
                 placeholder="Username"
                 value={signUpInfo.username}
               />
-              {validator && !signUpInfo.username ? (
-                <span className="text-red-400">User Name is empty</span>
-              ) : null}
+              {validator && !signUpInfo.username && (
+                <span className="text-red-400">Username cannot be empty</span>
+              )}
             </div>
             <div className="mb-3 w-full">
+              <label htmlFor="email" className="sr-only">
+                Email
+              </label>
               <input
                 type="email"
                 onChange={handleInputChange}
                 name="email"
+                id="email"
                 className={`${
                   validator && !signUpInfo.email
                     ? "border-2 border-dashed border-red-400"
@@ -131,15 +138,19 @@ function SignUp() {
                 placeholder="Email"
                 value={signUpInfo.email}
               />
-              {validator && !signUpInfo.email ? (
-                <span className="text-red-400">Email field is empty</span>
-              ) : null}
+              {validator && !signUpInfo.email && (
+                <span className="text-red-400">Email cannot be empty</span>
+              )}
             </div>
             <div className="mb-3 w-full flex flex-col">
+              <label htmlFor="password" className="sr-only">
+                Password
+              </label>
               <input
                 type="password"
                 onChange={handleInputChange}
                 name="password"
+                id="password"
                 className={`${
                   validator && !signUpInfo.password
                     ? "border-2 border-dashed border-red-400"
@@ -148,13 +159,14 @@ function SignUp() {
                 placeholder="Password"
                 value={signUpInfo.password}
               />
-              {validator && !signUpInfo.password ? (
-                <span className="text-red-400">Password is empty</span>
-              ) : null}
+              <label htmlFor="confirmPassword" className="sr-only">
+                Confirm Password
+              </label>
               <input
                 type="password"
                 onChange={handleConfirmPasswordChange}
                 name="confirmPassword"
+                id="confirmPassword"
                 className={`${
                   validator && !confirmPassword
                     ? "border-2 border-dashed border-red-400"
@@ -163,17 +175,17 @@ function SignUp() {
                 placeholder="Confirm Password"
                 value={confirmPassword}
               />
-              <small className="text-red-500">
-                {signUpInfo.password &&
-                  confirmPassword &&
-                  signUpInfo.password !== confirmPassword &&
-                  "Passwords do not match"}
-              </small>
+              {signUpInfo.password &&
+                confirmPassword &&
+                signUpInfo.password !== confirmPassword && (
+                  <small className="text-red-500">Passwords do not match</small>
+                )}
               {validator && <span className="text-red-500">{validator}</span>}
             </div>
             <div className="mb-4 w-full flex items-center">
               <input
                 type="checkbox"
+                id="rememberMe"
                 className="form-checkbox h-4 w-4 text-gray-600"
                 name="rememberMe"
               />
@@ -181,7 +193,7 @@ function SignUp() {
                 htmlFor="rememberMe"
                 className="ml-2 text-sm text-gray-600"
               >
-                <small>Remember me</small>
+                Remember me
               </label>
             </div>
             <div className="mb-4 w-full">
@@ -199,21 +211,21 @@ function SignUp() {
             </div>
             <div className="mb-4 w-full">
               <button className="bg-gray-200 flex items-center p-3 w-full justify-between text-sm rounded-full">
-                <img src={googleicon} alt="Google Icon" className="h-6 mr-2" />
-                <div className="w-full text-center">Continue with Google</div>
+                <img src={googleIcon} alt="Google Icon" className="h-6 mr-2" />
+                <span className="w-full text-center">Continue with Google</span>
               </button>
             </div>
-            <div className="text-center">
+            <footer className="text-center">
               <small>
                 Already have an Account?{" "}
                 <button
                   onClick={() => navigate("/Login", { replace: true })}
                   className="text-blue-500"
                 >
-                  Login
+                  SignIn
                 </button>
               </small>
-            </div>
+            </footer>
           </div>
         </div>
       </div>
@@ -226,7 +238,7 @@ function SignUp() {
           />
         </div>
       )}
-    </div>
+    </section>
   );
 }
 

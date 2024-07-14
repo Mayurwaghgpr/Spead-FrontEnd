@@ -8,16 +8,16 @@ export const postsApi = createApi({
   }),
   tagTypes: ['Post'],
   endpoints: (builder) => ({
-    fetchAllPosts: builder.query({
-      query: () => '/posts/posts',
+    fetchAllPublicData: builder.mutation({
+      query: (page) => `/posts/posts?limit=3&page=${page}`,
       providesTags: ['Post'],
     }),
     fetchDataById: builder.query({
       query: (id) => `/posts/:${id}`,
        providesTags: ['Post'],
     }),
-    fetchDataByTopic: builder.query({
-      query: (topic) => `/posts?type=${topic}`,
+    fetchDataByTopic: builder.mutation({
+      query: (topic) => `/posts/topic?type=${topic}`,
       providesTags: ['Post'],
     }),
     addNewPost: builder.mutation({
@@ -28,7 +28,7 @@ export const postsApi = createApi({
       }),
       invalidatesTags: ['Post'],
     }),
-    DeletPostApi: builder.query({
+    DeletPostApi: builder.mutation({
       query: (id) => ({
         url: `/posts/${id.trim()}`, 
         method:'DELETE'
@@ -38,4 +38,4 @@ export const postsApi = createApi({
   }),
 });
 
-export const { useFetchAllPostsQuery,useFetchDataByIdQuery, useFetchDataByTopicQuery, useAddNewPostMutation ,useDeletPostApiQuery } = postsApi;
+export const { useFetchAllPublicDataMutation,useFetchDataByIdQuery, useFetchDataByTopicMutation, useAddNewPostMutation ,useDeletPostApiMutation } = postsApi;

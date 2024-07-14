@@ -20,9 +20,9 @@ function PostPreviewEditor({
   const [Topic, setTopic] = useState();
   const { submit, elements, beforSubmit } = useSelector((state) => state.posts);
   const { user } = useSelector((state) => state.auth);
-  const [addNewPost] = useAddNewPostMutation();
+  const [addNewPost, { data, isLoading, isSuccess }] = useAddNewPostMutation();
   const dispatch = useDispatch();
-
+  console.log("PreimageFiles", imageFiles);
   const EditTitleImage = useCallback(
     (id, index, el) => {
       const newImage = el.files[0];
@@ -49,7 +49,7 @@ function PostPreviewEditor({
         const formData = new FormData();
         const textElements = elements.filter((el) => el.type !== "image");
         // console.log(elements);
-        // console.log(imageFiles);
+        console.log(imageFiles);
         formData.append("blog", JSON.stringify(textElements));
         formData.append("Topic", Topic);
         imageFiles.forEach((el, idx) => {
@@ -74,11 +74,11 @@ function PostPreviewEditor({
           console.error("Error:", errorMessage);
         } finally {
           dispatch(setBeforeSubmit(false));
-          dispatch(setSubmit(true));
+          dispatch(setSubmit(false));
         }
       })();
     }
-  }, [submit]);
+  }, [submit, dispatch, addNewPost, elements]);
 
   const imageElements = elements?.filter((el) => el.type === "image");
 
@@ -99,7 +99,10 @@ function PostPreviewEditor({
         </hgroup>
       </div>
 
-      <article className="max-h-[500px] h-full w-full max-w-[900px] flex gap-2  ">
+      <article
+        aria-disabled={isLoading}
+        className="max-h-[500px] h-full w-full max-w-[900px] flex gap-2  "
+      >
         <div className=" w-full flex flex-col justify-center items-center">
           <h1 className="w-full text-lg mb-2">Post Preview</h1>
           <div className="w-full h-[300px]  bg-slate-100 flex justify-center items-center">
@@ -172,13 +175,39 @@ function PostPreviewEditor({
           </div>
           <div className="h-full flex px-5 gap-3 items-start">
             <button
-              className=" bg-orange-300 px-4 py-1 rounded-xl"
+              className={`flex ${
+                isLoading ? "bg-orange-100 text-slate-400" : ""
+              } bg-orange-300 px-4 py-2 rounded-lg`}
               onClick={() => dispatch(setSubmit(true))}
+              disabled={isLoading}
             >
-              submit
+              {isLoading && (
+                <svg
+                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+              )}
+              {isLoading ? `submiting..` : "submit"}
             </button>
+
             <button
-              className=" bg-slate-200 px-4 py-1 rounded-xl"
+              className=" bg-slate-200 px-4 py-2 rounded-lg"
               onClick={() => dispatch(setBeforeSubmit(false))}
             >
               cancle

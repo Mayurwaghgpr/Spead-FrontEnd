@@ -4,7 +4,7 @@ import { authApi } from "./authApi";
 import { setErrNotify } from "./uiSlice";
 
 // Retrieve admin profile and token from local storage
-const Admin = JSON.parse(localStorage.getItem("Admin profile"));
+const Admin = JSON.parse(localStorage.getItem("AdminProfile"));
 const token = localStorage.getItem("AccessToken");
 
 // Async thunk for token validation

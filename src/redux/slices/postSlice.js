@@ -3,13 +3,12 @@ import { v4 as uuidv4 } from "uuid";
 // const post = JSON.parse(localStorage.getItem("selectedPost"));
 const initialState = {
     selectedPostId:'',
-    postsData: [],
+    postsData: null,
     topiclist:[],
     submit: false,
     beforsubmit: false,
     elements:[
     { type: "text", data: "", id: uuidv4(), index: 0 },
-    { type: "text", data: "", id: uuidv4(), index: 1 },
   ]
 }
 
@@ -27,8 +26,11 @@ const PostSclic = createSlice({
         FilterData: (state, action)=>{
             state.postsData = state.postsData.filter(post=> post.id !== action.payload)
         },
+        pushNewData: (state, action) => {
+            state.postsData.push(action.payload)
+        },
         setTopiclist: (state, action) => {
-            state.topiclist = action.payload
+            state.topiclist=action.payload
         },
         setElements: (state, action) => {
             state.elements = action.payload
@@ -43,6 +45,6 @@ const PostSclic = createSlice({
 })
 
 
-export const { setSelectedPostId, setData, setTopiclist, setSubmit ,setBeforeSubmit ,FilterData,setElements} = PostSclic.actions
+export const { setSelectedPostId, setData, setTopiclist, setSubmit ,setBeforeSubmit ,FilterData,setElements,pushNewData} = PostSclic.actions
 
 export default PostSclic.reducer

@@ -24,7 +24,7 @@ dist-ssr
 *.sw?
 .env
 
-
+sample
 # Logs
 logs
 *.log

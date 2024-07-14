@@ -1,7 +1,7 @@
 import React, { memo, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setConfirmBox } from "../redux/slices/uiSlice";
+import { setConfirmBox } from "../../redux/slices/uiSlice";
 import logoutIcon from "/logout.png";
 import profileIcon from "/user.png";
 
@@ -17,15 +17,15 @@ function LoginMenu({ MenuOpen, setIsMenuOpen }) {
     emailarr.splice(2, 7, "******");
     return emailarr.join("");
   }, [Admin, user]);
-  console.log(user.id);
+  console.log(user?.id);
 
   return (
     <div
       className={`${
-        MenuOpen ? "-translate-x-56 opacity-100" : "translate-x-96 opacity-10"
-      } fixed z-[100] shadow-lg h-screen top-0 mt-2 min-w-[100px] rounded-md bg-white transition-all duration-500 ease-linear`}
+        MenuOpen ? "-translate-x-56 " : "translate-x-96 "
+      } fixed z-[50] shadow-lg top-0  mt-2 min-w-[100px] rounded-md bg-white transition-all duration-300 ease-linear`}
     >
-      <div className="flex w-[300px] flex-col justify-between pb-3 items-start text-sm transition-all ease-linear duration-75">
+      <div className="flex w-[300px] flex-col h-full  pb-3 items-start text-sm transition-all ease-linear duration-75">
         <div className="flex text-base items-center w-full px-3">
           <div className="w-full flex gap-3 text-base items-center py-3">
             <img
@@ -41,14 +41,14 @@ function LoginMenu({ MenuOpen, setIsMenuOpen }) {
               <h1>{user?.username}</h1>
             </div>
           </div>
-          <div className="flex inset-0 h-full p-0">
+          <div className="flex inset-0  p-0">
             <button onClick={() => setIsMenuOpen(false)} className="">
               X
             </button>
           </div>
         </div>
 
-        <div className="flex border-t w-full px-3 py-2 gap-2">
+        <div className="flex border-t  w-full px-3 py-2 gap-2">
           <img className="h-5 w-5" src={profileIcon} alt="" />
           <Link
             className="flex text-gray-700 gap-2 w-full hover:underline hover:text-blue-500"
@@ -74,13 +74,13 @@ function LoginMenu({ MenuOpen, setIsMenuOpen }) {
             License
           </a>
         </div>
-        <div className="flex flex-col w-full px-3 py-2 gap-3">
+        <div className="flex flex-col w-full  px-3 py-2 gap-3">
           <p className="text-gray-700">{emailMasked()}</p>
           <button
             onClick={() =>
               dispatch(
                 setConfirmBox({
-                  message: "Want to LogOut?",
+                  message: "Want to Logout?",
                   status: true,
                   type: "logout",
                 })

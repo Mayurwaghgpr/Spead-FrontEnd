@@ -16,15 +16,20 @@ export const fetchUserProfile = async (id) => {
     return error.response;
   }
 };
-export const fetchUserData = async (userId) => {
+export const fetchUserData = async (profileId, pageParam) => {
   // const token = getToken();
+  console.log(profileId);
   try {
-    const response = await axios.get(`${BASE_URL}/user/userData/:${userId}`, {
-      withCredentials: true,
-    });
+    const response = await axios.get(
+      `${BASE_URL}/user/userData/:${profileId}`,
+      {
+        withCredentials: true,
+        params: { pageParam },
+      }
+    );
     console.log("hh", response);
     if (response.status == 200) {
-      return response;
+      return response.data;
     }
   } catch (err) {
     return err.response;
@@ -45,7 +50,7 @@ export const EditeUserProfile = async (newData) => {
 
   try {
     const response = await axios.post(
-      `${BASE_URL}/profile/EditProfile`,
+      `${BASE_URL}/user/EditProfile`,
       formData,
       {
         headers: {

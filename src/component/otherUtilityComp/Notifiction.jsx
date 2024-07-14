@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { setNotify } from "../redux/slices/uiSlice";
+import { setNotify } from "../../redux/slices/uiSlice";
 import { useSelector, useDispatch } from "react-redux";
 function Notification() {
   const { Notify } = useSelector((state) => state.ui);
   const dispatch = useDispatch();
-
+  // localStorage.removeItem("Authorization");
   return (
     <div
       className={`fixed  top-[10%] right-5  bg-yellow-400 mt-3 transition-all duration-500 ease-linear  rounded-md  ${
@@ -19,7 +19,7 @@ function Notification() {
           Notification
           <button
             onClick={() => {
-              dispatch(setNotify({ message: "", status: false }));
+              dispatch(setNotify({ ...Notify, status: false }));
             }}
             className=""
           >

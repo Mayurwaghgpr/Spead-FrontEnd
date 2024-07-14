@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { setErrNotify } from "../redux/slices/uiSlice";
+import { setErrNotify } from "../../redux/slices/uiSlice";
 import { useSelector, useDispatch } from "react-redux";
 function ErrorNotification() {
   const { ErrNotify } = useSelector((state) => state.ui);

@@ -2,21 +2,21 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import EditableElement from "./EditableElement";
 import TextTool from "./TextTools";
-
+import { usePostCreator } from "../hooks/usePostCreator";
 function WriteElements({
   element,
   index,
-  handleTextChange,
   handleKeyDown,
-  handleContentEditableChange,
   setFocusedIndex,
-  inputRefs,
   isScale,
+  handleTextChange,
+  handleContentEditableChange,
+  inputRefs,
 }) {
   const [textTool, setTextTool] = useState(null);
+
   const isCurrentTextTool = textTool?.toString() === index.toString();
   const { elements } = useSelector((state) => state.posts);
-
   switch (element.type) {
     case "text":
       return (
@@ -63,7 +63,7 @@ function WriteElements({
         <div key={element.id} className="p-4 relative">
           <figure>
             <img
-              className="h-[100%] p-2"
+              className="h-[100%] min-w-full p-2"
               src={element.file}
               alt="Preview"
               id="inputimage"
