@@ -1,10 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Footer from "../component/footer/Footer";
+import MainNavBar from "../component/header/MainNavBar";
 
 function Home() {
   return (
     <>
+      <MainNavBar />
       <div className="flex flex-col  justify-center  items-start sm:mx-10 py-5 pl-2">
         <div className="text-center flex flex-col  justify-center items-start sm:max-w-2xl">
           <h1 className="text-2xl font-bold mb-4">Welcome to ...Spread</h1>

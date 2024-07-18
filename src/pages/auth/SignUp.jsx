@@ -78,28 +78,23 @@ function SignUp() {
   };
 
   return (
-    <section className="sm:flex justify-center items-center fixed top-0 left-0 bottom-0 right-0 backdrop-blur-md">
-      <div className="w-full sm:hidden absolute">
+    <section className="sm:flex justify-center items-center flex-col fixed top-0 left-0 bottom-0 right-0 overflow-scroll">
+      <div className="w-full top-0  absolute">
         <button
           onClick={() => navigate("/")}
-          className="text-black text-3xl absolute right-3"
+          className="text-black text-3xl absolute right-3 text-shadow text-decoration-none"
+          aria-label="Close"
         >
-          <i className="bi bi-x-circle"></i>
+          <box-icon name="x"></box-icon>
         </button>
       </div>
-      <div className="py-3 border-black border my-14 bg-white rounded-2xl min-w-[300px] sm:w-[600px]">
-        <div className="w-full hidden sm:block relative">
-          <button
-            onClick={() => navigate("/")}
-            className="text-black text-3xl absolute top-0 right-5"
-          >
-            <i className="bi bi-x-circle"></i>
-          </button>
-        </div>
-        <header className="text-2xl text-center">Welcome to Spread..🖊️</header>
-        <h1 className="text-xl text-center m-4">Register</h1>
+      <header className="text-2xl mt-2 text-center flex justify-center items-center">
+        {"{...Spread}"}
+      </header>
+      <div className="py-3 my-4  min-w-[300px] sm:w-[500px]">
+        <h1 className="text-2xl text-center font-semibold">Creat an account</h1>
         <div className="flex flex-col justify-center w-full sm:flex-row">
-          <div className="flex flex-col px-5 w-full items-center justify-center">
+          <div className="flex flex-col px-5 py-2 w-full items-center justify-center">
             <div className="mb-3 w-full">
               <label htmlFor="username" className="sr-only">
                 Username
@@ -113,7 +108,7 @@ function SignUp() {
                   validator && !signUpInfo.username
                     ? "transition-transform duration-700 border-2 border-dashed border-red-400"
                     : "border-none"
-                } focus:shadow-inner focus:shadow-slate-900 bg-gray-200 p-3 w-full rounded-full`}
+                } focus:shadow-inner focus:shadow-slate-900 bg-gray-200 p-3 w-full rounded-lg`}
                 placeholder="Username"
                 value={signUpInfo.username}
               />
@@ -134,7 +129,7 @@ function SignUp() {
                   validator && !signUpInfo.email
                     ? "border-2 border-dashed border-red-400"
                     : "border-none"
-                } focus:shadow-inner focus:shadow-slate-900 bg-gray-200 p-3 w-full rounded-full`}
+                } focus:shadow-inner focus:shadow-slate-900 bg-gray-200 p-3 w-full rounded-lg`}
                 placeholder="Email"
                 value={signUpInfo.email}
               />
@@ -142,7 +137,7 @@ function SignUp() {
                 <span className="text-red-400">Email cannot be empty</span>
               )}
             </div>
-            <div className="mb-3 w-full flex flex-col">
+            <div className="mb-3 w-full gap-2 flex flex-col">
               <label htmlFor="password" className="sr-only">
                 Password
               </label>
@@ -155,7 +150,7 @@ function SignUp() {
                   validator && !signUpInfo.password
                     ? "border-2 border-dashed border-red-400"
                     : "border-none"
-                } focus:shadow-inner focus:shadow-slate-900 bg-gray-200 p-3 w-full rounded-full`}
+                } focus:shadow-inner focus:shadow-slate-900 bg-gray-200 p-3 w-full rounded-lg`}
                 placeholder="Password"
                 value={signUpInfo.password}
               />
@@ -171,7 +166,7 @@ function SignUp() {
                   validator && !confirmPassword
                     ? "border-2 border-dashed border-red-400"
                     : "border-none"
-                } focus:shadow-inner mt-2 focus:shadow-slate-900 bg-gray-200 p-3 w-full rounded-full`}
+                } focus:shadow-inner mt-2 focus:shadow-slate-900 bg-gray-200 p-3 w-full rounded-lg`}
                 placeholder="Confirm Password"
                 value={confirmPassword}
               />
@@ -199,7 +194,7 @@ function SignUp() {
             <div className="mb-4 w-full">
               <button
                 onClick={register}
-                className="bg-blue-500 p-3 w-full text-center text-white rounded-full"
+                className="bg-blue-500 p-3 w-full text-center text-white rounded-lg"
               >
                 Sign Up
               </button>
@@ -210,7 +205,7 @@ function SignUp() {
               <hr className="flex-1" />
             </div>
             <div className="mb-4 w-full">
-              <button className="bg-gray-200 flex items-center p-3 w-full justify-between text-sm rounded-full">
+              <button className="bg-gray-200 flex items-center p-3 w-full justify-between text-sm rounded-lg">
                 <img src={googleIcon} alt="Google Icon" className="h-6 mr-2" />
                 <span className="w-full text-center">Continue with Google</span>
               </button>
@@ -219,7 +214,7 @@ function SignUp() {
               <small>
                 Already have an Account?{" "}
                 <button
-                  onClick={() => navigate("/Login", { replace: true })}
+                  onClick={() => navigate("/signin", { replace: true })}
                   className="text-blue-500"
                 >
                   SignIn

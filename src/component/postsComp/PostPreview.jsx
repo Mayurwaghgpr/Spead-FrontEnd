@@ -83,7 +83,7 @@ const PostPreview = forwardRef(({ post }, ref) => {
 
   const PostsBody = (
     <>
-      <div className="p-3 flex flex-col h-full gap-3">
+      <div className="p-3 flex flex-col h-full gap-3 w-full">
         <div className="flex gap-2 text-sm">
           <Link
             to={`/profile/@${post?.user?.username
@@ -124,21 +124,21 @@ const PostPreview = forwardRef(({ post }, ref) => {
             .join("")}/${post?.id}`}
           className="cursor-pointer h-full flex justify-between p-2"
         >
-          <div className="col-span-9 flex flex-col gap-2 me-[4rem]">
+          <div className=" flex flex-wrap gap-1 me-2">
             <div className="w-full ">
-              <p className="font-extrabold rounded-lg sm:text-2xl">
+              <p className="font-extrabold rounded-lg text-sm sm:text-2xl  overflow-hidden overflow-ellipsis">
                 {post?.title}
               </p>
             </div>
-            <div className="w-full break-words">
-              <p className="rounded-lg">
-                {limitWordsAndAddEllipsis(post?.subtitelpagraph, 30)}
+            <div className="w-full ">
+              <p className="rounded-lg text-sm sm:text-lg  overflow-hidden overflow-ellipsis">
+                {post?.subtitelpagraph}
               </p>
             </div>
           </div>
           <div className="col-span-3">
             <img
-              className="rounded-sm sm:h-[100px] h-[70px] w-[150px] sm:min-w-[170px] sm:max-w-[170px]"
+              className="rounded-sm sm:h-[110px] h-[70px] w-[150px] min-w-[100px] sm:max-w-[170px]"
               src={
                 post?.titleImage &&
                 `${import.meta.env.VITE_BASE_URL}/${post?.titleImage}`

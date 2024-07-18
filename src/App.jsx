@@ -5,7 +5,7 @@ import SignUp from "./pages/auth/SignUp";
 import SignIn from "./pages/auth/SignIn";
 import Viewblogs from "./pages/ViewBlogs";
 import Home from "./pages/Home";
-import PageError from "./pages/Page404";
+import PageError from "./pages/ErrorPages/Page404";
 import MainNavBar from "./component/header/MainNavBar";
 import Profile from "./pages/userProfile/Profile";
 import DynamicPostCreator from "./pages/WritePannel/DynamicPostCreator";
@@ -27,7 +27,7 @@ function App() {
     <div className="scroll-none">
       <ErrorNotification />
       <Notification />
-      <MainNavBar />
+
       <Routes>
         <Route
           path="/"

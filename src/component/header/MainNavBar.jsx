@@ -99,10 +99,12 @@ function MainNavBar() {
                     alt={user?.name}
                   />
                 </button>
-                <LoginMenu
-                  MenuOpen={isMenuOpen}
-                  setIsMenuOpen={setIsMenuOpen}
-                />
+                {isMenuOpen && (
+                  <LoginMenu
+                    MenuOpen={isMenuOpen}
+                    setIsMenuOpen={setIsMenuOpen}
+                  />
+                )}
               </div>
             ) : (
               <div className="sm:flex gap-3">

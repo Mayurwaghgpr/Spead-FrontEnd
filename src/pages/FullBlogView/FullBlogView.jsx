@@ -122,11 +122,10 @@ function FullBlogView() {
             )}
           </section>
         ))}
+        <section className="mt-8">
+          <Comment />
+        </section>
       </article>
-
-      <section className="mt-8">
-        <Comment />
-      </section>
     </section>
   );
 }

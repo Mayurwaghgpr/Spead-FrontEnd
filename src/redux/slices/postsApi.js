@@ -8,17 +8,9 @@ export const postsApi = createApi({
   }),
   tagTypes: ['Post'],
   endpoints: (builder) => ({
-    fetchAllPublicData: builder.mutation({
-      query: (page) => `/posts/posts?limit=3&page=${page}`,
-      providesTags: ['Post'],
-    }),
     fetchDataById: builder.query({
       query: (id) => `/posts/:${id}`,
        providesTags: ['Post'],
-    }),
-    fetchDataByTopic: builder.mutation({
-      query: (topic) => `/posts/topic?type=${topic}`,
-      providesTags: ['Post'],
     }),
     addNewPost: builder.mutation({
       query: (newPost) => ({
