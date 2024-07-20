@@ -48,7 +48,7 @@ function FullBlogView() {
 
           <div className="flex items-center my-4">
             <img
-              className="w-12 h-12 rounded-full mr-4"
+              className="w-12 h-12 rounded-full mr-4 object-cover object-top"
               src={
                 firstContent?.User.userImage
                   ? `${import.meta.env.VITE_BASE_URL}/${
@@ -75,25 +75,23 @@ function FullBlogView() {
           </div>
         </header>
 
-        <div className="flex justify-between items-center border-y py-3">
+        <div className="flex justify-between items-center border-y px-3 py-3 text-lg font-light">
           <div className="flex gap-4">
             <button className="flex items-center gap-1 text-gray-600 hover:text-gray-900">
-              <box-icon name="like"></box-icon>
-              <span>35 Likes</span>
+              <i class="bi bi-hand-thumbs-up"></i>
+              <span>35</span>
             </button>
             <button className="flex items-center gap-1 text-gray-600 hover:text-gray-900">
-              <box-icon name="comment"></box-icon>
-              <span>100 Comments</span>
+              <i class="bi bi-chat"></i>
+              <span>100</span>
             </button>
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-7 justify-between">
             <button className="flex items-center gap-1 text-gray-600 hover:text-gray-900">
-              <box-icon name="message-square-add"></box-icon>
-              <span>Save</span>
+              <i class="bi bi-bookmark"></i>
             </button>
             <button className="flex items-center gap-1 text-gray-600 hover:text-gray-900">
-              <box-icon name="dots-horizontal-rounded"></box-icon>
-              <span>More</span>
+              <i class="bi bi-three-dots"></i>
             </button>
           </div>
         </div>
@@ -112,7 +110,7 @@ function FullBlogView() {
                 <img
                   src={`${import.meta.env.VITE_BASE_URL}/${item.imageUrl}`}
                   alt="Content"
-                  className="w-full rounded-lg"
+                  className="w-full rounded-lg object-cover object-center"
                 />
                 <figcaption className="text-center">{item.title}</figcaption>
               </figure>

@@ -22,7 +22,7 @@ function Viewblogs() {
     isLoading,
     error,
     data: utilsData,
-  } = useQuery("/utilsData", publiUtilityData, {
+  } = useQuery("utilsData", publiUtilityData, {
     onSuccess: (data) => {
       dispatch(setTopiclist(data.topics));
     },

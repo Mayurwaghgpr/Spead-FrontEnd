@@ -20,14 +20,14 @@ export const postsApi = createApi({
       }),
       invalidatesTags: ['Post'],
     }),
-    DeletPostApi: builder.mutation({
-      query: (id) => ({
-        url: `/posts/${id.trim()}`, 
-        method:'DELETE'
-      }),
-       providesTags: ['Post'],
-    })
+    // DeletPostApi: builder.mutation({
+    //   query: (id) => ({
+    //     url: `/posts/${id.trim()}`, 
+    //     method:'DELETE'
+    //   }),
+    //    providesTags: ['Post'],
+    // })
   }),
 });
 
-export const { useFetchAllPublicDataMutation,useFetchDataByIdQuery, useFetchDataByTopicMutation, useAddNewPostMutation ,useDeletPostApiMutation } = postsApi;
+export const { useFetchAllPublicDataMutation,useFetchDataByIdQuery, useFetchDataByTopicMutation, useAddNewPostMutation} = postsApi;

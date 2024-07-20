@@ -7,7 +7,8 @@ import {
   setBeforeSubmit,
 } from "../../../redux/slices/postSlice";
 import { setErrNotify, setNotify } from "../../../redux/slices/uiSlice";
-import { useAddNewPostMutation } from "../../../redux/slices/postsApi";
+import { useMutation, useQueryClient } from "react-query";
+import PostsApis from "../../../Apis/PostsApis";
 
 const DEFAULT_ELEMENT = { type: "text", data: "", id: uuidv4(), index: 0 };
 
@@ -17,12 +18,39 @@ function PostPreviewEditor({
   setImageFiles,
   handleTextChange,
 }) {
-  const [Topic, setTopic] = useState();
-  const { submit, elements, beforSubmit } = useSelector((state) => state.posts);
-  const { user } = useSelector((state) => state.auth);
-  const [addNewPost, { data, isLoading, isSuccess }] = useAddNewPostMutation();
   const dispatch = useDispatch();
-  console.log("PreimageFiles", imageFiles);
+  const [Topic, setTopic] = useState();
+  const { submit, elements, beforeSubmit } = useSelector(
+    (state) => state.posts
+  );
+  const { user } = useSelector((state) => state.auth);
+  const { AddNewPost } = PostsApis();
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation((NewPosts) => AddNewPost(NewPosts), {
+    onSuccess: (response) => {
+      console.log("first");
+      queryClient.invalidateQueries(["posts"]);
+      dispatch(
+        setNotify({
+          message: `New Blog ${response.message} fully created`,
+          status: true,
+        })
+      );
+      dispatch(setBeforeSubmit(false));
+      dispatch(setElements([DEFAULT_ELEMENT]));
+      dispatch(setSubmit(false));
+    },
+    onError: (error) => {
+      const errorMessage =
+        error.response?.error || "An error occurred. Please try again.";
+      dispatch(setErrNotify({ message: errorMessage, status: true }));
+      dispatch(setBeforeSubmit(false));
+      dispatch(setSubmit(false));
+      dispatch(setElements([DEFAULT_ELEMENT]));
+    },
+  });
+
   const EditTitleImage = useCallback(
     (id, index, el) => {
       const newImage = el.files[0];
@@ -37,48 +65,25 @@ function PostPreviewEditor({
     },
     [dispatch, elements, imageFiles, setImageFiles]
   );
-  console.log(elements);
-  console.log(imageFiles);
+
   useEffect(() => {
     if (elements.some((el) => el.data === "")) {
       dispatch(setSubmit(false));
     }
 
-    if (submit && !beforSubmit) {
-      (async () => {
-        const formData = new FormData();
-        const textElements = elements.filter((el) => el.type !== "image");
-        // console.log(elements);
-        console.log(imageFiles);
-        formData.append("blog", JSON.stringify(textElements));
-        formData.append("Topic", Topic);
-        imageFiles.forEach((el, idx) => {
-          formData.append(`image-${el.index}`, el.file);
-          formData.append(`description-${el.index}`, el.data);
-        });
-        console.log(formData);
-        try {
-          const response = await addNewPost(formData).unwrap();
-          dispatch(
-            setNotify({
-              message: `New Blog ${response.message} fully created`,
-              status: true,
-            })
-          );
-          dispatch(setElements([DEFAULT_ELEMENT]));
-          dispatch(setSubmit(false));
-        } catch (error) {
-          const errorMessage =
-            error.data?.error || "An error occurred. Please try again.";
-          dispatch(setErrNotify({ message: errorMessage, status: true }));
-          console.error("Error:", errorMessage);
-        } finally {
-          dispatch(setBeforeSubmit(false));
-          dispatch(setSubmit(false));
-        }
-      })();
+    if (submit && !beforeSubmit) {
+      const formData = new FormData();
+      const textElements = elements.filter((el) => el.type !== "image");
+      formData.append("blog", JSON.stringify(textElements));
+      formData.append("Topic", Topic);
+      imageFiles.forEach((el, idx) => {
+        formData.append(`image-${el.index}`, el.file);
+        formData.append(`description-${el.index}`, el.data);
+      });
+
+      mutation.mutate(formData);
     }
-  }, [submit, dispatch, addNewPost, elements]);
+  }, [submit, beforeSubmit, dispatch, elements, imageFiles, Topic, mutation]);
 
   const imageElements = elements?.filter((el) => el.type === "image");
 
@@ -100,7 +105,7 @@ function PostPreviewEditor({
       </div>
 
       <article
-        aria-disabled={isLoading}
+        aria-disabled={mutation.isLoading}
         className="max-h-[500px] h-full w-full max-w-[900px] flex gap-2  "
       >
         <div className=" w-full flex flex-col justify-center items-center">
@@ -146,7 +151,7 @@ function PostPreviewEditor({
               className=" p-2 w-full border-b placeholder:text-sm  outline-none focus:border-black"
               type="text"
               name="subtitle"
-              defaultValue={elements[1].data}
+              defaultValue={elements[1]?.data}
               placeholder=" Write Preview Subtitle"
               onChange={(e) =>
                 handleTextChange(elements[1]?.id, e.target.value)
@@ -176,12 +181,12 @@ function PostPreviewEditor({
           <div className="h-full flex px-5 gap-3 items-start">
             <button
               className={`flex ${
-                isLoading ? "bg-orange-100 text-slate-400" : ""
+                mutation.isLoading ? "bg-orange-100 text-slate-400" : ""
               } bg-orange-300 px-4 py-2 rounded-lg`}
               onClick={() => dispatch(setSubmit(true))}
-              disabled={isLoading}
+              disabled={mutation.isLoading}
             >
-              {isLoading && (
+              {mutation.isLoading && (
                 <svg
                   className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
                   xmlns="http://www.w3.org/2000/svg"
@@ -197,20 +202,20 @@ function PostPreviewEditor({
                     strokeWidth="4"
                   ></circle>
                   <path
-                    class="opacity-75"
+                    className="opacity-75"
                     fill="currentColor"
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                   ></path>
                 </svg>
               )}
-              {isLoading ? `submiting..` : "submit"}
+              {mutation.isLoading ? `Submitting...` : "Submit"}
             </button>
 
             <button
               className=" bg-slate-200 px-4 py-2 rounded-lg"
               onClick={() => dispatch(setBeforeSubmit(false))}
             >
-              cancle
+              Cancel
             </button>
           </div>
         </div>

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams, Link } from "react-router-dom";
 import PostPreview from "../../component/postsComp/PostPreview";
 import { fetchUserData } from "../../Apis/ProfileApis";
-import { setErrNotify } from "../../redux/slices/uiSlice";
+// import { setErrNotify } from "../../redux/slices/uiSlice";
 import { setuserProfile } from "../../redux/slices/profileSlice";
 import { useFetchUserProfileQuery } from "../../redux/slices/porfileApi";
 import ScrollToTopButton from "../../component/otherUtilityComp/ScrollToTopButton";
@@ -45,7 +45,7 @@ function Profile() {
       },
     }
   );
-  console.log("error", error);
+  // console.log("error", error);
 
   const handleInfinityScroll = useCallback(() => {
     // if (error || postError || !hasNextPage || isFetchingNextPage) return;
@@ -69,9 +69,6 @@ function Profile() {
   if (isError) {
     return <h1>Error loading profile data. Please try again.</h1>;
   }
-
-  // Debug: Log postsPage structure
-  // console.log("postsPage:", postsPage);
 
   return (
     <>

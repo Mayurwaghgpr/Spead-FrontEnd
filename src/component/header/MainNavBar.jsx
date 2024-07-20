@@ -39,20 +39,25 @@ function MainNavBar() {
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("scroll", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("scroll", handleClickOutside);
     };
   }, [handleClickOutside]);
-
-  console.log("user", user);
+  console.log(location);
+  useEffect(() => {
+    document.title;
+  }, []);
+  // console.log("user", user);
   return (
     <div className="">
-      <header className={`flex  justify-between bg-white py-2 px-4 flex-col`}>
+      <header className={`flex justify-between  bg-white py-2 px-4 flex-col`}>
         <nav className="flex items-center w-full h-[4rem] justify-between">
           <Link to="/blogs" className="text-2xl">
             {"{...Spread}"}
           </Link>
-          <div className="pr-5 flex justify-center items-center gap-5">
+          <div className="pr-5 flex justify-center items-center gap-10">
             {location.pathname === "/write" && isLogin && (
               <div className="flex justify-center items-center max-w-[400px]">
                 <button
@@ -68,11 +73,12 @@ function MainNavBar() {
             {location.pathname !== "/write" &&
               location.pathname !== "/profile" && (
                 <Link
-                  className="text-slate-500 font-thin hover:text-slate-800"
+                  className="flex justify-center items-center text-start gap-1 text-slate-500 font-thin text-2xl  transition-all duration-150 hover:text-slate-800"
                   to="/write"
+                  tabIndex="-1"
+                  title="Write"
                 >
-                  {isLogin && <i className="bi bi-pencil-square text-xl"></i>}{" "}
-                  Write
+                  {isLogin && <i className="bi bi-pen"></i>}{" "}
                 </Link>
               )}
             {isLogin ? (
@@ -83,13 +89,13 @@ function MainNavBar() {
                 <button
                   onClick={() => setIsMenuOpen((prev) => !prev)}
                   type="button"
-                  className="flex sm:h-[50px] sm:w-[50px] size-10 justify-center  p-1 bg-white text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 rounded-full"
+                  className="flex sm:h-[50px] sm:w-[50px] size-10 justify-center bg-white text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 rounded-full"
                   id="menu-button"
                   aria-expanded={isMenuOpen}
                   aria-haspopup="true"
                 >
                   <img
-                    className="rounded-full w-full h-full"
+                    className="rounded-full w-full h-full object-cover object-top"
                     title={user?.name}
                     src={
                       user?.userImage
@@ -126,6 +132,7 @@ function MainNavBar() {
         </nav>
       </header>
       <Outlet />
+
       {confirmBox.status && <ConfirmationBox />}
     </div>
   );

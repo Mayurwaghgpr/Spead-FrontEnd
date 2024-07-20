@@ -5,7 +5,7 @@ const BASE_URL = import.meta.env.VITE_BASE_URL;
 // const getToken = () => localStorage.getItem("token");
 
 export const fetchUserProfile = async (id) => {
-  console.log("use", id);
+  // console.log("use", id);
   // const token = getToken();
   try {
     const response = await axios.get(`${BASE_URL}/profile/:${id}`, {
@@ -18,7 +18,7 @@ export const fetchUserProfile = async (id) => {
 };
 export const fetchUserData = async (profileId, pageParam) => {
   // const token = getToken();
-  console.log(profileId);
+  // console.log(profileId);
   try {
     const response = await axios.get(
       `${BASE_URL}/user/userData/:${profileId}`,
@@ -27,7 +27,7 @@ export const fetchUserData = async (profileId, pageParam) => {
         params: { pageParam },
       }
     );
-    console.log("hh", response);
+    // console.log("hh", response);
     if (response.status == 200) {
       return response.data;
     }
@@ -37,16 +37,27 @@ export const fetchUserData = async (profileId, pageParam) => {
 };
 
 export const EditeUserProfile = async (newData) => {
-  // const token = getToken();
   const formData = new FormData();
-  console.log("adat", newData.userImage);
-
-  formData.append("userImage", newData.userImage);
+  console.log(newData);
+  if (
+    newData.userImage &&
+    newData.userImage !== "null" &&
+    newData.NewImageFile
+  ) {
+    formData.append("userImage", newData.userImage);
+  }
+  if (newData.NewImageFile) {
+    formData.append("NewImageFile", newData.NewImageFile);
+  }
   formData.append("username", newData.username);
   formData.append("email", newData.email);
-  newData.userInfo && formData.append("userInfo", newData.userInfo);
-  console.log("removeimage", newData.removeImage);
-  newData.removeImage && formData.append("removeImage", newData.removeImage);
+  if (newData.userInfo) {
+    formData.append("userInfo", newData.userInfo);
+  }
+  if (newData.removeImage) {
+    formData.append("userImage", newData.userImage);
+    formData.append("removeImage", newData.removeImage);
+  }
 
   try {
     const response = await axios.post(
@@ -54,7 +65,8 @@ export const EditeUserProfile = async (newData) => {
       formData,
       {
         headers: {
-          // Authorization: `Bearer ${token}`,
+          // Uncomment if you have a method to get the token
+          // Authorization: `Bearer ${getToken()}`,
           "Content-Type": "multipart/form-data",
         },
         withCredentials: true,
@@ -62,7 +74,10 @@ export const EditeUserProfile = async (newData) => {
     );
     return response;
   } catch (err) {
-    console.error("Error updating profile:", err);
+    console.error(
+      "Error updating profile:",
+      err.response ? err.response.data : err.message
+    );
     throw err;
   }
 };

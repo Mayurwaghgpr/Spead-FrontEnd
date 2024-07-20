@@ -80,7 +80,7 @@ function DynamicPostCreator() {
         >
           {elements.map((element, index) => (
             <div key={index} className="flex justify-center items-center">
-              {focusedIndex === index && (
+              {focusedIndex === index && element.data === "" && (
                 <div
                   className={`sm:flex hidden  justify-between bg-none items-center mt-2 absolute transition-transform duration-100 sm:left-56 left-5  sm:overflow-hidden ${
                     isScale ? "z-20" : "z-0"
@@ -89,14 +89,14 @@ function DynamicPostCreator() {
                   <span
                     onClick={() => setIsScale((prev) => !prev)}
                     title="more inputs"
-                    className={`group h-[40px] z-[100]  w-[40px] bg-none rounded-full border text-3xl flex justify-center items-center cursor-pointer transition-transform duration-100 ${
-                      isScale ? "rotate-45" : "rotate-0"
+                    className={`group h-[40px] z-[100]   w-[40px] bg-none rounded-full  border text-3xl font-extralight flex justify-center items-center cursor-pointer transition-transform duration-100 ${
+                      isScale ? "rotate-0" : " rotate-45"
                     }`}
                   >
-                    <i className="bi bi-plus"></i>
+                    <i class="bi bi-x"></i>
                   </span>
                   <div
-                    className={`flex gap-2 justify-center px-5 items-end  transition-all duration-100 ease-linear ${
+                    className={`flex gap-2 justify-center px-5 items-end  transition-all duration-100 ease-linear text-md font-thin *:h-[40px] *:w-[40px] *:border *:rounded-full    *:border-green-500 text-green-600 ${
                       isScale
                         ? " translate-x-1 z-10 opacity-100"
                         : " -translate-x-17 opacity-0 -z-50"
@@ -104,7 +104,7 @@ function DynamicPostCreator() {
                   >
                     <button
                       title="text"
-                      className={`border h-[50px] w-[50px] text-xs backdrop-blur-0  rounded-full items-center transition-all duration-100 ease-linear${
+                      className={`   items-center transition-all duration-100 ease-linear${
                         isScale
                           ? "scale-100 opacity-100"
                           : "scale-0 opacity-0 -z-50"
@@ -114,25 +114,25 @@ function DynamicPostCreator() {
                       {"abc"}
                     </button>
                     <button
-                      className={`border h-[50px] w-[50px] text-xs backdrop-blur-0  rounded-full items-center transition-all duration-300 ease-linear ${
+                      className={`backdrop-blur-0   items-center transition-all duration-300 ease-linear ${
                         isScale
                           ? "scale-100 opacity-100"
                           : "scale-0 opacity-0 -z-50"
                       }`}
                       onClick={() => addElement("url")}
                     >
-                      {"link"}
+                      <i class="bi bi-link"></i>
                     </button>
                     <label
                       title="add an image"
-                      className={`border h-[50px] w-[50px] text-xs rounded-full backdrop-blur-0  items-center flex justify-center transition-all duration-300 ease-linear ${
+                      className={` items-center flex justify-center transition-all duration-300 ease-linear ${
                         isScale
                           ? "scale-100 opacity-100"
                           : "scale-0 opacity-0 -z-50"
                       }`}
                       htmlFor="imgbtn"
                     >
-                      <i className="bi bi-image"></i>
+                      <i class="bi bi-image-alt"></i>
                     </label>
                     <input
                       ref={imageInputRef}
@@ -178,20 +178,20 @@ function DynamicPostCreator() {
         >
           <button
             title="text"
-            className={`border h-[50px] w-[50px] text-xs backdrop-blur-0  rounded-full items-center transition-all duration-300 ease-linear`}
+            className={`border h-[50px] w-[50px] text-xs rounded-full items-center transition-all duration-300 ease-linear`}
             onClick={() => addElement("text")}
           >
             {"abc"}
           </button>
           <button
-            className={`border h-[50px] w-[50px] text-xs backdrop-blur-0  rounded-full items-center transition-all duration-300 ease-linear `}
+            className={`border h-[50px] w-[50px] text-xs rounded-full items-center transition-all duration-300 ease-linear `}
             onClick={() => addElement("url")}
           >
             {"link"}
           </button>
           <label
             title="add an image"
-            className={`border h-[50px] w-[50px] text-xs rounded-full backdrop-blur-0  items-center flex justify-center transition-all duration-300 ease-linear `}
+            className={`border h-[50px] w-[50px] text-xs rounded-full items-center flex justify-center transition-all duration-300 ease-linear `}
             htmlFor="imgbtn"
           >
             <i className="bi bi-image"></i>

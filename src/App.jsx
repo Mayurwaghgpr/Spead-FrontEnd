@@ -17,7 +17,7 @@ import Notification from "./component/otherUtilityComp/Notifiction";
 import ScrollToTopButton from "./component/otherUtilityComp/ScrollToTopButton";
 import About from "./pages/About";
 import { setNotify } from "./redux/slices/uiSlice";
-
+import "bootstrap-icons/font/bootstrap-icons.css";
 function App() {
   const navigate = useNavigate();
   const dispatch = useDispatch();

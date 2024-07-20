@@ -10,14 +10,17 @@ import ConfirmationBox from "../otherUtilityComp/ConfirmationBox";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setConfirmBox, setIsConfirm } from "../../redux/slices/uiSlice";
-import { useDeletPostApiMutation } from "../../redux/slices/postsApi";
+import { useQueryClient, useMutation } from "react-query";
 import { setTopiclist, FilterData } from "../../redux/slices/postSlice";
 import profileIcon from "/user.png";
+import PostsApis from "../../Apis/PostsApis";
 
 const PostPreview = forwardRef(({ post }, ref) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const menuRef = useRef();
+  const queryClient = useQueryClient();
+  const { DeletPostApi } = PostsApis();
 
   const [menuId, setMenuId] = useState("");
   const [postIdToDelete, setPostIdToDelete] = useState("");
@@ -26,33 +29,22 @@ const PostPreview = forwardRef(({ post }, ref) => {
   const { postsData } = useSelector((state) => state.posts);
   const { user } = useSelector((state) => state.auth);
 
-  const [deletePost, { data, isSuccess, error, isLoading }] =
-    useDeletPostApiMutation();
-
-  useEffect(() => {
-    if (isSuccess && data?.id) {
+  const deletePostMutation = useMutation((id) => DeletPostApi(id), {
+    onSuccess: (data) => {
       dispatch(FilterData(data.id));
-    }
-  }, [data?.id, isSuccess, dispatch]);
+      queryClient.invalidateQueries(["posts"]);
+    },
+    onError: () => {},
+  });
 
   useEffect(() => {
     if (isConfirm.type === "deletepost" && isConfirm.status && postIdToDelete) {
-      deletePost(postIdToDelete);
+      deletePostMutation.mutate(postIdToDelete);
       setPostIdToDelete("");
       dispatch(setIsConfirm({ type: "", status: false }));
       dispatch(setTopiclist([]));
     }
-  }, [isConfirm, postIdToDelete, dispatch, deletePost]);
-
-  const limitWordsAndAddEllipsis = useCallback((text, limit) => {
-    if (text) {
-      const words = text.split(" ");
-      if (words.length > limit) {
-        return words.slice(0, limit).join(" ") + "...";
-      }
-      return text;
-    }
-  }, []);
+  }, [isConfirm, postIdToDelete, dispatch, deletePostMutation]);
 
   const confirmDeletePost = useCallback(
     (id) => {
@@ -94,12 +86,12 @@ const PostPreview = forwardRef(({ post }, ref) => {
           >
             <div
               className={`${
-                isLoading && "bg-slate-400 animate-pulse "
+                deletePostMutation.isLoading && "bg-slate-400 animate-pulse "
               } h-[30px] w-[30px] rounded-full `}
             >
-              {!isLoading && (
+              {!deletePostMutation.isLoading && (
                 <img
-                  className="h-[30px] w-[30px] hover:opacity-75 cursor-pointer rounded-full"
+                  className="h-[30px] w-[30px] hover:opacity-75 cursor-pointer rounded-full object-cover object-top"
                   src={
                     post?.user?.userImage
                       ? `${import.meta.env.VITE_BASE_URL}/${
@@ -138,7 +130,7 @@ const PostPreview = forwardRef(({ post }, ref) => {
           </div>
           <div className="col-span-3">
             <img
-              className="rounded-sm sm:h-[110px] h-[70px] w-[150px] min-w-[100px] sm:max-w-[170px]"
+              className="rounded-sm sm:h-[110px] h-[70px] w-[150px] min-w-[100px] sm:max-w-[170px]  object-cover"
               src={
                 post?.titleImage &&
                 `${import.meta.env.VITE_BASE_URL}/${post?.titleImage}`
@@ -148,43 +140,55 @@ const PostPreview = forwardRef(({ post }, ref) => {
           </div>
         </Link>
       </div>
-      <div className="mb-1 flex w-full items-center sm:p-5 p-3">
-        <div className="w-[50%]">
+      <div className="mb-1 flex w-full items-center p-3">
+        <div className="w-[50%] flex justify-start items-center gap-5">
           <p className="text-slate-700 text-sm mx-2 rounded-lg">
             {post?.createdAt
               ? format(new Date(post?.createdAt), "LLL-dd-yyyy")
               : ""}
           </p>
+          <div className="flex mb-1 cursor-pointer">
+            <i class="bi bi-hand-thumbs-up"></i>
+          </div>
+          <div className="flex mb-1 cursor-pointer">
+            <i class="bi bi-chat"></i>
+          </div>
         </div>
-        <div className="relative w-[50%] flex justify-center items-center">
-          <button
-            onClick={() => setMenuId((prev) => (prev === "" ? post?.id : ""))}
-            type="button"
-          >
-            <i className="bi bi-three-dots-vertical cursor-pointer "></i>
-          </button>
-          {menuId === post?.id && (
-            <div
-              id={post?.id}
-              className={`absolute sm:top-5 mt-2 p-1 bg-white border before:content-normal before:absolute before:-top-[0.3rem] before:right-[3rem] before:h-[10px] before:w-[10px] before:rotate-45 before:bg-white before:border-l before:border-t border-gray-300 rounded-lg`}
+
+        <div className="relative w-[50%] flex justify-center  gap-5 items-center">
+          <div className="flex cursor-pointer">
+            <i class="bi bi-bookmark"></i>
+          </div>
+          <div className=" relative flex justify-center items-center">
+            <button
+              onClick={() => setMenuId((prev) => (prev === "" ? post?.id : ""))}
+              type="button"
             >
-              <ul
-                ref={menuRef}
-                className="flex flex-col justify-center p-2 w-[100px]"
+              <i className="bi bi-three-dots-vertical cursor-pointer "></i>
+            </button>
+            {menuId === post?.id && (
+              <div
+                id={post?.id}
+                className={`absolute sm:top-5 mt-2 p-1 bg-white border before:content-normal before:absolute before:-top-[0.3rem] before:right-[3rem] before:h-[10px] before:w-[10px] before:rotate-45 before:bg-white before:border-l before:border-t border-gray-300 rounded-lg`}
               >
-                {post?.user?.id.toString() === user.id.toString().trim() && (
-                  <>
-                    <li>
-                      <button onClick={() => confirmDeletePost(post?.id)}>
-                        Delete Post
-                      </button>
-                    </li>
-                    <li>Edit</li>
-                  </>
-                )}
-              </ul>
-            </div>
-          )}
+                <ul
+                  ref={menuRef}
+                  className="flex flex-col justify-center p-2 w-[100px]"
+                >
+                  {post?.user?.id.toString() === user.id.toString().trim() && (
+                    <>
+                      <li>
+                        <button onClick={() => confirmDeletePost(post?.id)}>
+                          Delete Post
+                        </button>
+                      </li>
+                      <li>Edit</li>
+                    </>
+                  )}
+                </ul>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </>

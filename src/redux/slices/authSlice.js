@@ -20,7 +20,7 @@ export const tokenCheck = () => {
         return false;
       }
     } catch (error) {
-      console.error("Invalid token:", error);
+      // console.error("Invalid token:", error);
       localStorage.removeItem("AccessToken");
       return false;
     }

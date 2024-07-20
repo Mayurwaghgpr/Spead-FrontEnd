@@ -11,7 +11,7 @@ const ProfileHeader = React.memo(
         <div className="flex items-center gap-4 w-full">
           <div className="relative z-0 flex justify-center min-w-[50px] h-[100px] w-[100px] lg:h-[150px] lg:w-[150px] items-center rounded-full">
             <img
-              className="w-full h-full rounded-full"
+              className="w-full h-full rounded-full object-cover object-top"
               src={
                 userProfile?.userImage
                   ? `${import.meta.env.VITE_BASE_URL}/${userProfile.userImage}`
