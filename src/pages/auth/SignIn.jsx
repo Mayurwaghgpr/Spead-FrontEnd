@@ -1,65 +1,59 @@
 import React, { useState } from "react";
 import googleIcon from "../../assets/search.png";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsLogin, setUser } from "../../redux/slices/authSlice";
-import { useLogInMutation } from "../../redux/slices/authApi";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { LoginUser } from "../../Apis/authapi";
 
 function SignIn() {
-  const { isLogin } = useSelector((state) => state.auth);
-  const [logIn] = useLogInMutation();
+  const location = useLocation();
   const dispatch = useDispatch();
-  const [loginInfo, setLoginInfo] = useState({
-    username: "",
-    password: "",
-  });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const { isLogin } = useSelector((state) => state.auth);
+
+  const { isLoading, isSuccess, isError, mutate, error } = useMutation(
+    (loginInfo) => LoginUser(loginInfo),
+    {
+      onSuccess: (response) => {
+        const { AccessToken, user } = response;
+        if (AccessToken) {
+          dispatch(setIsLogin(true));
+          // queryClient.invalidateQueries({ queryKey: ["loggedInUser"] });
+          // dispatch(setUser(user));
+
+          localStorage.setItem("AccessToken", true);
+          // localStorage.setItem("userAccount", JSON.stringify(user));
+          navigate("/blogs", { replace: true });
+        }
+      },
+    }
+  );
 
   function handleLogin(e) {
-    const { name, value } = e.target;
-    setLoginInfo((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    e.preventDefault();
+
+    const fromData = new FormData(e.target);
+    const obj = Object.fromEntries(fromData);
+    console.log(obj);
+
+    mutate(obj);
   }
 
-  async function loginUser() {
-    if (!loginInfo.username || !loginInfo.password) {
-      setError("Username and password cannot be empty");
-      return;
-    }
-
-    setLoading(true);
-    setError(""); // Clear previous errors
-
-    try {
-      const response = await logIn(loginInfo).unwrap();
-      console.log("Response:", response); // Log the response
-
-      const { AccessToken, user } = response;
-
-      if (AccessToken) {
-        dispatch(setIsLogin(true));
-        dispatch(setUser(user));
-        localStorage.setItem("AccessToken", AccessToken);
-        localStorage.setItem("AdminProfile", JSON.stringify(user));
-        navigate("/blogs", { replace: true });
-      } else {
-        setError("Login failed. Please check your credentials.");
-      }
-    } catch (error) {
-      console.error("Login error:", error); // Log the error
-      setError(error.data?.message || "An error occurred during login");
-    } finally {
-      setLoading(false);
-    }
-  }
-
+  console.log(location.pathname);
   if (!isLogin) {
     return (
-      <section className="sm:flex justify-evenly items-center flex-col fixed top-0 left-0 bottom-0 right-0 backdrop-blur-[1.10px]">
+      <section
+        className={`sm:flex justify-evenly items-center flex-col fixed top-0 left-0 bottom-0 right-0 bg-white`}
+      >
+        {isError && (
+          <div className="text-red-500 mb-4 w-full flex justify-center  ">
+            {error?.message}!
+          </div>
+        )}
+        <div></div>
         <div className="w-full top-0  absolute">
           <button
             onClick={() => navigate("/")}
@@ -72,10 +66,17 @@ function SignIn() {
         <header className="text-2xl  text-center flex justify-center items-center">
           {"{...Spread}"}
         </header>
-        <div className="sm:p-3 py-4   rounded-2xl min-w-[300px] sm:w-[500px]">
+        <div
+          className={`sm:p-3 py-4 opacity-0  rounded-2xl min-w-[300px] sm:w-[500px] transition-all duration-300 delay-150 ${
+            location.pathname === "/signin" ? "opacity-100" : ""
+          }`}
+        >
           <div className="flex w-full h-full flex-col justify-center">
             <h1 className="text-2xl text-center font-semibold">Welcome</h1>
-            <form className="flex flex-col px-5 py-4 justify-evenly w-full h-full">
+            <form
+              onSubmit={handleLogin}
+              className="flex flex-col px-5 py-4 justify-evenly w-full h-full"
+            >
               <div className="mb-4">
                 <label htmlFor="username" className="sr-only">
                   Username
@@ -83,12 +84,10 @@ function SignIn() {
                 <input
                   type="text"
                   id="username"
-                  onChange={handleLogin}
                   name="username"
                   className="p-3 focus:shadow-inner outline-none focus:shadow-slate-900 bg-gray-200 w-full rounded-lg"
                   placeholder="Username"
-                  value={loginInfo.username}
-                  disabled={loading}
+                  disabled={isLoading}
                   required
                 />
               </div>
@@ -99,16 +98,14 @@ function SignIn() {
                 <input
                   type="password"
                   id="password"
-                  onChange={handleLogin}
                   name="password"
                   className="p-3 focus:shadow-inner outline-none focus:shadow-slate-900 bg-gray-200 w-full  rounded-lg"
                   placeholder="Password"
-                  value={loginInfo.password}
-                  disabled={loading}
+                  disabled={isLoading}
                   required
                 />
               </div>
-              {error && <div className="text-red-500 mb-4">{error}</div>}
+
               <div className="mb-4 min-w-[200px] flex justify-between">
                 <div className="flex items-center">
                   <input
@@ -128,13 +125,13 @@ function SignIn() {
               </div>
               <div className="mb-4">
                 <button
-                  onClick={loginUser}
-                  className={`bg-blue-500 min-w-[200px] text-white p-3 w-full  rounded-lg ${
-                    loading && "cursor-wait bg-blue-100"
+                  type="submit"
+                  className={`bg-slate-500 min-w-[200px] text-white p-3 w-full  rounded-lg ${
+                    isLoading && "cursor-wait bg-blue-100"
                   }`}
-                  disabled={loading}
+                  disabled={isLoading}
                 >
-                  {loading ? "Logging in..." : "Login"}
+                  {isLoading ? "Signing In..." : "Signin"}
                 </button>
               </div>
               <div className="mb-3 text-center grid grid-cols-3 items-center">
@@ -156,12 +153,9 @@ function SignIn() {
               <footer className="text-center">
                 <small>
                   Don't have an Account?{" "}
-                  <button
-                    onClick={() => navigate("/SignUp", { replace: true })}
-                    className="text-blue-500"
-                  >
+                  <Link to={"/SignUp"} replace={true} className="text-blue-500">
                     Sign Up
-                  </button>
+                  </Link>
                 </small>
               </footer>
             </form>

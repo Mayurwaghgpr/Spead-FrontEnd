@@ -1,15 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { v4 as uuidv4 } from 'uuid';
 
 const initialState = {
   confirmBox: {
     message: "",
     status: false,
   },
-    isConfirm: {
-        status: false
-    },
-  ErrNotify: { message: "", status: false },
-  Notify: {message:"" , status:false}
+  isConfirm: {
+    status: false,
+  },
+  ToastState: [
+   
+
+  ],
 };
 
 const uiSlice = createSlice({
@@ -17,20 +20,20 @@ const uiSlice = createSlice({
   initialState,
   reducers: {
     setConfirmBox: (state, action) => {
-      state.confirmBox = action.payload
+      state.confirmBox = action.payload;
     },
     setIsConfirm: (state, action) => {
       state.isConfirm = action.payload;
     },
-    setErrNotify: (state, action) => {
-      state.ErrNotify = action.payload
+    setToast: (state, action) => {
+      state.ToastState.push({ id: uuidv4(), ...action.payload });
     },
-    setNotify: (state, action) => {
-      state.Notify = action.payload
-    }
+    removeToast: (state, action) => {
+      state.ToastState = state.ToastState.filter(el => el.id !== action.payload);
+    },
   },
 });
 
-export const { setConfirmBox, setIsConfirm,setErrNotify,setNotify } = uiSlice.actions;
+export const { setConfirmBox, setIsConfirm, setToast, removeToast } = uiSlice.actions;
 
 export default uiSlice.reducer;

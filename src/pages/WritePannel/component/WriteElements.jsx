@@ -15,7 +15,7 @@ function WriteElements({
 }) {
   const [textTool, setTextTool] = useState(null);
 
-  const isCurrentTextTool = textTool?.toString() === index.toString();
+  const isCurrentTextTool = textTool?.toString() === element.id.toString();
   const { elements } = useSelector((state) => state.posts);
   switch (element.type) {
     case "text":

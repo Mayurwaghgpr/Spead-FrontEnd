@@ -3,23 +3,34 @@ import { EditeUserProfile } from "../../Apis/ProfileApis";
 import { useDispatch, useSelector } from "react-redux";
 import { setuserProfile } from "../../redux/slices/profileSlice";
 import profileIcon from "/user.png";
+import ProfilImage from "../../component/ProfilImage";
+import { setUser } from "../../redux/slices/authSlice";
+import { useMutation, useQueryClient } from "react-query";
 
 function ProfileEditor() {
   // Retrieve Admin profile from local storage
-  const Admin = JSON.parse(localStorage.getItem("AdminProfile")) || [];
+  const Admin = JSON.parse(localStorage.getItem("userAccount")) || [];
   const { userProfile } = useSelector((state) => state.profile);
+  const { user } = useSelector((state) => state.auth);
 
   const [newInfo, setNewInfo] = useState({ ...Admin });
-  const [isLoading, setIsLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
 
   const dispatch = useDispatch();
+  const queryClient = useQueryClient();
+  const { isSuccess, isLoading, isError, mutate } = useMutation(
+    (profileUpdated) => EditeUserProfile(profileUpdated),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["loggedInUser"] });
+      },
+    }
+  );
 
   useEffect(() => {
-    if (Admin) {
-      dispatch(setuserProfile(Admin));
+    if (user) {
+      dispatch(setuserProfile(user));
     }
-  }, [dispatch]);
+  }, [dispatch, user]);
 
   useEffect(() => {
     if (userProfile) {
@@ -49,34 +60,6 @@ function ProfileEditor() {
     document.getElementById("fileInput").click();
   };
 
-  const handleSave = async () => {
-    if (Object.keys(newInfo).length > 0) {
-      setIsLoading(true);
-      setSuccessMessage("");
-      try {
-        const result = await EditeUserProfile(newInfo);
-        if (result.status === 200) {
-          dispatch(setuserProfile(result.data));
-          localStorage.setItem("AdminProfile", JSON.stringify(result.data));
-          setSuccessMessage("Profile updated successfully!");
-        }
-      } catch (err) {
-        console.error("Error updating profile:", err);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-  };
-
-  useEffect(() => {
-    if (successMessage !== "") {
-      const timer = setTimeout(() => {
-        setSuccessMessage("");
-      }, 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [successMessage]);
-
   const RemoveSelecteImage = () => {
     if (newInfo.userImage && newInfo.NewImageFile) {
       delete newInfo.NewImageFile;
@@ -87,7 +70,7 @@ function ProfileEditor() {
       setNewInfo((prev) => ({ ...prev, removeImage: true }));
     }
   };
-  console.log(newInfo);
+  // console.log(newInfo);
   return (
     <div className="flex h-screen justify-center items-start">
       <article className="m-3 flex lg:items-start justify-center items-center flex-col p-5 gap-6">
@@ -95,10 +78,10 @@ function ProfileEditor() {
           className="border flex justify-start gap-5 w-full rounded-full"
           aria-label="Upload profile picture"
         >
-          <img
+          <ProfilImage
             onClick={triggerFileInput}
-            className="h-[100px] w-[100px] rounded-full p-1 cursor-pointer object-cover object-top"
-            src={
+            className="h-[100px]   w-[100px] rounded-full p-1"
+            imageUrl={
               newInfo.removeImage
                 ? profileIcon
                 : newInfo.NewImageFile
@@ -162,10 +145,12 @@ function ProfileEditor() {
               defaultValue={newInfo?.userInfo}
             />
           </div>
-          <button className={`p-4`} onClick={handleSave}>
+          <button className={`p-4`} onClick={() => mutate(newInfo)}>
             {isLoading ? "Updating..." : "Save"}
           </button>
-          {successMessage && <div className="size-full">{successMessage}</div>}
+          {isSuccess && (
+            <div className="size-full">Profile has been updated</div>
+          )}
         </div>
       </article>
     </div>

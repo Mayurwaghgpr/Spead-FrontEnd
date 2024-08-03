@@ -3,16 +3,17 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 import profileIcon from "/user.png";
+import ProfilImage from "../../../component/ProfilImage";
 
 const ProfileHeader = React.memo(
   ({ userProfile, profileId, user, postsData }) => (
     <div className="flex flex-col gap-4 bg-white border-b p-4">
       <div className="flex w-full justify-between sm:px-3">
         <div className="flex items-center gap-4 w-full">
-          <div className="relative z-0 flex justify-center min-w-[50px] h-[100px] w-[100px] lg:h-[150px] lg:w-[150px] items-center rounded-full">
-            <img
-              className="w-full h-full rounded-full object-cover object-top"
-              src={
+          <div className="relative z-0 flex justify-center min-w-[100px] h-[100px] w-[50px] lg:h-[100px] lg:w-[100px] items-center rounded-full">
+            <ProfilImage
+              className="w-full h-full  "
+              imageUrl={
                 userProfile?.userImage
                   ? `${import.meta.env.VITE_BASE_URL}/${userProfile.userImage}`
                   : profileIcon
@@ -26,7 +27,7 @@ const ProfileHeader = React.memo(
             </h1>
             <div className="flex items-center gap-2">
               <h1>Followers</h1>
-              <span>22</span>
+              <span>{userProfile?.Followers?.length}</span>
             </div>
             <div className="flex items-center gap-3">
               <h1>Posts</h1>
@@ -40,7 +41,7 @@ const ProfileHeader = React.memo(
       </div>
       <div className="flex justify-between">
         {profileId !== user.id ? (
-          <button className="py-2 px-4 w-full sm:w-[150px] bg-sky-200 rounded-3xl hover:outline">
+          <button className="py-2 px-4 w-full sm:w-[150px] bg-sky-100 rounded-3xl hover:outline">
             Follow +
           </button>
         ) : (

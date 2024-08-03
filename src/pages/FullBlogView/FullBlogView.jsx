@@ -6,26 +6,33 @@ import { useDispatch } from "react-redux";
 import { useFetchDataByIdQuery } from "../../redux/slices/postsApi";
 import profileIcon from "/user.png";
 import "boxicons";
+import ProfilImage from "../../component/ProfilImage";
+import { useQuery } from "react-query";
+import { fetchDataById } from "../../Apis/publicApis";
+import SomthingWentWrong from "../ErrorPages/somthingWentWrong";
 
 function FullBlogView() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  console.log(id);
   const {
     data: postDatabyId,
     isLoading,
     isError,
-  } = useFetchDataByIdQuery(id, {
-    skip: !id,
+    error,
+  } = useQuery({
+    queryKey: ["fullpostData", id],
+    queryFn: () => fetchDataById(id),
   });
-
   // useEffect(() => {
   //   if (isError) {
   //     navigate("/");
   //   }
   // }, [isError, navigate]);
-
+  if (error || isError) {
+    return <SomthingWentWrong />;
+  }
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -47,16 +54,16 @@ function FullBlogView() {
           </section>
 
           <div className="flex items-center my-4">
-            <img
-              className="w-12 h-12 rounded-full mr-4 object-cover object-top"
-              src={
+            <ProfilImage
+              alt={`${firstContent?.User.username}'s profile`}
+              imageUrl={
                 firstContent?.User.userImage
                   ? `${import.meta.env.VITE_BASE_URL}/${
                       firstContent?.User.userImage
                     }`
                   : profileIcon
               }
-              alt={`${firstContent?.User.username}'s profile`}
+              className="w-12 h-12 rounded-full mr-4 object-cover object-top"
             />
             <div>
               <Link
@@ -78,20 +85,20 @@ function FullBlogView() {
         <div className="flex justify-between items-center border-y px-3 py-3 text-lg font-light">
           <div className="flex gap-4">
             <button className="flex items-center gap-1 text-gray-600 hover:text-gray-900">
-              <i class="bi bi-hand-thumbs-up"></i>
+              <i className="bi bi-hand-thumbs-up"></i>
               <span>35</span>
             </button>
             <button className="flex items-center gap-1 text-gray-600 hover:text-gray-900">
-              <i class="bi bi-chat"></i>
+              <i className="bi bi-chat"></i>
               <span>100</span>
             </button>
           </div>
           <div className="flex gap-7 justify-between">
             <button className="flex items-center gap-1 text-gray-600 hover:text-gray-900">
-              <i class="bi bi-bookmark"></i>
+              <i className="bi bi-bookmark"></i>
             </button>
             <button className="flex items-center gap-1 text-gray-600 hover:text-gray-900">
-              <i class="bi bi-three-dots"></i>
+              <i className="bi bi-three-dots"></i>
             </button>
           </div>
         </div>

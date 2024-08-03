@@ -4,19 +4,30 @@ import { useDispatch, useSelector } from "react-redux";
 import { setConfirmBox } from "../../redux/slices/uiSlice";
 import logoutIcon from "/logout.png";
 import profileIcon from "/user.png";
+import { useMutation, useQuery } from "react-query";
+import userApi from "../../Apis/userApi";
+import useLogout from "../../utils/logout";
+import { setUser } from "../../redux/slices/authSlice";
 
 function LoginMenu({ MenuOpen, setIsMenuOpen }) {
-  const Admin = JSON.parse(localStorage.getItem("Admin profile"));
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
+  const { ArchivePost, getArchivedPosts, getLogInUserData } = userApi();
+  const Logout = useLogout();
+
+  const getArchive = useMutation(() => getArchivedPosts(), {
+    onSuccess: (data) => {
+      console.log("archive", data);
+    },
+  });
 
   const emailMasked = useCallback(() => {
-    const email = Admin?.email || user?.email || "";
+    const email = user?.email || "";
     if (email.length < 7) return email;
     const emailarr = email.split("");
     emailarr.splice(2, 7, "******");
     return emailarr.join("");
-  }, [Admin, user]);
+  }, [user]);
   // console.log(user?.id);
 
   return (
@@ -43,15 +54,15 @@ function LoginMenu({ MenuOpen, setIsMenuOpen }) {
           />
           <div className="flex w-full gap-2">{user?.username}</div>
         </Link>
-        <Link
-          to=""
+        <button
+          onClick={() => getArchive.mutate()}
           className="flex justify-start  items-center gap-2  w-full  "
           role="menuitem"
           tabIndex="-1"
         >
-          <i class="bi bi-bookmark"></i>
+          <i className="bi bi-bookmark"></i>
           Archive
-        </Link>
+        </button>
         <Link
           to=""
           className="flex justify-start  items-center gap-2  w-full  "
@@ -67,22 +78,14 @@ function LoginMenu({ MenuOpen, setIsMenuOpen }) {
           role="menuitem"
           tabIndex="-1"
         >
-          <i class="bi bi-gear"></i>
+          <i className="bi bi-gear"></i>
           Setting
         </Link>
         <div className="border-y py-2 w-full">
           <p className=" ">{emailMasked()}</p>
         </div>
         <button
-          onClick={() =>
-            dispatch(
-              setConfirmBox({
-                message: "Want to Logout?",
-                status: true,
-                type: "logout",
-              })
-            )
-          }
+          onClick={() => Logout()}
           type="button"
           className="flex  gap-2 w-full"
         >

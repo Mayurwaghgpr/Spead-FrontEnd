@@ -1,130 +1,154 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useCallback, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, Link } from "react-router-dom";
 import PostPreview from "../../component/postsComp/PostPreview";
-import { fetchUserData } from "../../Apis/ProfileApis";
-// import { setErrNotify } from "../../redux/slices/uiSlice";
+import { fetchUserData, fetchUserProfile } from "../../Apis/ProfileApis";
 import { setuserProfile } from "../../redux/slices/profileSlice";
-import { useFetchUserProfileQuery } from "../../redux/slices/porfileApi";
 import ScrollToTopButton from "../../component/otherUtilityComp/ScrollToTopButton";
 import ProfileHeader from "./component/ProfileHeader";
-import { useInfiniteQuery } from "react-query";
-import MainNavBar from "../../component/header/MainNavBar";
+import { useInfiniteQuery, useQuery } from "react-query";
+import PeoplesList from "../../component/PeoplesList";
+import Spinner from "../../component/loaders/Spinner";
 
 function Profile() {
   const dispatch = useDispatch();
   const params = useParams();
-  const { userProfile } = useSelector((state) => state.profile);
+  const intObserver = useRef();
   const { isLogin, user } = useSelector((state) => state.auth);
 
-  const profileId = params.id || user.id;
-
-  const { data, isError, isLoading } = useFetchUserProfileQuery(profileId, {
-    skip: !profileId,
-  });
-
-  useEffect(() => {
-    if (data) {
-      dispatch(setuserProfile(data));
-    }
-  }, [data, dispatch]);
+  const profileId = params.id || user?.id;
 
   const {
-    data: postsPage,
-    isError: postError,
+    isError,
+    isFetching,
+    isLoading,
+    data: userProfile,
+  } = useQuery(
+    ["userProfile", profileId],
+    async () => fetchUserProfile(profileId),
+    {
+      onSuccess: async (data) => dispatch(setuserProfile(data)),
+    }
+  );
+
+  const {
+    data: postsData,
+    isError: isPostError,
     isFetchingNextPage,
+    isLoading: postIsLoading,
     fetchNextPage,
     hasNextPage,
-    error,
+    error: postError,
   } = useInfiniteQuery(
     ["Userposts", profileId],
     ({ pageParam = 1 }) => fetchUserData(profileId, pageParam),
     {
       getNextPageParam: (lastPage, allPages) => {
-        return lastPage?.length ? allPages.length : undefined;
+        return lastPage?.length ? allPages.length + 1 : undefined;
       },
+      retry: false,
     }
   );
-  // console.log("error", error);
 
-  const handleInfinityScroll = useCallback(() => {
-    // if (error || postError || !hasNextPage || isFetchingNextPage) return;
-    if (
-      window.innerHeight + document.documentElement.scrollTop >=
-      document.documentElement.scrollHeight
-    ) {
-      fetchNextPage();
-    }
-  }, [hasNextPage, fetchNextPage, error, postError, isFetchingNextPage]);
+  const lastpostRef = useCallback(
+    (post) => {
+      if (postIsLoading || isFetching || !hasNextPage || isPostError) return;
 
-  useEffect(() => {
-    window.addEventListener("scroll", handleInfinityScroll);
-    return () => window.removeEventListener("scroll", handleInfinityScroll);
-  }, [handleInfinityScroll]);
+      if (intObserver.current) intObserver.current.disconnect();
+
+      intObserver.current = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting && hasNextPage) {
+            fetchNextPage();
+          }
+        },
+        {
+          threshold: 1.0,
+        }
+      );
+      if (post) intObserver.current.observe(post);
+    },
+    [isFetchingNextPage, isFetching, hasNextPage]
+  );
 
   if (isLoading) {
-    return <h1>Loading...</h1>;
+    return <h1>Loading profile data...</h1>;
   }
 
-  if (isError) {
-    return <h1>Error loading profile data. Please try again.</h1>;
+  if (isError || (isPostError && postError?.message !== "404")) {
+    return <h1>Error {postError?.message}. Please try again.</h1>;
   }
 
   return (
-    <>
-      <MainNavBar />
-      <div className="flex justify-end">
-        <div className="w-[900px] flex flex-col h-full">
-          <div id="Profile" className="flex-grow">
-            <ProfileHeader
-              userProfile={userProfile}
-              profileId={profileId}
-              user={user}
-            />
-            <div className="w-full flex bg-white gap-5 p-2 px-4">
-              <div className="w-full flex gap-5">
-                <p className="hover:underline cursor-pointer">Home</p>
-                <p className="hover:underline cursor-pointer">About</p>
-              </div>
+    <div className="flex justify-end">
+      <div className="w-[900px] flex flex-col h-full">
+        <div id="Profile" className="flex-grow">
+          <ProfileHeader
+            userProfile={userProfile}
+            profileId={profileId}
+            user={user}
+          />
+          <div className="w-full flex bg-white gap-5 p-2 px-4">
+            <div className="w-full flex gap-5">
+              <p className="hover:underline cursor-pointer">Home</p>
+              <p className="hover:underline cursor-pointer">About</p>
             </div>
-            <main
-              className={`lg:px-5 pt-5 min-h-[50vh] ${
-                !postsPage?.pages?.length && "flex justify-center items-center"
-              }`}
-            >
-              {Boolean(postsPage?.pages?.length)
-                ? postsPage.pages.flatMap((page, pageIndex) =>
-                    page?.posts?.map((post) => (
-                      <PostPreview key={post.id} post={post} />
-                    ))
-                  )
-                : profileId === user?.id && (
-                    <article className="max-w-[600px] w-[600px] flex flex-col justify-center items-center text-2xl border-dashed border-2 rounded-lg max-h-[300px] h-[300px]">
-                      No posts yet{" "}
-                      {isLogin && (
-                        <Link
-                          to="/write"
-                          className="text-slate-500 font-thin hover:text-slate-800"
-                        >
-                          Add New Post +
-                        </Link>
-                      )}
-                    </article>
-                  )}
-            </main>
+          </div>
+          <div
+            className={`lg:px-5 p-3 pt-5 min-h-[50vh] ${
+              !postsData?.pages?.length && "flex justify-center items-center"
+            }`}
+          >
+            {postsData?.pages.length > 0 ? (
+              postsData?.pages?.map((page) =>
+                page?.map((post, idx) => {
+                  return (
+                    <PostPreview
+                      ref={page?.length === idx + 1 ? lastpostRef : null}
+                      key={post.id}
+                      post={post}
+                    />
+                  );
+                })
+              )
+            ) : profileId === user?.id ? (
+              <div className="max-w-[600px] min-w-[200px] w-full   flex flex-col justify-center items-center text-2xl border-dashed border-2 rounded-lg max-h-[300px] h-full min-h-[200px]">
+                No posts yet{" "}
+                {isLogin && (
+                  <Link
+                    to="/write"
+                    className="text-slate-500 font-thin hover:text-slate-800"
+                  >
+                    Add New Post +
+                  </Link>
+                )}
+              </div>
+            ) : null}
+            {isFetchingNextPage && (
+              <div className="w-full flex justify-center items-center h-24 ">
+                <Spinner />
+              </div>
+            )}
           </div>
         </div>
-        <div className="lg:block right-0 sticky top-0 bg-gray-400 hidden h-screen max-w-[300px] sm:min-w-[300px]">
-          <div className="flex  bg-orange-200 justify-center p-3">
-            <h1>Following</h1>
-            <ul>
-              <li></li>
-            </ul>
-          </div>
-        </div>
-        <ScrollToTopButton />
       </div>
-    </>
+      <div className="lg:flex flex-col right-0 sticky top-0 hidden h-screen max-w-[300px] sm:min-w-[300px]">
+        <div className="flex flex-col h-full items-center gap-4 p-3">
+          <h1>Following</h1>
+          <ul className="flex w-full flex-col items-start px-2 gap-3 min-h-full bg-slate-100">
+            {userProfile?.Following?.map((followings, idx) => (
+              <PeoplesList
+                key={followings.id}
+                people={followings}
+                index={idx}
+              />
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <ScrollToTopButton />
+    </div>
   );
 }
 

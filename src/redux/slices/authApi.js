@@ -11,19 +11,11 @@ export const authApi = createApi({
     endpoints: (builder) => ({
         SignUp: builder.mutation({
             query: (SignUpData) => ({
-                url: `/auth/SignUp`,
+                url: ``,
                 method:'PUT',
                 body:SignUpData
             })
         }),
-        LogIn: builder.mutation({
-            query: (Logindata) => ({
-                url: `/auth/Login`,
-                method:'POST',
-                body:Logindata
-            })
-        }),
-
         refeshTokenQuery: builder.query({
             query: () => `/auth/refreshToken`,
             providesTags:['auth']
@@ -31,4 +23,4 @@ export const authApi = createApi({
     })
 })
 
-export const{useRefeshTokenQueryQuery,useSignUpMutation,useLogInMutation}=authApi
+export const{useRefeshTokenQueryQuery,useSignUpMutation}=authApi

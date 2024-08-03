@@ -3,15 +3,16 @@ import axios from "axios";
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 function PostsApis() {
-  const AddNewPost = async (newPost) => {
+  const AddNewPost = async (newPost, signal) => {
     try {
       const result = await axios.post(`${BASE_URL}/posts/posts`, newPost, {
         withCredentials: true,
+        signal: signal,
       });
       return result.data; // Return the actual data
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        localStorage.removeItem("AdminProfile");
+        // localStorage.removeItem("userAccount");
         localStorage.removeItem("AccessToken");
       }
       console.error("AddNewPost error:", error);
@@ -28,7 +29,7 @@ function PostsApis() {
       return response.data; // Return the actual data
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        localStorage.removeItem("AdminProfile");
+        // localStorage.removeItem("userAccount");
         localStorage.removeItem("AccessToken");
       }
       console.error("DeletePostApi error:", error);

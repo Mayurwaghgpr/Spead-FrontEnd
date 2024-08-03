@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 const SomthingWentWrong = () => {
   return (
@@ -9,4 +9,4 @@ const SomthingWentWrong = () => {
   );
 };
 
-export default SomthingWentWrong;
+export default memo(SomthingWentWrong);

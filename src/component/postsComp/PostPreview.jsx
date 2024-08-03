@@ -1,40 +1,61 @@
 import React, {
   useEffect,
-  useState,
   useCallback,
+  useState,
   useRef,
   forwardRef,
+  memo,
 } from "react";
 import { format } from "date-fns";
 import ConfirmationBox from "../otherUtilityComp/ConfirmationBox";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setConfirmBox, setIsConfirm } from "../../redux/slices/uiSlice";
+import {
+  setConfirmBox,
+  setIsConfirm,
+  setToast,
+} from "../../redux/slices/uiSlice";
 import { useQueryClient, useMutation } from "react-query";
-import { setTopiclist, FilterData } from "../../redux/slices/postSlice";
+import { setTopiclist } from "../../redux/slices/postSlice";
 import profileIcon from "/user.png";
 import PostsApis from "../../Apis/PostsApis";
+import ProfilImage from "../ProfilImage";
+import userApi from "../../Apis/userApi";
 
 const PostPreview = forwardRef(({ post }, ref) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const menuRef = useRef();
   const queryClient = useQueryClient();
-  const { DeletPostApi } = PostsApis();
+  const { DeletePostApi } = PostsApis();
+  const { ArchivePost } = userApi();
 
   const [menuId, setMenuId] = useState("");
   const [postIdToDelete, setPostIdToDelete] = useState("");
-
-  const { confirmBox, isConfirm } = useSelector((state) => state.ui);
+  const { confirmBox, isConfirm, TostState } = useSelector((state) => state.ui);
   const { postsData } = useSelector((state) => state.posts);
   const { user } = useSelector((state) => state.auth);
 
-  const deletePostMutation = useMutation((id) => DeletPostApi(id), {
+  const deletePostMutation = useMutation((id) => DeletePostApi(id), {
     onSuccess: (data) => {
-      dispatch(FilterData(data.id));
+      // dispatch(FilterData(data.id));
       queryClient.invalidateQueries(["posts"]);
     },
     onError: () => {},
+  });
+
+  const AddToArchive = useMutation((id) => ArchivePost(id), {
+    onSuccess: (data) => {
+      dispatch(setToast({ message: data.message, type: "success" }));
+    },
+    onError: (error) => {
+      dispatch(
+        setToast({
+          message: error.response?.error,
+          type: "error",
+        })
+      );
+    },
   });
 
   useEffect(() => {
@@ -44,7 +65,7 @@ const PostPreview = forwardRef(({ post }, ref) => {
       dispatch(setIsConfirm({ type: "", status: false }));
       dispatch(setTopiclist([]));
     }
-  }, [isConfirm, postIdToDelete, dispatch, deletePostMutation]);
+  }, [isConfirm.status, postIdToDelete, deletePostMutation.data]);
 
   const confirmDeletePost = useCallback(
     (id) => {
@@ -68,14 +89,16 @@ const PostPreview = forwardRef(({ post }, ref) => {
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
+    // document.addEventListener("scroll", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      // document.removeEventListener("scroll", handleClickOutside);
     };
-  }, [menuRef]);
+  }, [menuRef.current]);
 
   const PostsBody = (
-    <>
-      <div className="p-3 flex flex-col h-full gap-3 w-full">
+    <div className="">
+      <div className="p-3 flex leading-0 flex-col h-full gap-3 w-full ">
         <div className="flex gap-2 text-sm">
           <Link
             to={`/profile/@${post?.user?.username
@@ -84,24 +107,20 @@ const PostPreview = forwardRef(({ post }, ref) => {
               .join("")}/${post?.user?.id}`}
             className="flex gap-3"
           >
-            <div
-              className={`${
-                deletePostMutation.isLoading && "bg-slate-400 animate-pulse "
-              } h-[30px] w-[30px] rounded-full `}
-            >
-              {!deletePostMutation.isLoading && (
-                <img
-                  className="h-[30px] w-[30px] hover:opacity-75 cursor-pointer rounded-full object-cover object-top"
-                  src={
+            <div className={` h-[30px] w-[30px] rounded-full `}>
+              {
+                <ProfilImage
+                  className={`h-[30px] w-[50px] hover:opacity-75 `}
+                  imageUrl={
                     post?.user?.userImage
                       ? `${import.meta.env.VITE_BASE_URL}/${
                           post?.user?.userImage
                         }`
                       : profileIcon
                   }
-                  alt="Author"
+                  alt={post?.user?.username}
                 />
-              )}
+              }
             </div>
           </Link>
           <div className="text-sm rounded-lg flex">
@@ -148,17 +167,25 @@ const PostPreview = forwardRef(({ post }, ref) => {
               : ""}
           </p>
           <div className="flex mb-1 cursor-pointer">
-            <i class="bi bi-hand-thumbs-up"></i>
+            <button className=" ">
+              <i className="bi bi-hand-thumbs-up"></i>
+            </button>
           </div>
           <div className="flex mb-1 cursor-pointer">
-            <i class="bi bi-chat"></i>
+            <button className=" ">
+              <i className="bi bi-chat"></i>
+            </button>
           </div>
         </div>
 
         <div className="relative w-[50%] flex justify-center  gap-5 items-center">
-          <div className="flex cursor-pointer">
-            <i class="bi bi-bookmark"></i>
-          </div>
+          <button
+            disabled={post?.user?.id === user?.id}
+            onClick={() => AddToArchive.mutate(post?.id)}
+            className="flex cursor-pointer"
+          >
+            <i className="bi bi-bookmark"></i>
+          </button>
           <div className=" relative flex justify-center items-center">
             <button
               onClick={() => setMenuId((prev) => (prev === "" ? post?.id : ""))}
@@ -191,11 +218,14 @@ const PostPreview = forwardRef(({ post }, ref) => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 
   const content = ref ? (
-    <article ref={ref} className="border-b flex w-full mt-1 flex-col">
+    <article
+      ref={ref}
+      className="border-b flex w-full mt-1 flex-col min-h-[248px] "
+    >
       {PostsBody}
     </article>
   ) : (
@@ -211,4 +241,4 @@ const PostPreview = forwardRef(({ post }, ref) => {
   );
 });
 
-export default PostPreview;
+export default memo(PostPreview);

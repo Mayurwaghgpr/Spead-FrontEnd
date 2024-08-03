@@ -6,15 +6,9 @@ export default {
   ],
   theme: {
     extend: {
-      fontFamily:{
+      fontFamily: {
+        roboto: ['Roboto', 'sans-serif'],
       },
-            keyframes: {
-        wiggle: {
-          '0%, 100%': { transform: 'rotate(-3deg)' },
-          '50%': { transform: 'rotate(3deg)' },
-        }
-      },
-  
       colors:{
           'bg-white-blur':'#fff50',
       }

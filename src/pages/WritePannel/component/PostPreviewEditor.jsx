@@ -6,7 +6,7 @@ import {
   setElements,
   setBeforeSubmit,
 } from "../../../redux/slices/postSlice";
-import { setErrNotify, setNotify } from "../../../redux/slices/uiSlice";
+import { setToast } from "../../../redux/slices/uiSlice";
 import { useMutation, useQueryClient } from "react-query";
 import PostsApis from "../../../Apis/PostsApis";
 
@@ -23,18 +23,19 @@ function PostPreviewEditor({
   const { submit, elements, beforeSubmit } = useSelector(
     (state) => state.posts
   );
+  const { TostState } = useSelector((state) => state.ui);
+
   const { user } = useSelector((state) => state.auth);
   const { AddNewPost } = PostsApis();
   const queryClient = useQueryClient();
 
   const mutation = useMutation((NewPosts) => AddNewPost(NewPosts), {
     onSuccess: (response) => {
-      console.log("first");
       queryClient.invalidateQueries(["posts"]);
       dispatch(
-        setNotify({
+        setToast({
           message: `New Blog ${response.message} fully created`,
-          status: true,
+          type: "success",
         })
       );
       dispatch(setBeforeSubmit(false));
@@ -44,13 +45,12 @@ function PostPreviewEditor({
     onError: (error) => {
       const errorMessage =
         error.response?.error || "An error occurred. Please try again.";
-      dispatch(setErrNotify({ message: errorMessage, status: true }));
+      dispatch(setToast({ message: errorMessage, type: "error" }));
       dispatch(setBeforeSubmit(false));
       dispatch(setSubmit(false));
       dispatch(setElements([DEFAULT_ELEMENT]));
     },
   });
-
   const EditTitleImage = useCallback(
     (id, index, el) => {
       const newImage = el.files[0];

@@ -2,7 +2,7 @@ import { useState, useCallback, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useSelector, useDispatch } from "react-redux";
 import { setElements } from "../../../redux/slices/postSlice";
-import { debounce } from "../../../utils/debouce";
+import { debounce } from "../../../utils/debounce";
 
 export const usePostCreator = () => {
   const { elements } = useSelector((state) => state.posts);
@@ -12,7 +12,7 @@ export const usePostCreator = () => {
   const [imageFiles, setImageFiles] = useState([]);
   const imageInputRef = useRef();
   const inputRefs = useRef([]);
-  console.log("imageFiles", imageFiles);
+  // console.log("imageFiles", imageFiles);
   const addElement = useCallback(
     (type) => {
       const newElement = {

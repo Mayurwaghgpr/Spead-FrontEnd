@@ -15,30 +15,17 @@ const EditableElement = ({
 }) => {
   const handleTextSelection = useCallback(
     (event) => {
-      // const input = event.target;
-      // if (input) {
-      //   const start = input.selectionStart;
-      //   const end = input.selectionEnd;
-      //   const text = input.value.substring(start, end);
-      //   console.log(text);
-      // }
       event.preventDefault();
-
-      let selectedText = window.getSelection().toString().trim();
-      // const start = selectedText.selectionStart;
-      // const end = selectedText.selectionEnd;
-      // const text = selectedText.substring(start, end);
-      // console.log(start, end);
-      console.log(selectedText, event.target.textContent);
-      if (selectedText && event.target.textContent) {
+      const selectedText = window.getSelection().toString().trim();
+      if (selectedText) {
         setTextTool(event.target.id);
       }
     },
-    [setTextTool !== 0]
+    [setTextTool]
   );
 
   useEffect(() => {
-    const handleDocumentClick = (event) => {
+    const handleDocumentClick = () => {
       if (!window.getSelection().toString().trim()) {
         setTextTool(null);
       }
@@ -55,7 +42,7 @@ const EditableElement = ({
     <div
       id={element.id}
       key={element.id}
-      className={`flex items-center gap-2  ${extraClasses}`}
+      className={`flex items-center gap-2 ${extraClasses}`}
     >
       <p
         ref={(el) => (inputRefs.current[index] = el)}
@@ -63,20 +50,20 @@ const EditableElement = ({
         type={type}
         contentEditable
         suppressContentEditableWarning
-        className={` border-l  outline-none placeholder:text-2xl placeholder:font-thin p-4 bg-inherit  ${
+        className={`border-l outline-none placeholder:text-2xl placeholder:font-thin p-4 bg-inherit ${
           type === "url" ? "type-url" : "type-text"
         }${isScale ? "z-0" : "z-30"} ${
           index === 0
-            ? " text-4xl font-semibold "
+            ? "text-4xl font-semibold"
             : index === 1
-            ? " text-2xl "
+            ? "text-2xl"
             : "text-xl"
-        }w-full`}
-        // placeholder={placeholder}
+        } w-full`}
         onKeyDown={(e) => handleKeyDown(e, element.id, index)}
         onBlur={(e) => handleTextChange(element.id, e.target.textContent)}
-        onFocus={(e) => setFocusedIndex(index)}
+        onFocus={() => setFocusedIndex(index)}
         onMouseUp={handleTextSelection}
+        placeholder={placeholder}
       ></p>
     </div>
   );

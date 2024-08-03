@@ -2,37 +2,45 @@ import axios from "axios";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
-// const getToken = () => localStorage.getItem("token");
-
 export const fetchUserProfile = async (id) => {
-  // console.log("use", id);
-  // const token = getToken();
+  console.log("use", id);
   try {
-    const response = await axios.get(`${BASE_URL}/profile/:${id}`, {
+    const response = await axios.get(`${BASE_URL}/user/profile/:${id}`, {
       withCredentials: true,
     });
-    return response;
+    return response.data;
   } catch (error) {
     return error.response;
   }
 };
 export const fetchUserData = async (profileId, pageParam) => {
-  // const token = getToken();
-  // console.log(profileId);
+  console.log(profileId, pageParam);
   try {
-    const response = await axios.get(
-      `${BASE_URL}/user/userData/:${profileId}`,
-      {
-        withCredentials: true,
-        params: { pageParam },
-      }
-    );
-    // console.log("hh", response);
-    if (response.status == 200) {
-      return response.data;
+    const response = await axios.get(`${BASE_URL}/user/userData/${profileId}`, {
+      withCredentials: true,
+      params: {
+        limit: 3,
+        page: pageParam,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    if (error.response && error.response.status === 401) {
+      // localStorage.removeItem("userAccount");
+      localStorage.removeItem("AccessToken");
+      localStorage.setItem(
+        "Authorization",
+        JSON.stringify({
+          message: error.response.data.message,
+          status: false,
+        })
+      );
     }
-  } catch (err) {
-    return err.response;
+    console.log(error.response);
+    if (error.response && error.response.status === 404) {
+      throw new Error(error.response.status);
+    }
+    throw new Error(error.response);
   }
 };
 

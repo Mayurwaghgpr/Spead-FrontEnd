@@ -23,31 +23,41 @@ function DynamicPostCreator() {
   } = usePostCreator();
   const dispatch = useDispatch();
   const { elements, beforsubmit } = useSelector((state) => state.posts);
-  console.log(elements);
+  // console.log(elements);
   const removeElement = useCallback(
     (id) => {
+      // console.log("id", id);
       const updatedElements = elements
         .filter((el) => el.id !== id)
-        .map((el, idx) => ({ ...el, index: idx }));
+        .map((el, idx) => ({
+          ...el,
+          index: idx,
+        }));
+      console.log(updatedElements);
       dispatch(setElements(updatedElements));
       const updatedImageFiles = imageFiles
         .filter((el) => el.id !== id)
         .map((el, idx) => ({ ...el, index: idx }));
       setImageFiles(updatedImageFiles);
+      console.log("updatedlength", updatedElements.length);
+      return updatedElements.length;
     },
+
     [elements, dispatch, imageFiles]
   );
 
   const handleKeyDown = useCallback(
     (event, id, index) => {
+      let prevlength = elements.length;
       if (
         event.key === "Backspace" &&
         !event.target.innerText &&
         elements.length > 0
       ) {
-        removeElement(id);
+        console.log("prveleng", prevlength);
+        const newlength = removeElement(id);
         setTimeout(() => {
-          if (index >= 0) {
+          if (newlength < prevlength && index > 0) {
             inputRefs.current[index - 1]?.focus();
           }
         }, 0);
@@ -66,11 +76,10 @@ function DynamicPostCreator() {
     },
     [removeElement, addElement, elements]
   );
-  console.log("focused index", focusedIndex);
+  // console.log("focused index", focusedIndex);
   // console.log(beforSubmit);
   return (
     <>
-      <MainNavBar />
       <main className=" h-screen flex flex-col justify-between">
         <Ibutton />
         <div
@@ -80,7 +89,7 @@ function DynamicPostCreator() {
         >
           {elements.map((element, index) => (
             <div key={index} className="flex justify-center items-center">
-              {focusedIndex === index && element.data === "" && (
+              {focusedIndex === index && (
                 <div
                   className={`sm:flex hidden  justify-between bg-none items-center mt-2 absolute transition-transform duration-100 sm:left-56 left-5  sm:overflow-hidden ${
                     isScale ? "z-20" : "z-0"
@@ -93,7 +102,7 @@ function DynamicPostCreator() {
                       isScale ? "rotate-0" : " rotate-45"
                     }`}
                   >
-                    <i class="bi bi-x"></i>
+                    <i className="bi bi-x"></i>
                   </span>
                   <div
                     className={`flex gap-2 justify-center px-5 items-end  transition-all duration-100 ease-linear text-md font-thin *:h-[40px] *:w-[40px] *:border *:rounded-full    *:border-green-500 text-green-600 ${
@@ -121,7 +130,7 @@ function DynamicPostCreator() {
                       }`}
                       onClick={() => addElement("url")}
                     >
-                      <i class="bi bi-link"></i>
+                      <i className="bi bi-link"></i>
                     </button>
                     <label
                       title="add an image"
@@ -132,7 +141,7 @@ function DynamicPostCreator() {
                       }`}
                       htmlFor="imgbtn"
                     >
-                      <i class="bi bi-image-alt"></i>
+                      <i className="bi bi-image-alt"></i>
                     </label>
                     <input
                       ref={imageInputRef}
