@@ -1,31 +1,41 @@
-import React, { memo, useEffect } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { removeToast } from "../../redux/slices/uiSlice";
 
 function ToastItem({ ToastContent }) {
   const dispatch = useDispatch();
-  //   useEffect(() => {
-  //     const timeoutId = setTimeout(() => {
-  //       dispatch(removeToast(ToastContent.id));
-  //     }, 1000);
+  const [isVisible, setVisble] = useState(true);
 
-  //     return () => clearTimeout(timeoutId);
-  //   }, [dispatch, ToastContent.id]);
+  useEffect(() => {
+    const timeoutId1 = setTimeout(() => {
+      setVisble(false);
+    }, 2000);
 
-  const status = () => {
-    if (ToastContent.type === "success") {
-      return "bg-green-300";
-    } else if (ToastContent.type === "error") {
-      return "bg-red-300";
-    }
-  };
+    const timeoutId2 = setTimeout(() => {
+      dispatch(removeToast(ToastContent.id));
+    }, 2500);
+
+    return () => {
+      clearTimeout(timeoutId1);
+      clearTimeout(timeoutId2);
+    };
+  }, [dispatch, ToastContent.id]);
+
+  // const status = () => {
+  //   if (ToastContent.type === "success") {
+  //     return "bg-green-300";
+  //   } else if (ToastContent.type === "error") {
+  //     return "bg-red-300";
+  //   }
+  // };
 
   return (
     <div
-      className={`transition-transform duration-500 ease-in-out bg-slate-100 relative flex  flex-col rounded-lg w-full`}
+      className={`transition-all duration-500 ease-in-out bg-slate-200 shadow-lg relative flex  flex-col rounded-lg w-full ${
+        isVisible ? "opacity-100" : "opacity-0 -translate-y-2"
+      }`}
     >
       <div className="w-full flex  p-4">
-        <div className={`w-1 me-2 ${status()}`}></div>
         <div className="w-full break-words flex">
           <p className="word-break">{ToastContent?.message}</p>
         </div>
@@ -38,7 +48,7 @@ function ToastItem({ ToastContent }) {
           X
         </button>
       </div>
-      <div className={`w-1 h-1 bg-sky-500 rounded-lg`}></div>
+      {/* <div className={`w-1 h-1 bg-sky-500 rounded-lg`}></div> */}
     </div>
   );
 }

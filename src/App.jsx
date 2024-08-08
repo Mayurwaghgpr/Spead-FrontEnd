@@ -24,7 +24,7 @@ function App() {
   const { isLogin } = useSelector((state) => state.auth);
 
   return (
-    <>
+    <main className="h-screen relative">
       <TostNotify />
       <MainNavBar />
       <PersistentUser />
@@ -86,7 +86,7 @@ function App() {
         <Route path="*" element={<PageError />} />
       </Routes>
       <ScrollToTopButton />
-    </>
+    </main>
   );
 }
 

@@ -15,11 +15,11 @@ function LoginMenu({ MenuOpen, setIsMenuOpen }) {
   const { ArchivePost, getArchivedPosts, getLogInUserData } = userApi();
   const Logout = useLogout();
 
-  const getArchive = useMutation(() => getArchivedPosts(), {
-    onSuccess: (data) => {
-      console.log("archive", data);
-    },
-  });
+  // const getArchive = useMutation(() => getArchivedPosts(), {
+  //   onSuccess: (data) => {
+  //     console.log("archive", data);
+  //   },
+  // });
 
   const emailMasked = useCallback(() => {
     const email = user?.email || "";
@@ -55,7 +55,7 @@ function LoginMenu({ MenuOpen, setIsMenuOpen }) {
           <div className="flex w-full gap-2">{user?.username}</div>
         </Link>
         <button
-          onClick={() => getArchive.mutate()}
+          // onClick={() => getArchive.mutate()}
           className="flex justify-start  items-center gap-2  w-full  "
           role="menuitem"
           tabIndex="-1"

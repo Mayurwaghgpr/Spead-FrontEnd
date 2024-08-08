@@ -90,10 +90,10 @@ function Viewblogs() {
   return (
     <div className="flex sm:mx-7">
       <div className="flex w-full sm:items-start">
-        <div className="lg:flex justify-between min-h-screen flex-col p-3 hidden text-xl w-full max-w-[368px] border-e sticky top-0 overflow-y-auto">
+        <aside className="lg:flex justify-start gap-20 min-h-screen flex-col p-3 hidden text-xl w-full max-w-[368px] border-e sticky top-0 overflow-y-auto">
           <div className="flex flex-col pe-4 w-full h-full items-center text-start gap-2">
-            <h1 className="font-medium text-start w-full sm:text-sm lg:text-lg xl:text-xl">
-              Trending topics
+            <h1 className="font-normal text-start w-full sm:text-sm lg:text-md xl:text-lg">
+              Suggested topics
             </h1>
             <div className="flex justify-center items-end flex-col">
               {!isLoadingPreps ? (
@@ -101,7 +101,7 @@ function Viewblogs() {
                   {topiclist?.map(({ topic }, index) => (
                     <li
                       key={index}
-                      className="border text-sm rounded-2xl bg-slate-100 px-2 py-0.5"
+                      className="border text-sm rounded-2xl bg-sky-100 px-2 py-0.5"
                     >
                       <button
                         className="t-btn"
@@ -118,7 +118,7 @@ function Viewblogs() {
             </div>
           </div>
           <div className="h-full text-sm ">
-            <h1 className="font-medium text-start w-full sm:text-sm lg:text-lg xl:text-xl">
+            <h1 className="font-normal text-start w-full sm:text-sm lg:text-md xl:text-lg">
               Follow People
             </h1>
             {!isLoadingPreps ? (
@@ -130,13 +130,13 @@ function Viewblogs() {
             ) : (
               <FollowPeopleLoader items={5} />
             )}
-            <button className="w-full self-center p-1 hover:bg-sky-200 rounded-md transition-all duration-75-200">
+            <button className="w-full self-center p-1 hover:bg-sky-200 rounded-md transition-all ease-in-out duration-300">
               Load more
             </button>
           </div>
-        </div>
+        </aside>
         <div className="sm:mx-10">
-          <ul className="flex z-20 sticky top-0 bg-slate-50 border-b pl-5 pt-4 pb-2 h-[3rem] w-full justify-start items-center gap-3">
+          <ul className="flex z-20 sticky top-0 bg-slate-50 border-b pl-5 pt-4 pb-2 h-[3rem] justify-start items-center gap-3">
             <li className="rounded-full capitalize">
               <button className="t-btn" onClick={() => handleTopicClick("All")}>
                 Your Feed

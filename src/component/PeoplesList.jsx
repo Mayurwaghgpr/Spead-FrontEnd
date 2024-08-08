@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import profileIcon from "/user.png";
+import profileIcon from "/vecteezy_user-profile-vector-flat-illustration-avatar-person-icon_37336395.png";
 import ProfilImage from "./ProfilImage";
 import userApi from "../Apis/userApi";
 import { useMutation } from "react-query";
@@ -64,7 +64,7 @@ function PeoplesList({ people, index }) {
               followedId: people?.id,
             })
           }
-          className="bg-slate-200 p-2 max-w-[75px]  overflow-hidden overflow-ellipsis rounded-full"
+          className="bg-sky-100 p-2 max-w-[75px]  overflow-hidden overflow-ellipsis rounded-full"
         >
           Following
         </button>
@@ -76,7 +76,7 @@ function PeoplesList({ people, index }) {
               followedId: people?.id,
             })
           }
-          className="bg-slate-100 min-w-[75px] p-2 rounded-full"
+          className="bg-sky-100 min-w-[75px] p-2 rounded-full"
         >
           Follow
         </button>

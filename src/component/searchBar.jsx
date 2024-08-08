@@ -5,7 +5,7 @@ import { debounce } from "../utils/debounce";
 import { fetchSearchData } from "../Apis/publicApis";
 import Spinner from "./loaders/Spinner";
 
-function SearchBar() {
+function SearchBar({ className, disable = true }) {
   const [search, setSearch] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -23,17 +23,22 @@ function SearchBar() {
   }, 500);
 
   return (
-    <div className="relative flex flex-col justify-center items-start gap-1">
-      <div className="lg:w-[600px] w-full md:w-[500px] flex justify-center sm:border pr-3 rounded-full items-center gap-3">
+    <div
+      className={` flex-col sm:flex hidden justify-center  items-center gap-1 ${className}`}
+    >
+      <div
+        className={`w-full h-full  flex justify-center pr-3  items-center gap-3 `}
+      >
         <input
-          className="bg-inherit p-2 pl-3 rounded-l-xl w-full outline-none"
+          className="bg-inherit  p-2 pl-3 rounded-l-xl w-full outline-none"
           placeholder="search"
           type="search"
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           onChange={({ target: { value } }) => searchDebounce(value.trim())}
+          disabled={disable}
         />
-        <button>
+        <button disabled={disable}>
           <i className="bi bi-search"></i>
         </button>
       </div>
@@ -52,7 +57,7 @@ function SearchBar() {
                 <span className="font-thin text-lg">
                   <i className="bi bi-search"></i>
                 </span>
-                <b>{searchres.topic}</b>
+                <b>{searchres?.topic}</b>
               </li>
             ))}
             {/* {isFetching && <Spinner />} */}

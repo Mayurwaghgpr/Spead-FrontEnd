@@ -21,7 +21,7 @@ function SignIn() {
         const { AccessToken, user } = response;
         if (AccessToken) {
           dispatch(setIsLogin(true));
-          // queryClient.invalidateQueries({ queryKey: ["loggedInUser"] });
+          queryClient.invalidateQueries({ queryKey: ["loggedInUser"] });
           // dispatch(setUser(user));
 
           localStorage.setItem("AccessToken", true);
@@ -46,14 +46,13 @@ function SignIn() {
   if (!isLogin) {
     return (
       <section
-        className={`sm:flex justify-evenly items-center flex-col fixed top-0 left-0 bottom-0 right-0 bg-white`}
+        className={`sm:flex justify-evenly h-full items-center flex-col fixed top-0 left-0 bottom-0 right-0 bg-white`}
       >
         {isError && (
           <div className="text-red-500 mb-4 w-full flex justify-center  ">
             {error?.message}!
           </div>
         )}
-        <div></div>
         <div className="w-full top-0  absolute">
           <button
             onClick={() => navigate("/")}

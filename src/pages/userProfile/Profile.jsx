@@ -88,7 +88,7 @@ function Profile() {
             profileId={profileId}
             user={user}
           />
-          <div className="w-full flex bg-white gap-5 p-2 px-4">
+          <div className="w-full flex  gap-5 p-2 px-4">
             <div className="w-full flex gap-5">
               <p className="hover:underline cursor-pointer">Home</p>
               <p className="hover:underline cursor-pointer">About</p>
@@ -132,10 +132,30 @@ function Profile() {
           </div>
         </div>
       </div>
-      <div className="lg:flex flex-col right-0 sticky top-0 hidden h-screen max-w-[300px] sm:min-w-[300px]">
-        <div className="flex flex-col h-full items-center gap-4 p-3">
-          <h1>Following</h1>
-          <ul className="flex w-full flex-col items-start px-2 gap-3 min-h-full bg-slate-100">
+      <div className="lg:flex flex-col top-0 right-0 sticky text-md   hidden h-screen max-w-[350px] gap-2 mr-2 w-full sm:min-w-[300px]">
+        <div className=" flex px-5  flex-col justify-center  mt-2 h-full pt-6  bg-slate-50 rounded-xl border items-start gap-3">
+          {/* <div className="flex justify-center items-center gap-1  py-1 px-3 ">
+            <span>{postsData?.length || 0}</span>
+            <h1>Posts</h1>
+          </div> */}
+          <div className="flex justify-center items-center h-full  gap-1 py-1 px-3   ">
+            <span>{userProfile?.Followers?.length}</span>
+            <h1>Followers</h1>
+          </div>
+          <ul className="flex w-full flex-col items-start px-2 gap-3 min-h-full">
+            {userProfile?.Followers?.map((Follower, idx) => (
+              <PeoplesList key={Follower.id} people={Follower} index={idx} />
+            ))}
+          </ul>
+        </div>
+        <div className="flex px-5 flex-col h-full  bg-slate-50 rounded-xl border  items-start gap-4 p-3">
+          <div className=" flex gap-1 justify-center items-center ">
+            {" "}
+            <span>{userProfile?.Following?.length}</span>
+            <h1>Following</h1>
+          </div>
+
+          <ul className="flex w-full flex-col items-start px-2 gap-3 min-h-full">
             {userProfile?.Following?.map((followings, idx) => (
               <PeoplesList
                 key={followings.id}
