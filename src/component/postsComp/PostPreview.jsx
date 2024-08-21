@@ -17,23 +17,22 @@ import {
 } from "../../redux/slices/uiSlice";
 import { useQueryClient, useMutation } from "react-query";
 import { setTopiclist } from "../../redux/slices/postSlice";
-import profileIcon from "/user.png";
+import profileIcon from "/ProfOutlook.png";
 import PostsApis from "../../Apis/PostsApis";
-import ProfilImage from "../ProfilImage";
 import userApi from "../../Apis/userApi";
+import useClickOutside from "../../hooks/useClickOutside";
+import Bookmark from "../buttons/Bookmark";
 
-const PostPreview = forwardRef(({ post, className }, ref) => {
+const PostPreview = forwardRef(({ post, className, Saved }, ref) => {
+  const [postIdToDelete, setPostIdToDelete] = useState("");
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const menuRef = useRef();
   const queryClient = useQueryClient();
   const { DeletePostApi } = PostsApis();
-  const { ArchivePost } = userApi();
 
-  const [menuId, setMenuId] = useState("");
-  const [postIdToDelete, setPostIdToDelete] = useState("");
   const { confirmBox, isConfirm } = useSelector((state) => state.ui);
-  const { postsData } = useSelector((state) => state.posts);
   const { user } = useSelector((state) => state.auth);
 
   const deletePostMutation = useMutation((id) => DeletePostApi(id), {
@@ -41,20 +40,6 @@ const PostPreview = forwardRef(({ post, className }, ref) => {
       queryClient.invalidateQueries(["posts"]);
     },
     onError: () => {},
-  });
-
-  const addToArchiveMutation = useMutation((id) => ArchivePost(id), {
-    onSuccess: (data) => {
-      dispatch(setToast({ message: data.message, type: "success" }));
-    },
-    onError: (error) => {
-      dispatch(
-        setToast({
-          message: error.response?.error,
-          type: "error",
-        })
-      );
-    },
   });
 
   useEffect(() => {
@@ -80,28 +65,17 @@ const PostPreview = forwardRef(({ post, className }, ref) => {
     },
     [dispatch]
   );
-
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setMenuId("");
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [menuRef]);
+  const { menuId, setMenuId } = useClickOutside(menuRef);
 
   return (
     <>
       <article
         ref={ref}
-        className={`border-b flex w-full mt-1 flex-col min-h-[248px] bg-inherit ${className}`}
+        className={` border-b  flex w-full mt-1  flex-col  bg-inherit ${className} `}
       >
-        <div className="">
-          <div className="p-3 flex leading-0 flex-col h-full gap-3 w-full ">
-            <div className="flex gap-2 text-sm">
+        <div className=" h-full w-full">
+          <div className="p-3 flex leading-0 flex-col h-full justify-center  gap-3 w-full ">
+            <div className="flex gap-2 text-sm justify-start items-center">
               <Link
                 to={`/profile/@${post?.user?.username
                   .split(" ")
@@ -109,22 +83,33 @@ const PostPreview = forwardRef(({ post, className }, ref) => {
                   .join("")}/${post?.user?.id}`}
                 className="flex gap-3"
               >
-                <div className={``}>
-                  <img
-                    className="h-[40px] w-[40px] hover:opacity-75 cursor-pointer object-cover object-top rounded-full"
-                    src={
-                      post?.user?.userImage
-                        ? `${import.meta.env.VITE_BASE_URL}/${
-                            post?.user?.userImage
-                          }`
-                        : profileIcon
-                    }
-                    alt={post?.user?.username}
-                  />
+                <div
+                  className={`h-[40px] w-[40px] hover:opacity-75 rounded-full `}
+                >
+                  {post ? (
+                    <img
+                      className="cursor-pointer object-cover object-top h-full w-full rounded-full "
+                      src={
+                        post?.user?.userImage
+                          ? `${import.meta.env.VITE_BASE_URL}/${
+                              post?.user?.userImage
+                            }`
+                          : profileIcon
+                      }
+                      loading="lazy"
+                      alt={post?.user?.username}
+                    />
+                  ) : (
+                    <div className="h-full w-full bg-slate-300 animate-pulse dark:bg-slate-700 bg-inherit rounded-full"></div>
+                  )}
                 </div>
               </Link>
-              <div className="text-sm rounded-lg flex">
-                <p className="capitalize">{post?.user?.username}</p>
+              <div className="text-sm rounded-lg flex  ">
+                {post ? (
+                  <p className="capitalize">{post?.user?.username}</p>
+                ) : (
+                  <span className="w-20 h-3  bg-slate-300 animate-pulse dark:bg-slate-700 bg-inherit rounded-xl"></span>
+                )}
               </div>
               <h1 className="text-slate-700 text-sm rounded-lg">
                 {post?.topic}
@@ -135,89 +120,103 @@ const PostPreview = forwardRef(({ post, className }, ref) => {
                 .split(" ")
                 .slice(0, post?.user?.username.length - 1)
                 .join("")}/${post?.id}`}
-              className="cursor-pointer h-full flex justify-between p-2"
+              className="cursor-pointer h-full flex justify-between items-center gap-3"
             >
-              <div className="flex flex-col gap-1 leading-tight">
-                <p className="font-bold rounded-lg text-sm sm:text-2xl overflow-hidden overflow-ellipsis">
-                  {post?.title}
-                </p>
-                <p className="rounded-lg text-sm sm:text-base text-gray-500 font-light overflow-hidden overflow-ellipsis">
-                  {post?.subtitelpagraph}
-                </p>
+              <div className="flex flex-col gap-1 leading-tight ">
+                {post ? (
+                  <>
+                    <p className="font-bold text-sm sm:text-2xl overflow-hidden overflow-ellipsis ">
+                      {post?.title}
+                    </p>
+                    <p className="text-sm sm:text-base  font-normal overflow-hidden overflow-ellipsis">
+                      {post?.subtitelpagraph}
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <div className="rounded-lg  sm:w-[350px] w-[100px] h-3 sm:h-5 bg-slate-300 dark:bg-slate-700 animate-pulse "></div>
+                    <div className="rounded-lg sm:w-[400px] w-[150px] h-5 sm:h-12 bg-slate-200 dark:bg-slate-700 animate-pulse "></div>
+                  </>
+                )}
               </div>
-              <div className="col-span-3">
-                <img
-                  className="rounded-sm sm:h-[110px] h-[70px] w-[150px] min-w-[100px] sm:max-w-[170px] object-cover"
-                  src={
-                    post?.titleImage &&
-                    `${import.meta.env.VITE_BASE_URL}/${post?.titleImage}`
-                  }
-                  alt="PreviewImage"
-                />
+
+              <div className="rounded-sm   sm:h-[110px] h-[80px] sm:w-[160px] min-w-[100px] sm:max-w-[170px] animate-pulse bg-slate-200 dark:bg-slate-700">
+                {post && (
+                  <img
+                    className="object-cover object-center h-full w-full"
+                    src={
+                      post?.titleImage &&
+                      `${import.meta.env.VITE_BASE_URL}/${post?.titleImage}`
+                    }
+                    loading="lazy"
+                    alt="PreviewImage"
+                  />
+                )}
               </div>
             </Link>
           </div>
-          <div className="mb-1 flex w-full items-center p-3">
-            <div className="w-[50%] flex justify-start items-center gap-5">
-              <p className="text-slate-700 text-sm mx-2 rounded-lg">
-                {post?.createdAt
-                  ? format(new Date(post?.createdAt), "LLL-dd-yyyy")
-                  : ""}
-              </p>
-              <div className="flex mb-1 cursor-pointer">
-                <button className=" ">
-                  <i className="bi bi-hand-thumbs-up"></i>
-                </button>
+          {post && (
+            <div className=" flex w-full justify-between items-center px-4 p-3">
+              <div className=" flex justify-start items-center gap-5">
+                <p className=" text-sm rounded-lg w-[20px]">
+                  {post?.createdAt
+                    ? format(new Date(post?.createdAt), "LLL-dd-yyyy")
+                    : ""}
+                </p>
+                <div className="flex  cursor-pointer">
+                  <button className=" ">
+                    <i className="bi bi-hand-thumbs-up"></i>
+                  </button>
+                </div>
+                <div className="flex  cursor-pointer">
+                  <button className=" ">
+                    <i className="bi bi-chat"></i>
+                  </button>
+                </div>
               </div>
-              <div className="flex mb-1 cursor-pointer">
-                <button className=" ">
-                  <i className="bi bi-chat"></i>
-                </button>
-              </div>
-            </div>
-            <div className="relative w-[50%] flex justify-center gap-5 items-center">
-              <button
-                disabled={post?.user?.id === user?.id}
-                onClick={() => addToArchiveMutation.mutate(post?.id)}
-                className="flex cursor-pointer"
-              >
-                <i className="bi bi-bookmark"></i>
-              </button>
-              <div className="relative flex justify-center items-center">
-                <button
-                  onClick={() =>
-                    setMenuId((prev) => (prev === "" ? post?.id : ""))
-                  }
-                  type="button"
-                >
-                  <i className="bi bi-three-dots-vertical cursor-pointer "></i>
-                </button>
-                {menuId === post?.id && (
-                  <div
-                    id={post?.id}
-                    className="absolute sm:top-5 mt-2 p-1 bg-white border before:content-normal before:absolute before:-top-[0.3rem] before:right-[3rem] before:h-[10px] before:w-[10px] before:rotate-45 before:bg-white before:border-l before:border-t border-gray-300 rounded-lg"
+              <div className="relative  flex justify-center gap-5 items-center">
+                <Bookmark post={post || null} />
+
+                <div className="relative flex justify-center items-center">
+                  <button
+                    className="cursor-pointer"
+                    onClick={() =>
+                      setMenuId((prev) => (prev === "" ? post?.id : ""))
+                    }
+                    type="button"
                   >
-                    <ul
-                      ref={menuRef}
-                      className="flex flex-col justify-center p-2 w-[100px]"
+                    <i className="bi bi-three-dots-vertical  "></i>
+                  </button>
+                  {menuId === post?.id && (
+                    <div
+                      id={post?.id}
+                      className="absolute sm:top-5 mt-2 p-1 z-[100] bg-white dark:bg-[#0f0f0f]  border before:content-normal before:absolute before:-top-[0.3rem] before:right-[3rem] before:h-[10px] before:w-[10px] before:rotate-45 before:bg-white before:border-l before:border-t border-gray-300 rounded-lg"
                     >
-                      {post?.user?.id.toString() ===
-                        user.id.toString().trim() && (
-                        <>
-                          <li>
-                            <button onClick={() => confirmDeletePost(post?.id)}>
-                              Delete Post
-                            </button>
-                          </li>
-                          <li>Edit</li>
-                        </>
-                      )}
-                    </ul>
-                  </div>
-                )}
+                      <ul
+                        ref={menuRef}
+                        className="flex flex-col justify-center p-2 w-[100px]"
+                      >
+                        {post?.user?.id.toString() ===
+                          user.id.toString().trim() && (
+                          <>
+                            <li>
+                              <button
+                                className="w-full"
+                                onClick={() => confirmDeletePost(post?.id)}
+                              >
+                                Delete Post
+                              </button>
+                            </li>
+                            <li>Edit</li>
+                          </>
+                        )}
+                      </ul>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </article>
       {confirmBox?.status && <ConfirmationBox />}

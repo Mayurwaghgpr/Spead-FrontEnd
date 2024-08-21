@@ -5,7 +5,7 @@ import { usePostCreator } from "./hooks/usePostCreator";
 import { setElements } from "../../redux/slices/postSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Ibutton from "../../component/Ibutton";
-import MainNavBar from "../../component/header/MainNavBar";
+import useScrollDirection from "../../hooks/useScrollDirection";
 function DynamicPostCreator() {
   const {
     isScale,
@@ -22,6 +22,7 @@ function DynamicPostCreator() {
     focusedIndex,
   } = usePostCreator();
   const dispatch = useDispatch();
+  const { maintransformY } = useScrollDirection();
   const { elements, beforsubmit } = useSelector((state) => state.posts);
   // console.log(elements);
   const removeElement = useCallback(
@@ -80,8 +81,7 @@ function DynamicPostCreator() {
   // console.log(beforSubmit);
   return (
     <>
-      <main className=" h-screen flex flex-col justify-between">
-        <Ibutton />
+      <main className=" flex flex-col justify-between  mt-16">
         <div
           className={` flex sm:pl-0  pl-3 sm:justify-center sm:items-center flex-col ${
             elements.length === 0 ? "pt-[4rem]" : "pt-0"
@@ -105,7 +105,7 @@ function DynamicPostCreator() {
                     <i className="bi bi-x"></i>
                   </span>
                   <div
-                    className={`flex gap-2 justify-center px-5 items-end  transition-all duration-100 ease-linear text-md font-thin *:h-[40px] *:w-[40px] *:border *:rounded-full    *:border-green-500 text-green-600 ${
+                    className={`flex gap-2 justify-center px-5 items-end  transition-all duration-100 ease-linear text-md font-thin *:h-[40px] *:w-[40px] *:border *:rounded-full    *:border-slate-500 text-slate-600 ${
                       isScale
                         ? " translate-x-1 z-10 opacity-100"
                         : " -translate-x-17 opacity-0 -z-50"
@@ -132,6 +132,17 @@ function DynamicPostCreator() {
                     >
                       <i className="bi bi-link"></i>
                     </button>
+                    <button
+                      className={`backdrop-blur-0   items-center transition-all duration-300 ease-linear ${
+                        isScale
+                          ? "scale-100 opacity-100"
+                          : "scale-0 opacity-0 -z-50"
+                      }`}
+                      onClick={() => addElement("code")}
+                    >
+                      <i className="bi bi-braces"></i>
+                    </button>
+
                     <label
                       title="add an image"
                       className={` items-center flex justify-center transition-all duration-300 ease-linear ${
@@ -182,7 +193,7 @@ function DynamicPostCreator() {
           )}
         </div>
 
-        <div
+        {/* <div
           className={`flex sm:hidden  sticky gap-2 justify-center px-5 bottom-0 items-end  transition-all duration-300 ease-linear `}
         >
           <button
@@ -213,8 +224,9 @@ function DynamicPostCreator() {
             accept="image/*"
             onChange={handleFileChange}
           />
-        </div>
+        </div> */}
       </main>
+      <Ibutton />
     </>
   );
 }

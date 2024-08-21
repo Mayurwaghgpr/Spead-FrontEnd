@@ -7,26 +7,29 @@ import { setToast } from "../../redux/slices/uiSlice.js";
 import googleIcon from "../../assets/search.png";
 import { useMutation, useQueryClient } from "react-query";
 import { RegisterUser } from "../../Apis/authapi.jsx";
+import CommonInput from "../../component/commonInput.jsx";
+import { passwordRegex, emailRegex } from "../../utils/regex.js";
 
 function SignUp() {
+  const [validation, setValidation] = useState("");
   const { isLogin } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   // const { TostState } = useSelector((state) => state.ui);
 
-  const { isLoading, isSuccess, mutate } = useMutation(
+  const { isLoading, isSuccess, mutate, isError, error } = useMutation(
     (SignUpInfo) => RegisterUser(SignUpInfo),
     {
       onSuccess: (response) => {
         const { AccessToken, user } = response;
         dispatch(setIsLogin(true));
-        // queryClient.invalidateQueries({ queryKey: ["loggedInUser"] });
+        queryClient.invalidateQueries({ queryKey: ["loggedInUser"] });
         // dispatch(setUser(user));
 
         localStorage.setItem("AccessToken", true);
         // localStorage.setItem("userAccount", JSON.stringify(user));
-        navigate("/blogs", { replace: true });
+        navigate("/", { replace: true });
       },
       onError: (error) => {
         console.error("Error during registration:", error);
@@ -44,12 +47,52 @@ function SignUp() {
 
     const fromData = new FormData(e.target);
     const signUpInfo = Object.fromEntries(fromData);
+    const { password, email } = signUpInfo;
+
+    if (!passwordRegex.test(password)) {
+      setValidation(
+        "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character."
+      );
+      return;
+    }
+    if (!emailRegex.test(email)) {
+      setValidation("Please enter a valid email address.");
+      return;
+    }
+
     console.log(signUpInfo);
     mutate(signUpInfo);
   };
 
+  const singupInputs = [
+    {
+      type: "text",
+      name: "username",
+      labelname: "User Name",
+      className: ` mb-3 w-full`,
+    },
+    {
+      type: "email",
+      name: "email",
+      labelname: "Email",
+      className: `mb-3 w-full`,
+    },
+    {
+      type: "password",
+      name: "password",
+      labelname: "Password",
+      className: `mb-3 w-full`,
+    },
+  ];
+
   return (
-    <section className="sm:flex justify-center items-center flex-col fixed top-0 left-0 bottom-0 right-0 overflow-scroll bg-white">
+    <section className="sm:flex justify-center z-10  h-screen  items-center flex-col fixed top-0 left-0 bottom-0 right-0 overflow-scroll bg-white">
+      {isError ||
+        (validation && (
+          <div className="text-red-500 my-4 w-full flex justify-center  bg-red-100 py-2 ">
+            {error?.response?.data.message || validation}!
+          </div>
+        ))}
       <div className="w-full top-0  absolute">
         <button
           onClick={() => navigate("/")}
@@ -59,66 +102,38 @@ function SignUp() {
           <box-icon name="x"></box-icon>
         </button>
       </div>
-      <header className="text-2xl mt-2 text-center flex justify-center items-center">
-        {"{...Spread}"}
-      </header>
-      <div className="py-3 my-4  min-w-[300px] sm:w-[500px]">
-        <h1 className="text-2xl text-center font-semibold">Creat an account</h1>
-        <div className="flex flex-col justify-center w-full sm:flex-row">
+
+      <div className="flex flex-col justify-evenly py-3 my-4  min-w-[300px] sm:w-[500px] h-full">
+        <header className="text-2xl mt-2 text-center flex justify-center items-center">
+          {"{...Spread}"}
+        </header>
+
+        <div className="flex flex-col justify-center w-full ">
+          <h1 className="text-2xl py-5 text-center font-medium">
+            Creat an account
+          </h1>
           <form
             onSubmit={signUp}
             className="flex flex-col px-5 py-2 w-full items-center justify-center"
           >
-            <div className="mb-3 w-full">
-              <label htmlFor="username" className="sr-only">
-                Username
-              </label>
-              <input
-                type="text"
-                name="username"
-                id="username"
-                className={` focus:shadow-inner focus:shadow-slate-900 bg-gray-200 p-3 w-full rounded-lg`}
-                placeholder="Username"
+            {singupInputs.map((input, idx) => (
+              <CommonInput
+                key={idx}
+                className={input.className}
+                type={input.type}
+                labelname={input.labelname}
+                name={input.name}
+                isLoading={isLoading}
               />
-            </div>
-            <div className="mb-3 w-full">
-              <label htmlFor="email" className="sr-only">
-                Email
-              </label>
-              <input
-                type="email"
-                name="email"
-                id="email"
-                className={` focus:shadow-inner focus:shadow-slate-900 bg-gray-200 p-3 w-full rounded-lg`}
-                placeholder="Email"
-              />
-            </div>
-            <div className="mb-3 w-full gap-2 flex flex-col">
-              <label htmlFor="password" className="sr-only">
-                Password
-              </label>
-              <input
-                type="password"
-                name="password"
-                id="password"
-                autoComplete="new-password"
-                className={`focus:shadow-inner focus:shadow-slate-900 bg-gray-200 p-3 w-full rounded-lg`}
-                placeholder="Password"
-              />
-            </div>
+            ))}
+
             <div className="mb-4 w-full flex items-center">
-              <input
-                type="checkbox"
-                id="rememberMe"
-                className="form-checkbox h-4 w-4 text-gray-600"
-                name="rememberMe"
+              <CommonInput
+                className={"flex flex-row-reverse gap-2"}
+                type={"checkbox"}
+                labelname={"remberMe"}
+                label={"RemberMe"}
               />
-              <label
-                htmlFor="rememberMe"
-                className="ml-2 text-sm text-gray-600"
-              >
-                Remember me
-              </label>
             </div>
             <div className="mb-4 w-full">
               <button

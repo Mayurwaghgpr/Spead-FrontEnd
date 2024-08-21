@@ -1,92 +1,111 @@
-import React from "react";
+import React, { useEffect, Suspense, lazy } from "react";
 import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import SignUp from "./pages/auth/SignUp";
-import SignIn from "./pages/auth/SignIn";
-import ViewBlogs from "./pages/ViewBlogs";
-import Home from "./pages/Home";
-import PageError from "./pages/ErrorPages/Page404";
 import MainNavBar from "./component/header/MainNavBar";
-import Profile from "./pages/userProfile/Profile";
-import DynamicPostCreator from "./pages/WritePannel/DynamicPostCreator";
-import FullBlogView from "./pages/FullBlogView/FullBlogView";
 import ProtectedRoute from "./utils/ProtectedRoutes";
-import ProfileEditor from "./pages/userProfile/ProfileEditor";
 import TostNotify from "./component/otherUtilityComp/TostNotify";
 import ScrollToTopButton from "./component/otherUtilityComp/ScrollToTopButton";
-import About from "./pages/About";
 import PersistentUser from "./component/persistentUser";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import Spiner from "./component/loaders/Spinner";
+
+// Lazy load components
+const SignUp = lazy(() => import("./pages/auth/SignUp"));
+const SignIn = lazy(() => import("./pages/auth/SignIn"));
+const ViewBlogs = lazy(() => import("./pages/ViewBlogs"));
+const Home = lazy(() => import("./pages/Home"));
+const PageError = lazy(() => import("./pages/ErrorPages/Page404"));
+const Profile = lazy(() => import("./pages/userProfile/Profile"));
+const DynamicPostCreator = lazy(() =>
+  import("./pages/WritePannel/DynamicPostCreator")
+);
+const FullBlogView = lazy(() => import("./pages/FullBlogView/FullBlogView"));
+const ProfileEditor = lazy(() => import("./pages/userProfile/ProfileEditor"));
+const About = lazy(() => import("./pages/About"));
+const ReadList = lazy(() => import("./pages/ReadList"));
+const Settings = lazy(() => import("./component/settings"));
 
 function App() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { isLogin } = useSelector((state) => state.auth);
+  const LocalTheme = localStorage.getItem("ThemeMode");
 
   return (
-    <main className="h-screen relative">
+    <>
       <TostNotify />
-      <MainNavBar />
       <PersistentUser />
-      <Routes>
-        <Route
-          path="/"
-          element={isLogin ? <Navigate to="/blogs" replace /> : <Home />}
-        />
-        <Route
-          path="/signin"
-          element={!isLogin ? <SignIn /> : <Navigate to="/blogs" replace />}
-        />
-        <Route
-          path="/signup"
-          element={!isLogin ? <SignUp /> : <Navigate to="/blogs" replace />}
-        />
-        <Route path="/about" element={<About />} />
+      <MainNavBar />
+      <Suspense fallback={<Spiner />}>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              !isLogin ? (
+                <Home />
+              ) : (
+                <ProtectedRoute>
+                  <ViewBlogs />
+                </ProtectedRoute>
+              )
+            }
+          />
+          <Route
+            path="/signin"
+            element={!isLogin ? <SignIn /> : <Navigate to="/" replace />}
+          />
+          <Route
+            path="/signup"
+            element={!isLogin ? <SignUp /> : <Navigate to="/" replace />}
+          />
+          <Route path="/about" element={<About />} />
 
-        <Route
-          path="/profile/:username/:id"
-          element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/profileEditor"
-          element={
-            <ProtectedRoute>
-              <ProfileEditor />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/write"
-          element={
-            <ProtectedRoute>
-              <DynamicPostCreator />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/blogs"
-          element={
-            <ProtectedRoute>
-              <ViewBlogs />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/FullView/:username/:id"
-          element={
-            <ProtectedRoute>
-              <FullBlogView />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="*" element={<PageError />} />
-      </Routes>
-      <ScrollToTopButton />
-    </main>
+          <Route
+            path="/profile/:username/:id"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profileEditor"
+            element={
+              <ProtectedRoute>
+                <ProfileEditor />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/write"
+            element={
+              <ProtectedRoute>
+                <DynamicPostCreator />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/setting"
+            element={
+              <ProtectedRoute>
+                <Settings />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/FullView/:username/:id"
+            element={
+              <ProtectedRoute>
+                <FullBlogView />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="*" element={<PageError />} />
+          <Route path="/Read" element={<ReadList />} />
+        </Routes>
+      </Suspense>
+      {<ScrollToTopButton />}
+    </>
   );
 }
 

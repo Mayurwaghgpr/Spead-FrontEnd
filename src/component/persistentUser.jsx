@@ -2,26 +2,26 @@ import React, { memo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "react-query";
 import userApi from "../Apis/userApi";
-import { setUser } from "../redux/slices/authSlice";
+import { setIsLogin, setUser } from "../redux/slices/authSlice";
 
 function PersistentUser() {
   const { getLogInUserData } = userApi();
-  const { isLogin } = useSelector((state) => state.auth);
+  // const { isLogin } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   useQuery({
     queryKey: ["loggedInUser"],
     queryFn: () => getLogInUserData(),
     onSuccess: (data) => {
-      console.log("user login data:", data);
+      // console.log("user login data:", data);
+      dispatch(setIsLogin(true));
       dispatch(setUser(data));
     },
     onError: (error) => {
-      localStorage.removeItem("AccessToken");
+      dispatch(setIsLogin(false));
       console.error("Error fetching logged-in user data:", error);
     },
-    staleTime: 10 * 60 * 1000, // 10 minutes
-    enabled: !!isLogin, // Fetch data only if isLogin is true
+    retry: false,
   });
 
   return null;

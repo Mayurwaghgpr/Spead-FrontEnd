@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    userProfile:{},
+    userProfile: {},
+    FollowInfo:{Info:'',count:null},
 }
 
 const ProfileSlice = createSlice({
@@ -11,9 +12,12 @@ const ProfileSlice = createSlice({
     setuserProfile: (state, action) => {
             state.userProfile = action.payload
         },
+    setFollowInfo: (state, action) => {
+        state.FollowInfo =action.payload
+    }
 
     }
 })
 
-export const {setuserProfile } = ProfileSlice.actions;
+export const {setuserProfile,setFollowInfo } = ProfileSlice.actions;
 export default ProfileSlice.reducer

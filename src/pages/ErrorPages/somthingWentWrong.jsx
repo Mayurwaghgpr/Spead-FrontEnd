@@ -1,12 +1,13 @@
-import React, { memo } from "react";
+import React from "react";
 
-const SomthingWentWrong = () => {
+function SomthingWentWrong({ cause, message }) {
   return (
-    <div className="h-screen w-full flex justify-center items-center ">
-      {" "}
-      <h1>..oops! somthingWentWrong</h1>
+    <div>
+      <h1>Something Went Wrong</h1>
+      <p>Error Code: {cause}</p>
+      <p>{typeof message === "string" ? message : JSON.stringify(message)}</p>
     </div>
   );
-};
+}
 
-export default memo(SomthingWentWrong);
+export default SomthingWentWrong;

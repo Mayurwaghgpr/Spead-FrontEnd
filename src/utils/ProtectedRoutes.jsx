@@ -1,19 +1,26 @@
-import React, { memo, useContext } from "react";
-import { Navigate, Outlet, useOutletContext } from "react-router-dom";
+import React, { memo, useEffect } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setToast } from "../redux/slices/uiSlice";
+
 const ProtectedRoute = ({ children }) => {
   const { isLogin } = useSelector((state) => state.auth);
-  const { TostState } = useSelector((state) => state.ui);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const Authorization = JSON.parse(localStorage.getItem("Authorization"));
-  console.log(Authorization);
-  if (Authorization?.status && !isLogin) {
-    dispatch(setToast({ message: Authorization.message }));
-    <Navigate to="/signin" replace />;
+
+  if (Authorization?.status === false) {
+    dispatch(
+      setToast({
+        message: Authorization?.message || "Unauthorized",
+        type: "error",
+      })
+    );
+    navigate("/signin", { replace: true });
   }
-  console.log("this p", isLogin);
-  return isLogin ? children : <Navigate to="/signin" replace />;
+
+  return !isLogin ? <Navigate to="/signin" replace /> : children;
 };
 
 export default memo(ProtectedRoute);

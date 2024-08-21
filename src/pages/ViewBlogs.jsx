@@ -1,31 +1,35 @@
-import React, { useEffect, useCallback, useState, useRef } from "react";
+import React, { useCallback } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setTopiclist } from "../redux/slices/postSlice";
 import ScrollToTopButton from "../component/otherUtilityComp/ScrollToTopButton";
-import profileIcon from "/user.png";
 import PostPreview from "../component/postsComp/PostPreview";
 import { useInfiniteQuery, useQuery } from "react-query";
-import { userPrepsData, fetchDataAll } from "../Apis/publicApis";
 import SomthingWentWrong from "./ErrorPages/somthingWentWrong";
 import FollowPeopleLoader from "../component/loaders/FollowPeopleLoader";
 import TopicsSkeletonLoader from "../component/loaders/TopicsSkeletonLoader";
-import MainNavBar from "../component/header/MainNavBar";
-import userApi from "../Apis/userApi";
 import PeoplesList from "../component/PeoplesList";
 import Spinner from "../component/loaders/Spinner";
+import useLastPostObserver from "../hooks/useLastPostObserver";
+import useScrollDirection from "../hooks/useScrollDirection";
+import { setToast } from "../redux/slices/uiSlice";
+import nopost from "../assets/3385493.webp";
+import usePublicApis from "../Apis/publicApis";
 
 function Viewblogs() {
+  const { maintransformY } = useScrollDirection();
   const dispatch = useDispatch();
-  const intObserver = useRef();
   const [searchParams, setSearchParams] = useSearchParams();
-
   const { topiclist } = useSelector((state) => state.posts);
   const { isLogin, user } = useSelector((state) => state.auth);
+
+  const { userPrepsData, fetchDataAll } = usePublicApis();
+
   const selectedTopic = searchParams.get("topic");
 
   const {
     isLoading: isLoadingPreps,
+    isFetching: FechingPreps,
     error: errorPreps,
     data: PrepsData,
   } = useQuery("userPreps", userPrepsData, {
@@ -49,75 +53,83 @@ function Viewblogs() {
     ["posts", selectedTopic],
     ({ pageParam = 1 }) => fetchDataAll({ pageParam, topic: selectedTopic }),
     {
-      getNextPageParam: (lastPage, allPages) => {
-        return lastPage?.length ? allPages.length + 1 : undefined;
-      },
+      getNextPageParam: (lastPage, allPages) =>
+        lastPage?.length ? allPages.length + 1 : undefined,
+      retry: false,
+      onError: () => {},
     }
   );
 
-  const lastpostRef = useCallback(
-    (post) => {
-      if (isLoadingPosts || isFetching || !hasNextPage || ispostError) return;
-
-      if (intObserver.current) intObserver.current.disconnect();
-
-      intObserver.current = new IntersectionObserver(
-        (entries) => {
-          // console.log("entries", entries[0]);
-          if (entries[0].isIntersecting && hasNextPage) {
-            // console.log("we are near last post");
-            fetchNextPage();
-          }
-        },
-        {
-          threshold: 1.0,
-        }
-      );
-      if (post) intObserver.current.observe(post);
-    },
-    [isFetchingNextPage, isFetching, hasNextPage]
+  const { lastpostRef } = useLastPostObserver(
+    fetchNextPage,
+    isFetchingNextPage,
+    isFetching,
+    hasNextPage
   );
 
-  const handleTopicClick = (topic) => {
-    setSearchParams({ topic });
-    refetch();
-  };
-
-  if (errorPreps || errorPosts) {
-    return <SomthingWentWrong />;
+  const handleTopicClick = useCallback(
+    (topic) => {
+      setSearchParams({ topic });
+      refetch();
+    },
+    [setSearchParams, refetch]
+  );
+  console.log(errorPosts);
+  if (
+    errorPreps !== null ||
+    (errorPosts !== null && errorPosts?.status !== 404)
+  ) {
+    return (
+      <SomthingWentWrong
+        cause={errorPosts?.status || errorPreps?.status}
+        message={
+          errorPreps?.data ||
+          errorPosts?.data ||
+          "An error occurred while loading content. Please try again later."
+        }
+      />
+    );
   }
-
+  console.log(postsData);
   return (
-    <div className="flex sm:mx-7">
-      <div className="flex w-full sm:items-start">
-        <aside className="lg:flex justify-start gap-20 min-h-screen flex-col p-3 hidden text-xl w-full max-w-[368px] border-e sticky top-0 overflow-y-auto">
-          <div className="flex flex-col pe-4 w-full h-full items-center text-start gap-2">
-            <h1 className="font-normal text-start w-full sm:text-sm lg:text-md xl:text-lg">
-              Suggested topics
-            </h1>
-            <div className="flex justify-center items-end flex-col">
-              {!isLoadingPreps ? (
-                <ul className="flex justify-start flex-wrap gap-2">
-                  {topiclist?.map(({ topic }, index) => (
-                    <li
-                      key={index}
-                      className="border text-sm rounded-2xl bg-sky-100 px-2 py-0.5"
+    <main
+      className="flex flex-col sm:flex-row  bottom-0 border-inherit transition-all duration-300 ease-in-out dark:border-[#383838]"
+      style={{
+        transform: `translateY(${maintransformY}px)`,
+      }}
+    >
+      <aside
+        className={`lg:flex gap-20 h-screen border-inherit transition-all duration-200 ease-in-out flex-col p-3 hidden text-xl w-full max-w-[368px] sticky top-0 py-8 border-e px-10 box-border`}
+      >
+        <div className="flex flex-col w-full h-full items-center text-start gap-2">
+          <h1 className="font-normal text-start w-full sm:text-sm lg:text-md xl:text-lg">
+            Suggested topics
+          </h1>
+          <div className="flex justify-center items-end flex-col">
+            {!FechingPreps ? (
+              <ul className="flex justify-start flex-wrap gap-2">
+                {topiclist?.map(({ topic }, index) => (
+                  <li
+                    key={index}
+                    className="text-[14px] font-normal rounded-full dark:bg-gray-600 bg-gray-100 px-3 py-1"
+                  >
+                    <button
+                      className="t-btn"
+                      onClick={() => handleTopicClick(topic)}
+                      aria-label={`Select topic ${topic}`}
                     >
-                      <button
-                        className="t-btn"
-                        onClick={() => handleTopicClick(topic)}
-                      >
-                        <span>{topic}</span>
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <TopicsSkeletonLoader items={7} />
-              )}
-            </div>
+                      <span>{topic}</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <TopicsSkeletonLoader items={7} />
+            )}
           </div>
-          <div className="h-full text-sm ">
+        </div>
+        <div className="sticky flex flex-col justify-end h-full">
+          <div className="h-full text-sm">
             <h1 className="font-normal text-start w-full sm:text-sm lg:text-md xl:text-lg">
               Follow People
             </h1>
@@ -128,49 +140,76 @@ function Viewblogs() {
                 ))}
               </ul>
             ) : (
-              <FollowPeopleLoader items={5} />
+              <FollowPeopleLoader
+                items={3}
+                className={"flex h-8 w-full gap-2 my-4  "}
+              />
             )}
-            <button className="w-full self-center p-1 hover:bg-sky-200 rounded-md transition-all ease-in-out duration-300">
-              Load more
+            <button className="w-full self-center p-1 transition-all ease-in-out duration-300">
+              See More
             </button>
           </div>
-        </aside>
-        <div className="sm:mx-10">
-          <ul className="flex z-20 sticky top-0 bg-slate-50 border-b pl-5 pt-4 pb-2 h-[3rem] justify-start items-center gap-3">
+        </div>
+      </aside>
+      <div className="dark:bg-[#0f0f0f] bg-white">
+        <div
+          className={`flex transition-all duration-200 dark:border-[#383838] ease-in-out z-[5] bg-inherit border-b px-5 h-[3rem] mb-1 justify-start gap-3 sticky top-0`}
+        >
+          <ul className="flex gap-3 h-full mt-2 border-inherit">
             <li className="rounded-full capitalize">
-              <button className="t-btn" onClick={() => handleTopicClick("All")}>
-                Your Feed
+              <button
+                className="t-btn"
+                onClick={() => handleTopicClick("All")}
+                aria-label="Select all topics"
+              >
+                All
               </button>
             </li>
             <li>
-              <Link to="#">Specialization</Link>
+              <Link to="#" aria-label="Specialization">
+                Specialization
+              </Link>
             </li>
           </ul>
-          <div
-            id="PostContainer"
-            className="relative flex flex-col lg:min-w-[800px] w-full lg:w-[700px] max-w-[900px]"
-          >
-            {postsData?.pages?.map((page) =>
-              page?.map((post, idx) => {
-                return (
+        </div>
+        <div
+          id="PostContainer"
+          className={`relative flex flex-col ${
+            !postsData && " py-10 "
+          } w-full lg:w-[730px] max-w-[730px] min-h-screen snap-center sm:px-10 dark:border-[#383838]`}
+        >
+          {!isLoadingPosts
+            ? postsData?.pages?.map((page) =>
+                page?.map((post, idx) => (
                   <PostPreview
-                    ref={page?.length === idx + 1 ? lastpostRef : null}
+                    className={"border-inherit"}
+                    ref={
+                      page?.length > 3 && page?.length === idx + 1
+                        ? lastpostRef
+                        : null
+                    }
                     key={post.id}
                     post={post}
                   />
-                );
-              })
-            )}
-            {isFetchingNextPage && (
-              <div className="w-full flex justify-center items-center h-full p-5">
-                <Spinner />
-              </div>
-            )}
-          </div>
+                ))
+              )
+            : [...Array(4)].map((_, idx) => (
+                <PostPreview className={"border-inherit"} key={idx} />
+              ))}
+          {isFetchingNextPage && (
+            <div className="w-full flex justify-center items-center h-full p-5">
+              <Spinner />
+            </div>
+          )}
+          {!postsData && !isLoadingPosts && (
+            <div className=" relative w-full flex text-inherit text-black justify-center flex-col items-center">
+              <h1 className=" absolute text-2xl">Nod Post</h1>
+              <img className="" src={nopost} alt="nopost" loading="lazy" />
+            </div>
+          )}
         </div>
-        {!hasNextPage && <ScrollToTopButton />}
       </div>
-    </div>
+    </main>
   );
 }
 

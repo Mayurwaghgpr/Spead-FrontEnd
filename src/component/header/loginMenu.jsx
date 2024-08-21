@@ -1,94 +1,94 @@
 import React, { memo, useCallback } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setConfirmBox } from "../../redux/slices/uiSlice";
 import logoutIcon from "/logout.png";
-import profileIcon from "/user.png";
-import { useMutation, useQuery } from "react-query";
-import userApi from "../../Apis/userApi";
+import profileIcon from "/ProfOutlook.png";
 import useLogout from "../../utils/logout";
-import { setUser } from "../../redux/slices/authSlice";
 
 function LoginMenu({ MenuOpen, setIsMenuOpen }) {
-  const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
-  const { ArchivePost, getArchivedPosts, getLogInUserData } = userApi();
+  const { user, isLogin } = useSelector((state) => state.auth);
   const Logout = useLogout();
-
-  // const getArchive = useMutation(() => getArchivedPosts(), {
-  //   onSuccess: (data) => {
-  //     console.log("archive", data);
-  //   },
-  // });
+  const location = useLocation();
 
   const emailMasked = useCallback(() => {
     const email = user?.email || "";
     if (email.length < 7) return email;
-    const emailarr = email.split("");
-    emailarr.splice(2, 7, "******");
-    return emailarr.join("");
+    return `${email.slice(0, 2)}******${email.slice(6, email.length)}`;
   }, [user]);
-  // console.log(user?.id);
+
+  const handleProfileClick = () => {
+    setIsMenuOpen(false);
+  };
 
   return (
-    <div
-      className={`fixed  z-[50] shadow-lg px-2 right-10  mt-2  rounded-2xl bg-white transition-all  duration-300 ease-linear`}
-    >
-      <div className="flex min-w-[270px] text-md flex-col h-full p-4 gap-3 items-start justify-between font-light transition-all ease-linear duration-75">
+    <div className="fixed z-[100] shadow-lg px-2 right-10 mt-2 rounded-2xl dark:bg-[#0f0f0f] bg-white transition-all duration-300 ease-linear dark:border-[#383838] dark:border">
+      <div className="flex min-w-[270px] text-md flex-col h-full p-4 gap-3 items-start justify-between font-light transition-all ease-linear duration-75   dark:*:border-[#383838]">
+        {/* Profile Link */}
         <Link
-          className="flex justify-center items-center gap-2 w-full  "
-          to={`/profile/@${user?.username
-            .split(" ")
-            .slice(0, user?.username.length - 1)
-            .join("")}/${user?.id}`}
-          onClick={() => setIsMenuOpen(false)}
+          className="flex justify-center items-center gap-2 w-full"
+          to={`/profile/@${user?.username?.replace(/\s+/g, "")}/${user?.id}`}
+          onClick={handleProfileClick}
         >
           <img
             className="h-7 w-8 rounded-full object-cover object-top"
-            src={
-              user?.userImage
-                ? `${import.meta.env.VITE_BASE_URL}/${user?.userImage}`
-                : profileIcon
-            }
-            alt=""
+            src={user?.userImage ? `${user.userImage}` : profileIcon}
+            alt="User profile"
           />
           <div className="flex w-full gap-2">{user?.username}</div>
         </Link>
-        <button
-          // onClick={() => getArchive.mutate()}
-          className="flex justify-start  items-center gap-2  w-full  "
+        {location.pathname !== "/write" &&
+          location.pathname !== "/profile" &&
+          isLogin && (
+            <Link
+              className="text-lg sm:hidden flex gap-2"
+              to="/write"
+              tabIndex="-1"
+              title="Write"
+            >
+              <i className="bi bi-pen"></i>
+              write
+            </Link>
+          )}
+        {/* Archive Button */}
+        <Link
+          to={"/read"}
+          className="flex justify-start items-center gap-2 w-full"
           role="menuitem"
           tabIndex="-1"
         >
           <i className="bi bi-bookmark"></i>
           Archive
-        </button>
+        </Link>
+
+        {/* Stories Link */}
         <Link
           to=""
-          className="flex justify-start  items-center gap-2  w-full  "
+          className="flex justify-start items-center gap-2 w-full"
           role="menuitem"
           tabIndex="-1"
         >
           <i className="bi bi-book"></i>
-          stories
+          Stories
         </Link>
+
+        {/* Settings Link */}
         <Link
-          to=""
-          className="flex justify-start items-center gap-2 w-full  "
+          to="/setting"
+          className="flex justify-start items-center gap-2 w-full"
           role="menuitem"
           tabIndex="-1"
         >
           <i className="bi bi-gear"></i>
-          Setting
+          Settings
         </Link>
-        <div className="border-y py-2 w-full">
-          <p className=" ">{emailMasked()}</p>
+
+        {/* Email Display */}
+        <div className="border-y py-2 border-0 w-full">
+          <p>{emailMasked()}</p>
         </div>
-        <button
-          onClick={() => Logout()}
-          type="button"
-          className="flex  gap-2 w-full"
-        >
+
+        {/* Logout Button */}
+        <button onClick={Logout} type="button" className="flex gap-2 w-full">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"

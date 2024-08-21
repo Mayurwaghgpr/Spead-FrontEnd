@@ -6,12 +6,14 @@ function userApi() {
 
   const getLogInUserData = async () => {
     try {
-      const result = await axios.get(`${BASE_URL}/user/logedInuser`, {
+      const result = await axios.get(`${BASE_URL}/user/loggedInUser`, {
         withCredentials: true,
       });
       console.log(result);
       return result.data;
-    } catch (error) {}
+    } catch (error) {
+      throw error;
+    }
   };
 
   const followUser = async ({ followerId, followedId }) => {
@@ -23,7 +25,7 @@ function userApi() {
       );
       return result.data;
     } catch (error) {
-      console.log(error);
+      throw new Error(error.respons);
     }
   };
   const unfollowUser = async ({ followerId, followedId }) => {
@@ -50,11 +52,39 @@ function userApi() {
       return result.data;
     } catch (error) {}
   };
-  const getArchivedPosts = async () => {
+  const getArchivedPosts = async ({ pageParam }) => {
     try {
-      const result = await axios.get(`${BASE_URL}/user/ArchivedPost`, {
+      const result = await axios.get(`${BASE_URL}/user/archivedPosts`, {
         withCredentials: true,
+        params: {
+          page: pageParam,
+          limit: 3,
+        },
       });
+      return result.data;
+    } catch (error) {}
+  };
+  const removePostFromArchive = async (id) => {
+    console.log(id);
+    try {
+      const result = await axios.delete(
+        `${BASE_URL}/user/removeFromArchive?id=${id}`,
+        {
+          withCredentials: true,
+        }
+      );
+      return result.data;
+    } catch (error) {}
+  };
+
+  const fetchFollowInfo = async ({ FollowInfo, profileId }) => {
+    try {
+      const result = await axios.get(
+        `${BASE_URL}/user/${FollowInfo}/${profileId}`,
+        {
+          withCredentials: true,
+        }
+      );
       return result.data;
     } catch (error) {}
   };
@@ -64,6 +94,8 @@ function userApi() {
     ArchivePost,
     getArchivedPosts,
     getLogInUserData,
+    removePostFromArchive,
+    fetchFollowInfo,
   };
 }
 

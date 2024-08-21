@@ -1,38 +1,17 @@
-import React, { memo } from "react";
+import React, { memo, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import profileIcon from "/vecteezy_user-profile-vector-flat-illustration-avatar-person-icon_37336395.png";
-import ProfilImage from "./ProfilImage";
+import profileIcon from "/ProfOutlook.png";
 import userApi from "../Apis/userApi";
 import { useMutation } from "react-query";
-function PeoplesList({ people, index }) {
-  const { user } = useSelector((state) => state.auth);
-  const { followUser, unfollowUser } = userApi();
-  const followMutation = useMutation((followIds) => followUser(followIds), {
-    onSuccess: (data) => {
-      // localStorage.setItem("userAccount", JSON.stringify(data));
-      dispatch(setUser(data));
-      // console.log("success ", data);
-    },
-    onError: () => {
-      console.log("error");
-    },
-  });
-  const unfollowMutation = useMutation((followIds) => unfollowUser(followIds), {
-    onSuccess: (data) => {
-      // localStorage.setItem("userAccount", JSON.stringify(data.data));
-      dispatch(setUser(data.data));
-      console.log("success");
-    },
-    onError: () => {
-      console.log("error");
-    },
-  });
+import Follow from "./buttons/follow";
+function PeoplesList({ people, index, className }) {
+  const [isUserhover, setuserHower] = useState(false);
+  const userRef = useRef();
 
-  // console.log("people?.Followers");
   return (
     <li
-      className="flex mt-2 justify-between px-2 w-full  gap-3  capitalize items-center"
+      className={`flex mt-2 justify-between px-2 w-full  gap-3 font-medium capitalize items-center   ${className}`}
       key={people?.id}
       id={people?.id}
     >
@@ -40,47 +19,48 @@ function PeoplesList({ people, index }) {
         className="flex gap-2 justify-between"
         to={`/profile/@${people?.username.split(" ").join("")}/${people?.id}`}
       >
-        <ProfilImage
-          className="h-[30px] rounded-full w-[30px]"
-          imageUrl={
+        <img
+          className="h-[30px] rounded-full w-[30px] object-cover object-top"
+          src={
             people?.userImage
               ? `${import.meta.env.VITE_BASE_URL}/${people?.userImage}`
               : profileIcon
           }
           alt={`${people?.username}'s profile picture`}
         />
-        <div className="flex ms-3 gap-2  justify-center flex-col items-start">
-          <h1 className=" font-bold">{people?.username}</h1>
-          <p className="max-w-[127px] max-h-10  overflow-hidden overflow-ellipsis ">
-            {people?.userInfo}
-          </p>
+        <div
+          onMouseOver={() => setuserHower(true)}
+          onMouseOut={() => setuserHower(false)}
+          className=" flex ms-3 gap-2  justify-center overflow-hidden flex-col items-start"
+        >
+          <h1 className="">{people?.username}</h1>
+          {isUserhover && (
+            <div className=" absolute max-w-[300px] w-full flex flex-col gap-2  mt-[140px] bg-white font-normal text-[12px] p-3 overflow-hidden overflow-ellipsis rounded-md ">
+              <div className=" flex gap-4 justify-start items-center">
+                {" "}
+                <img
+                  className="h-[30px] rounded-full w-[30px] object-cover object-top"
+                  src={
+                    people?.userImage
+                      ? `${import.meta.env.VITE_BASE_URL}/${people?.userImage}`
+                      : profileIcon
+                  }
+                  alt={`${people?.username}'s profile picture`}
+                />
+                <h1>{people?.username}</h1>
+              </div>
+
+              <p>{people?.userInfo}</p>
+            </div>
+          )}
         </div>
       </Link>
-      {user?.Following?.some((followedId) => followedId?.id === people?.id) ? (
-        <button
-          onClick={() =>
-            unfollowMutation.mutate({
-              followerId: user.id,
-              followedId: people?.id,
-            })
-          }
-          className="bg-sky-100 p-2 max-w-[75px]  overflow-hidden overflow-ellipsis rounded-full"
-        >
-          Following
-        </button>
-      ) : (
-        <button
-          onClick={() =>
-            followMutation.mutate({
-              followerId: user.id,
-              followedId: people?.id,
-            })
-          }
-          className="bg-sky-100 min-w-[75px] p-2 rounded-full"
-        >
-          Follow
-        </button>
-      )}
+      <Follow
+        profileId={people?.id}
+        className={
+          "w-[85px] h-7 font-light bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 rounded-full"
+        }
+      />
     </li>
   );
 }

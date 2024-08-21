@@ -1,24 +1,25 @@
-import React, { useEffect, useState } from "react";
-import { EditeUserProfile } from "../../Apis/ProfileApis";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setuserProfile } from "../../redux/slices/profileSlice";
-import profileIcon from "/vecteezy_user-profile-vector-flat-illustration-avatar-person-icon_37336395.png";
-import ProfilImage from "../../component/ProfilImage";
+import profileIcon from "/ProfOutlook.png";
+import ProfilImage from "../../component/ProfileButton";
 import { setUser } from "../../redux/slices/authSlice";
 import { useMutation, useQueryClient } from "react-query";
 import { setToast } from "../../redux/slices/uiSlice";
+import { debounce } from "../../utils/debounce";
+import useProfileApi from "../../Apis/ProfileApis";
 
 function ProfileEditor() {
-  // Retrieve Admin profile from local storage
-  const Admin = JSON.parse(localStorage.getItem("userAccount")) || [];
-  const { userProfile } = useSelector((state) => state.profile);
   const { user } = useSelector((state) => state.auth);
+  const [newInfo, setNewInfo] = useState(user);
 
-  const [newInfo, setNewInfo] = useState({ ...Admin });
+  const [ProfileImage, SetProfileImage] = useState();
+  const { EditeUserProfile } = useProfileApi();
 
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
 
+  console.log(newInfo);
   const { isLoading, isError, mutate } = useMutation(
     (profileUpdated) => EditeUserProfile(profileUpdated),
     {
@@ -33,21 +34,24 @@ function ProfileEditor() {
       },
     }
   );
-
   useEffect(() => {
-    if (user) {
-      dispatch(setuserProfile(user));
-    }
-  }, [dispatch, user]);
+    setNewInfo(user);
+  }, [user]);
 
-  useEffect(() => {
-    if (userProfile) {
-      setNewInfo({ ...userProfile });
+  useMemo(() => {
+    if (newInfo?.removeImage) {
+      SetProfileImage(profileIcon);
+    } else if (newInfo.NewImageFile) {
+      SetProfileImage(URL.createObjectURL(newInfo.NewImageFile));
+    } else if (newInfo?.userImage !== null) {
+      SetProfileImage(`${import.meta.env.VITE_BASE_URL}/${newInfo?.userImage}`);
+    } else {
+      SetProfileImage(profileIcon);
     }
-  }, [userProfile]);
+  }, [newInfo?.removeImage, newInfo.NewImageFile, newInfo?.userImage]);
 
   // Handle input changes
-  const handleChange = (event) => {
+  const handleChange = debounce((event) => {
     const { name, value, files } = event.target;
     if (name === "image" && files.length > 0) {
       const file = files[0];
@@ -62,7 +66,7 @@ function ProfileEditor() {
         [name]: value,
       }));
     }
-  };
+  }, 600);
 
   const triggerFileInput = () => {
     document.getElementById("fileInput").click();
@@ -80,32 +84,26 @@ function ProfileEditor() {
   };
   // console.log(newInfo);
   return (
-    <div className="flex h-screen justify-center items-start">
-      <article className="m-3 w-full   flex flex-col max-w-[700px] shadow-xl h-full rounded-xl p-4   gap-6">
-        <h1 className="w-full text-center text-2xl p-2">User Information</h1>
+    <div className=" relative flex h-screen justify-center items-start dark:*:border-[#0f0f0f]">
+      <article className=" w-full   flex flex-col max-w-[700px] mt-[70px] shadow-xl  rounded-xl px-4  border-inherit  gap-6 sm:text-sm text-xs">
+        <h1 className="w-full text-center text-2xl p-2  bg-inherit  ">
+          User Information
+        </h1>
         <div
-          className=" flex justify-start gap-3   w-full  font-light "
+          className=" flex justify-start gap-3   w-full  font-light border-inherit "
           aria-label="Upload profile picture"
         >
-          <div className="flex flex-col  min-w-28 px-2">
+          <div className="flex flex-col  min-w-28 px-2 ">
             <label htmlFor="">Profile image</label>
             <img
               onClick={triggerFileInput}
-              className="h-[100px]   w-[100px] cursor-pointer object-cover object-top rounded-full p-1"
-              src={
-                newInfo.removeImage
-                  ? profileIcon
-                  : newInfo.NewImageFile
-                  ? URL.createObjectURL(newInfo.NewImageFile)
-                  : newInfo?.userImage !== null
-                  ? `${import.meta.env.VITE_BASE_URL}/${newInfo?.userImage}`
-                  : profileIcon
-              }
+              className="sm:h-[100px]   sm:w-[100px] w-20 h-20 cursor-pointer object-cover object-top rounded-full p-1"
+              src={ProfileImage}
               alt="Profile"
             />
             <div className="w-full">
               <input
-                className="w-full p-3"
+                className="w-full p-3 bg-inherit  border border-inherit"
                 id="fileInput"
                 type="file"
                 name="image"
@@ -128,19 +126,19 @@ function ProfileEditor() {
                 Remove
               </button>
             </div>
-            <p className="text-justify break-words font-light ">
+            <p className="text-start  break-words font-light ">
               Importent: Insert image in JPG,JPEG,PNG format and high quality
             </p>
           </div>
         </div>
-        <div className="flex flex-col w-full items-end h-full  font-light   gap-2">
-          <div className="w-full flex flex-col gap-3 ">
+        <div className="flex flex-col w-full items-end h-full  font-light  dark:*:border-[#383838] gap-2">
+          <div className="w-full flex flex-col gap-3">
             <label className=" px-2" htmlFor="username">
               User Name
             </label>
             <input
               maxLength={50}
-              className="w-full p-3"
+              className="w-full p-3  bg-inherit  border border-inherit rounded-lg"
               type="text"
               name="username"
               defaultValue={newInfo?.username}
@@ -156,7 +154,7 @@ function ProfileEditor() {
             </label>
             <input
               maxLength={30}
-              className="w-full p-3"
+              className="w-full p-3  bg-inherit  border border-inherit rounded-lg"
               type="text"
               name="email"
               defaultValue={newInfo?.email}
@@ -172,8 +170,8 @@ function ProfileEditor() {
               Bio
             </label>
             <input
-              maxLength={100}
-              className="w-full p-3"
+              maxLength={30}
+              className="w-full p-3  bg-inherit  border border-inherit rounded-lg"
               type="text"
               name="userInfo"
               id="userInfo"

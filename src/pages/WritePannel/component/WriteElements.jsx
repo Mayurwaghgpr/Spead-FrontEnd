@@ -3,6 +3,8 @@ import { useSelector } from "react-redux";
 import EditableElement from "./EditableElement";
 import TextTool from "./TextTools";
 import { usePostCreator } from "../hooks/usePostCreator";
+import CopyToClipboardInput from "../../../component/CopyToClipboardInput";
+import CodeEditor from "../../../component/WriterTools/codeEditor";
 function WriteElements({
   element,
   index,
@@ -58,6 +60,8 @@ function WriteElements({
           />
         </div>
       );
+    case "code":
+      return <CodeEditor />;
     case "image":
       return (
         <div key={element.id} className="p-4 relative">

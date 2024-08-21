@@ -7,13 +7,20 @@ function ToastItem({ ToastContent }) {
   const [isVisible, setVisble] = useState(true);
 
   useEffect(() => {
-    const timeoutId1 = setTimeout(() => {
+    let timeoutId1;
+    let timeoutId2;
+    if (ToastContent.id) {
+      clearTimeout(timeoutId1);
+      clearTimeout(timeoutId2);
+    }
+
+    timeoutId1 = setTimeout(() => {
       setVisble(false);
     }, 2000);
 
-    const timeoutId2 = setTimeout(() => {
+    timeoutId2 = setTimeout(() => {
       dispatch(removeToast(ToastContent.id));
-    }, 2500);
+    }, 2300);
 
     return () => {
       clearTimeout(timeoutId1);
@@ -21,17 +28,14 @@ function ToastItem({ ToastContent }) {
     };
   }, [dispatch, ToastContent.id]);
 
-  // const status = () => {
-  //   if (ToastContent.type === "success") {
-  //     return "bg-green-300";
-  //   } else if (ToastContent.type === "error") {
-  //     return "bg-red-300";
-  //   }
-  // };
+  const status =
+    ToastContent.type === "success"
+      ? "bg-green-300"
+      : ToastContent.type === "error" && "bg-red-300";
 
   return (
     <div
-      className={`transition-all duration-500 ease-in-out bg-slate-200 shadow-lg relative flex  flex-col rounded-lg w-full ${
+      className={`transition-all duration-500 ease-in-out ${status} shadow-lg relative flex  flex-col rounded-lg w-full ${
         isVisible ? "opacity-100" : "opacity-0 -translate-y-2"
       }`}
     >

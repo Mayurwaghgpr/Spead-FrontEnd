@@ -15,10 +15,10 @@ const useLogout = () => {
       dispatch(setIsLogin(false));
       dispatch(setUser(null));
       localStorage.removeItem("AccessToken");
-      localStorage.removeItem("selectedPost");
       localStorage.removeItem("userAccount");
-      localStorage.removeItem("otherUser");
-      navigate("/");
+      if (result) {
+        navigate("/");
+      }
     } catch (error) {
       console.log(error);
     }
