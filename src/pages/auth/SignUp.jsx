@@ -1,52 +1,39 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsLogin } from "../../redux/slices/authSlice.js";
 import { setToast } from "../../redux/slices/uiSlice.js";
-import googleIcon from "../../assets/search.png";
 import { useMutation, useQueryClient } from "react-query";
 import { RegisterUser } from "../../Apis/authapi.jsx";
 import CommonInput from "../../component/commonInput.jsx";
 import { passwordRegex, emailRegex } from "../../utils/regex.js";
+import OAuth from "./OAuth.jsx";
+import { motion } from "framer-motion";
 
 function SignUp() {
   const [validation, setValidation] = useState("");
-  const { isLogin } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  // const { TostState } = useSelector((state) => state.ui);
+  const { isLoading, isError, error, mutate } = useMutation(RegisterUser, {
+    onSuccess: (response) => {
+      const { AccessToken } = response;
+      dispatch(setIsLogin(true));
+      queryClient.invalidateQueries({ queryKey: ["loggedInUser"] });
+      localStorage.setItem("AccessToken", AccessToken);
+      navigate("/", { replace: true });
+    },
+    onError: (error) => {
+      const errorMessage =
+        error.response?.data.message || "Registration failed";
+      dispatch(setToast({ message: errorMessage }));
+    },
+  });
 
-  const { isLoading, isSuccess, mutate, isError, error } = useMutation(
-    (SignUpInfo) => RegisterUser(SignUpInfo),
-    {
-      onSuccess: (response) => {
-        const { AccessToken, user } = response;
-        dispatch(setIsLogin(true));
-        queryClient.invalidateQueries({ queryKey: ["loggedInUser"] });
-        // dispatch(setUser(user));
-
-        localStorage.setItem("AccessToken", true);
-        // localStorage.setItem("userAccount", JSON.stringify(user));
-        navigate("/", { replace: true });
-      },
-      onError: (error) => {
-        console.error("Error during registration:", error);
-        dispatch(
-          setToast({
-            message: error.response.data.message || "Registration failed",
-          })
-        );
-      },
-    }
-  );
-
-  const signUp = async (e) => {
+  const signUp = (e) => {
     e.preventDefault();
-
-    const fromData = new FormData(e.target);
-    const signUpInfo = Object.fromEntries(fromData);
+    const formData = new FormData(e.target);
+    const signUpInfo = Object.fromEntries(formData);
     const { password, email } = signUpInfo;
 
     if (!passwordRegex.test(password)) {
@@ -59,66 +46,67 @@ function SignUp() {
       setValidation("Please enter a valid email address.");
       return;
     }
-
-    console.log(signUpInfo);
     mutate(signUpInfo);
   };
 
-  const singupInputs = [
+  const signUpInputs = [
     {
       type: "text",
       name: "username",
       labelname: "User Name",
-      className: ` mb-3 w-full`,
+      className: "mb-3 w-full flex flex-col gap-2",
     },
     {
       type: "email",
       name: "email",
       labelname: "Email",
-      className: `mb-3 w-full`,
+      className: "mb-3 w-full flex flex-col gap-2",
     },
     {
       type: "password",
       name: "password",
       labelname: "Password",
-      className: `mb-3 w-full`,
+      className: "mb-3 w-full flex flex-col gap-2",
     },
   ];
 
   return (
-    <section className="sm:flex justify-center z-10  h-screen  items-center flex-col fixed top-0 left-0 bottom-0 right-0 overflow-scroll bg-white">
-      {isError ||
-        (validation && (
-          <div className="text-red-500 my-4 w-full flex justify-center  bg-red-100 py-2 ">
-            {error?.response?.data.message || validation}!
-          </div>
-        ))}
-      <div className="w-full top-0  absolute">
-        <button
-          onClick={() => navigate("/")}
-          className="text-black text-3xl absolute right-3 text-shadow text-decoration-none"
-          aria-label="Close"
-        >
-          <box-icon name="x"></box-icon>
-        </button>
-      </div>
+    <motion.section
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="sm:flex relative justify-start z-10 h-screen items-center flex-col top-0 left-0 bottom-0 text-black right-0 overflow-scroll  bg-[#ffff]"
+    >
+      {(isError || validation) && (
+        <div className="text-red-500 my-4 w-full flex justify-center bg-red-100 py-2">
+          {error?.response?.data.message || validation}
+        </div>
+      )}
 
-      <div className="flex flex-col justify-evenly py-3 my-4  min-w-[300px] sm:w-[500px] h-full">
+      <button
+        onClick={() => navigate("/")}
+        className=" text-3xl absolute top-0 p-4 right-3"
+        aria-label="Close"
+      >
+        <i className="bi bi-x-lg"></i>
+      </button>
+
+      <div className="flex flex-col justify-tart gap-3 p-7 min-w-[300px] sm:w-[500px] rounded-xl bg-white ">
         <header className="text-2xl mt-2 text-center flex justify-center items-center">
           {"{...Spread}"}
         </header>
 
-        <div className="flex flex-col justify-center w-full ">
+        <div className="flex flex-col justify- w-full px-5 ">
           <h1 className="text-2xl py-5 text-center font-medium">
-            Creat an account
+            Create an account
           </h1>
           <form
             onSubmit={signUp}
-            className="flex flex-col px-5 py-2 w-full items-center justify-center"
+            className="flex flex-col py-2 w-full items-center justify-start"
           >
-            {singupInputs.map((input, idx) => (
+            {signUpInputs.map((input) => (
               <CommonInput
-                key={idx}
+                key={input.name}
                 className={input.className}
                 type={input.type}
                 labelname={input.labelname}
@@ -126,21 +114,24 @@ function SignUp() {
                 isLoading={isLoading}
               />
             ))}
-
-            <div className="mb-4 w-full flex items-center">
+            <div className="flex justify-start w-full">
               <CommonInput
-                className={"flex flex-row-reverse gap-2"}
+                className={
+                  "mb-4 flex flex-row-reverse justify-start  items-center gap-2 text-sm"
+                }
                 type={"checkbox"}
-                labelname={"remberMe"}
+                labelname={"RemberMe"}
                 label={"RemberMe"}
+                in
               />
             </div>
             <div className="mb-4 w-full">
               <button
                 type="submit"
                 className="bg-slate-500 p-3 w-full text-center text-white rounded-lg"
+                disabled={isLoading}
               >
-                Sign Up
+                {isLoading ? "Signing Up..." : "Sign Up"}
               </button>
             </div>
             <div className="mb-3 w-full text-center flex items-center">
@@ -149,23 +140,20 @@ function SignUp() {
               <hr className="flex-1" />
             </div>
             <div className="mb-4 w-full">
-              <button className="bg-gray-200 flex items-center p-3 w-full justify-between text-sm rounded-lg">
-                <img src={googleIcon} alt="Google Icon" className="h-6 mr-2" />
-                <span className="w-full text-center">Continue with Google</span>
-              </button>
+              <OAuth />
             </div>
             <footer className="text-center">
               <small>
-                Already have an Account?{" "}
-                <Link to={"/signin"} replace={true} className="text-blue-500">
-                  SignIn
+                Already have an account?{" "}
+                <Link to="/signin" replace={true} className="text-blue-500">
+                  Sign In
                 </Link>
               </small>
             </footer>
           </form>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }
 

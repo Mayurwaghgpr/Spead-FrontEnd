@@ -21,12 +21,12 @@ function useClickOutside(MenuRef, searchRef) {
     document.addEventListener("mousedown", handleClickOutside);
 
     if (!searchRef) {
-      document.addEventListener("scroll", handleClickOutside);
+      // document.addEventListener("scroll", handleClickOutside);
     }
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("scroll", handleClickOutside);
+      // document.removeEventListener("scroll", handleClickOutside);
     };
   }, [MenuRef, searchRef]);
 

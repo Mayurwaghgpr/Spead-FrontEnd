@@ -5,10 +5,11 @@ import profileIcon from "/ProfOutlook.png";
 import userApi from "../Apis/userApi";
 import { useMutation } from "react-query";
 import Follow from "./buttons/follow";
+import userImageSrc from "../utils/userImageSrc";
 function PeoplesList({ people, index, className }) {
   const [isUserhover, setuserHower] = useState(false);
   const userRef = useRef();
-
+  const { userImageurl, IsuserFromOAth } = userImageSrc(people);
   return (
     <li
       className={`flex mt-2 justify-between px-2 w-full  gap-3 font-medium capitalize items-center   ${className}`}
@@ -21,11 +22,7 @@ function PeoplesList({ people, index, className }) {
       >
         <img
           className="h-[30px] rounded-full w-[30px] object-cover object-top"
-          src={
-            people?.userImage
-              ? `${import.meta.env.VITE_BASE_URL}/${people?.userImage}`
-              : profileIcon
-          }
+          src={userImageurl}
           alt={`${people?.username}'s profile picture`}
         />
         <div
@@ -56,7 +53,7 @@ function PeoplesList({ people, index, className }) {
         </div>
       </Link>
       <Follow
-        profileId={people?.id}
+        People={people}
         className={
           "w-[85px] h-7 font-light bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 rounded-full"
         }

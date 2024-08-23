@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import logoutIcon from "/logout.png";
 import profileIcon from "/ProfOutlook.png";
 import useLogout from "../../utils/logout";
+import userImageSrc from "../../utils/userImageSrc";
 
 function LoginMenu({ MenuOpen, setIsMenuOpen }) {
   const { user, isLogin } = useSelector((state) => state.auth);
@@ -19,9 +20,9 @@ function LoginMenu({ MenuOpen, setIsMenuOpen }) {
   const handleProfileClick = () => {
     setIsMenuOpen(false);
   };
-
+  const { userImageurl } = userImageSrc(user);
   return (
-    <div className="fixed z-[100] shadow-lg px-2 right-10 mt-2 rounded-2xl dark:bg-[#0f0f0f] bg-white transition-all duration-300 ease-linear dark:border-[#383838] dark:border">
+    <div className="fixed z-[100] shadow-lg px-2 right-10 mt-2 rounded-2xl dark:bg-[#222222] bg-white transition-all duration-300 ease-linear dark:border-[#383838] dark:border">
       <div className="flex min-w-[270px] text-md flex-col h-full p-4 gap-3 items-start justify-between font-light transition-all ease-linear duration-75   dark:*:border-[#383838]">
         {/* Profile Link */}
         <Link
@@ -30,8 +31,8 @@ function LoginMenu({ MenuOpen, setIsMenuOpen }) {
           onClick={handleProfileClick}
         >
           <img
-            className="h-7 w-8 rounded-full object-cover object-top"
-            src={user?.userImage ? `${user.userImage}` : profileIcon}
+            className="h-7 w-7 rounded-full object-cover object-top"
+            src={userImageurl}
             alt="User profile"
           />
           <div className="flex w-full gap-2">{user?.username}</div>

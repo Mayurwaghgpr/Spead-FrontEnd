@@ -8,6 +8,7 @@ import { useMutation, useQueryClient } from "react-query";
 import { setToast } from "../../redux/slices/uiSlice";
 import { debounce } from "../../utils/debounce";
 import useProfileApi from "../../Apis/ProfileApis";
+import userImageSrc from "../../utils/userImageSrc";
 
 function ProfileEditor() {
   const { user } = useSelector((state) => state.auth);
@@ -18,6 +19,9 @@ function ProfileEditor() {
 
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
+
+  const { userImageurl, IsuserFromOAth } = userImageSrc(newInfo);
+  console.log(IsuserFromOAth);
 
   console.log(newInfo);
   const { isLoading, isError, mutate } = useMutation(
@@ -44,7 +48,7 @@ function ProfileEditor() {
     } else if (newInfo.NewImageFile) {
       SetProfileImage(URL.createObjectURL(newInfo.NewImageFile));
     } else if (newInfo?.userImage !== null) {
-      SetProfileImage(`${import.meta.env.VITE_BASE_URL}/${newInfo?.userImage}`);
+      SetProfileImage(userImageurl);
     } else {
       SetProfileImage(profileIcon);
     }
@@ -58,6 +62,7 @@ function ProfileEditor() {
       setNewInfo((prev) => ({
         ...prev,
         NewImageFile: file,
+        userFromOAth: IsuserFromOAth,
       }));
       event.target.value = "";
     } else {
@@ -79,13 +84,17 @@ function ProfileEditor() {
         ...prev,
       }));
     } else {
-      setNewInfo((prev) => ({ ...prev, removeImage: true }));
+      setNewInfo((prev) => ({
+        ...prev,
+        removeImage: true,
+        userFromOAth: IsuserFromOAth,
+      }));
     }
   };
   // console.log(newInfo);
   return (
     <div className=" relative flex h-screen justify-center items-start dark:*:border-[#0f0f0f]">
-      <article className=" w-full   flex flex-col max-w-[700px] mt-[70px] shadow-xl  rounded-xl px-4  border-inherit  gap-6 sm:text-sm text-xs">
+      <article className=" w-full   flex flex-col max-w-[700px] mt-[70px] shadow-xl  rounded-xl px-4  border-inherit  gap-6 sm:text-sm text-xs py-5">
         <h1 className="w-full text-center text-2xl p-2  bg-inherit  ">
           User Information
         </h1>

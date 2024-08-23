@@ -9,7 +9,7 @@ import { useInfiniteQuery, useQuery } from "react-query";
 import Spinner from "../../component/loaders/Spinner";
 import ProfileinfoCard from "../../component/ProfileinfoCard";
 import useLastPostObserver from "../../hooks/useLastPostObserver";
-import useScrollDirection from "../../hooks/useScrollDirection";
+// import useScrollDirection from "../../hooks/useScrollDirection";
 import useProfileApi from "../../Apis/ProfileApis";
 
 function Profile() {
@@ -101,9 +101,9 @@ function Profile() {
   return (
     <div className="flex justify-center  mt-16  dark:*:border-[#383838]">
       <div className=" md:w-[80%]  lg:w-[70%] xl:w-[60%]  w-full flex flex-col h-full">
-        <div id="Profile" className="flex-grow w-full">
+        <div id="Profile" className="flex-grow w-full p-4">
           <ProfileHeader profileId={profileId} />
-          <div className="w-full flex gap-5 p-2 px-4">
+          <div className="w-full flex gap-5 border-t p-2 px-4">
             <div className="w-full flex gap-5">
               <p className="hover:underline cursor-pointer">Home</p>
               <p className="hover:underline cursor-pointer">About</p>

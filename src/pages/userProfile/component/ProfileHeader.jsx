@@ -2,28 +2,26 @@ import React from "react";
 
 import { Link } from "react-router-dom";
 
-import profileIcon from "/ProfOutlook.png";
 import Follow from "../../../component/buttons/follow";
 import { useDispatch, useSelector } from "react-redux";
 import { setFollowInfo } from "../../../redux/slices/profileSlice";
+import userImageSrc from "../../../utils/userImageSrc";
 
 const ProfileHeader = React.memo(({ profileId }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const { userProfile } = useSelector((state) => state.profile);
+
+  const { userImageurl, IsuserFromOAth } = userImageSrc(userProfile);
   return (
-    <div className="flex flex-col justify-evenly dark:bg-inherit dark:*:border-[#383838] dark:border-[#383838]  p-4 ">
-      <div className="flex w-full justify-start items-center flex-col gap-2 sm:px-3">
-        <div className="relative flex  h-full border-b p-2 py-5  w-full justify-start   items-basline   gap-5 sm:gap-9 border-inherit">
+    <div className="flex flex-col justify-evenly dark:bg-inherit dark:*:border-[#383838] dark:border-[#383838]   ">
+      <div className="flex w-full justify-start items-center flex-col gap-2 ">
+        <div className="relative flex  h-full border-b p-2 py-5  w-full justify-start   items-basline   gap-5 sm:gap-9 border-inherit px-4">
           <div>
             <div className="lg:min-w-[80px] lg:min-h-[80px] h-[70px] w-[70px]   ">
               <img
                 className=" w-full h-full items-center  cursor-pointer rounded-full   object-cover object-top "
-                src={
-                  userProfile?.userImage
-                    ? `${userProfile.userImage}`
-                    : profileIcon
-                }
+                src={userImageurl}
                 alt={userProfile?.username}
               />
             </div>
@@ -32,7 +30,7 @@ const ProfileHeader = React.memo(({ profileId }) => {
           <div className="flex flex-col  justify-start  gap-3  h-full sm:text-lg text-xs ">
             <div className="flex justify-start items-center w-full   ">
               <div className="">
-                <h1 className="lg:text-xl  text-sm font-medium">
+                <h1 className="lg:text-3xl  text-sm font-medium">
                   {userProfile?.username}
                 </h1>
                 <span className=" font-light sm:text-md text-xs">he/him</span>
@@ -44,13 +42,13 @@ const ProfileHeader = React.memo(({ profileId }) => {
                   dispatch(
                     setFollowInfo({
                       Info: "Followers",
-                      count: userProfile?.followersCount,
+                      count: userProfile?.Followers.length,
                     })
                   )
                 }
                 className="flex   justify-start  items-start h-full gap-1 "
               >
-                <span>{userProfile?.followersCount}</span>
+                <span>{userProfile?.Followers.length}</span>
                 <h1>Followers</h1>
               </button>
               <button
@@ -58,13 +56,13 @@ const ProfileHeader = React.memo(({ profileId }) => {
                   dispatch(
                     setFollowInfo({
                       Info: "Following",
-                      count: userProfile?.followingCount,
+                      count: userProfile?.Following.length,
                     })
                   )
                 }
                 className="flex   justify-start  items-start h-full  gap-1   "
               >
-                <span>{userProfile?.followingCount}</span>
+                <span>{userProfile?.Following.length}</span>
                 <h1>Following</h1>
               </button>
             </div>

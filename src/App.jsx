@@ -1,5 +1,11 @@
 import React, { useEffect, Suspense, lazy } from "react";
-import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
+import {
+  Routes,
+  Route,
+  useNavigate,
+  Navigate,
+  useLocation,
+} from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import MainNavBar from "./component/header/MainNavBar";
 import ProtectedRoute from "./utils/ProtectedRoutes";
@@ -8,6 +14,7 @@ import ScrollToTopButton from "./component/otherUtilityComp/ScrollToTopButton";
 import PersistentUser from "./component/persistentUser";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import Spiner from "./component/loaders/Spinner";
+import { AnimatePresence } from "framer-motion";
 
 // Lazy load components
 const SignUp = lazy(() => import("./pages/auth/SignUp"));
@@ -28,6 +35,7 @@ const Settings = lazy(() => import("./component/settings"));
 function App() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
   const { isLogin } = useSelector((state) => state.auth);
   const LocalTheme = localStorage.getItem("ThemeMode");
 
@@ -35,75 +43,83 @@ function App() {
     <>
       <TostNotify />
       <PersistentUser />
-      <MainNavBar />
-      <Suspense fallback={<Spiner />}>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              !isLogin ? (
-                <Home />
-              ) : (
-                <ProtectedRoute>
-                  <ViewBlogs />
-                </ProtectedRoute>
-              )
-            }
-          />
-          <Route
-            path="/signin"
-            element={!isLogin ? <SignIn /> : <Navigate to="/" replace />}
-          />
-          <Route
-            path="/signup"
-            element={!isLogin ? <SignUp /> : <Navigate to="/" replace />}
-          />
-          <Route path="/about" element={<About />} />
+      <AnimatePresence mode="wait">
+        <MainNavBar />
+        <Suspense
+          fallback={
+            <div className=" flex bg-black justify-center items-center opacity-30  h-screen">
+              <Spiner />
+            </div>
+          }
+        >
+          <Routes location={location} key={location.key || location.pathname}>
+            <Route
+              path="/"
+              element={
+                !isLogin ? (
+                  <Home />
+                ) : (
+                  <ProtectedRoute>
+                    <ViewBlogs />
+                  </ProtectedRoute>
+                )
+              }
+            />
+            <Route
+              path="/signin"
+              element={!isLogin ? <SignIn /> : <Navigate to="/" replace />}
+            />
+            <Route
+              path="/signup"
+              element={!isLogin ? <SignUp /> : <Navigate to="/" replace />}
+            />
+            <Route path="/about" element={<About />} />
 
-          <Route
-            path="/profile/:username/:id"
-            element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/profileEditor"
-            element={
-              <ProtectedRoute>
-                <ProfileEditor />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/write"
-            element={
-              <ProtectedRoute>
-                <DynamicPostCreator />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/setting"
-            element={
-              <ProtectedRoute>
-                <Settings />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/FullView/:username/:id"
-            element={
-              <ProtectedRoute>
-                <FullBlogView />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="*" element={<PageError />} />
-          <Route path="/Read" element={<ReadList />} />
-        </Routes>
-      </Suspense>
+            <Route
+              path="/profile/:username/:id"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profileEditor"
+              element={
+                <ProtectedRoute>
+                  <ProfileEditor />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/write"
+              element={
+                <ProtectedRoute>
+                  <DynamicPostCreator />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/setting"
+              element={
+                <ProtectedRoute>
+                  <Settings />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/FullView/:username/:id"
+              element={
+                <ProtectedRoute>
+                  <FullBlogView />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="*" element={<PageError />} />
+            <Route path="/Read" element={<ReadList />} />
+          </Routes>
+        </Suspense>
+      </AnimatePresence>
       {<ScrollToTopButton />}
     </>
   );

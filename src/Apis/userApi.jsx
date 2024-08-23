@@ -78,6 +78,7 @@ function userApi() {
   };
 
   const fetchFollowInfo = async ({ FollowInfo, profileId }) => {
+    console.log({ FollowInfo, profileId });
     try {
       const result = await axios.get(
         `${BASE_URL}/user/${FollowInfo}/${profileId}`,

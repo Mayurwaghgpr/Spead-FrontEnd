@@ -38,7 +38,7 @@ const ReadList = () => {
   );
 
   return (
-    <div className="relative w-full flex justify-center mt-6 items-center flex-col bg-inherit bg-white dark:*:border-[#383838] dark:bg-[#0f0f0f]">
+    <div className="relative w-full flex justify-center mt-6 items-center flex-col bg-inherit bg-white dark:*:border-[#383838] dark:bg-[#222222]">
       <div className="h-full flex justify-center flex-col items-center sm:w-[60%] w-full bg-inherit">
         <div className="sticky top-0 text-3xl font-medium z-[1] flex justify-start items-center border rounded-b-lg my-8 min-h-32 w-full bg-inherit">
           <div className="w-full px-5 h-full bg-inherit">

@@ -6,8 +6,8 @@ import { setIsLogin, setUser } from "../../redux/slices/authSlice";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { LoginUser } from "../../Apis/authapi";
 import CommonInput from "../../component/commonInput";
-import { passwordRegex } from "../../utils/regex";
 import OAuth from "./OAuth";
+import { motion } from "framer-motion";
 
 function SignIn() {
   const location = useLocation();
@@ -45,13 +45,13 @@ function SignIn() {
 
   const singinInputs = [
     {
-      className: "mb-4 flex flex-col gap-2",
+      className: "mb-4 flex flex-col gap-2 ",
       type: "text",
       name: "username",
       labelname: "UserName",
     },
     {
-      className: "mb-4 flex flex-col gap-2",
+      className: "mb-4 flex flex-col gap-2 ",
       type: "password",
       name: "password",
       labelname: "Password",
@@ -60,38 +60,39 @@ function SignIn() {
 
   if (!isLogin) {
     return (
-      <section
-        className={`sm:flex justify-evenly z-10 items-center h-screen flex-col fixed top-0 left-0 bottom-0 right-0 bg-white`}
+      <motion.section
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className={`sm:flex relative justify-evenly z-10 items-center h-screen flex-col   top-0 left-0 bottom-0 right-0 text-black  bg-[#ffff] border-inherit`}
       >
         {isError && (
           <div className="text-red-500 my-4 w-full flex justify-center  bg-red-100 py-2 ">
             {error?.response?.data.message}!
           </div>
         )}
-        <div className="w-full top-0  absolute">
-          <button
-            onClick={() => navigate("/")}
-            className="text-black text-3xl absolute right-3 text-shadow text-decoration-none"
-            aria-label="Close"
-          >
-            <box-icon name="x"></box-icon>
-          </button>
-        </div>
+        <button
+          onClick={() => navigate("/")}
+          className=" text-3xl absolute  top-0 p-5   right-3 text-shadow text-decoration-none"
+          aria-label="Close"
+        >
+          <i className="bi bi-x-lg"></i>
+        </button>
 
         <div
-          className={`flex flex-col justify-evenly items-center  sm:p-3 py-4 opacity-0  rounded-2xl min-w-[300px] sm:w-[500px] h-full transition-all duration-300 delay-150 ${
+          className={`flex flex-col justify-center items-center p-8 opacity-0  min-w-[300px] sm:w-[500px]  transition-all duration-300 delay-150 ${
             location.pathname === "/signin" ? "opacity-100" : ""
           }`}
         >
           <header className="text-2xl  text-center flex justify-center items-center">
             {"{...Spread}"}
           </header>
-          <div className="flex w-full  flex-col justify-center">
-            <h1 className="text-2xl text-center font-medium">Welcome</h1>
+          <div className="flex w-full h-full  flex-col justify-center px-5">
             <form
               onSubmit={handleLogin}
-              className="flex flex-col px-5 py-4 justify-evenly w-full "
+              className="flex flex-col  py-4 justify-evenly w-full   border-inherit"
             >
+              <h1 className="text-2xl text-center font-medium my-4">Welcome</h1>
               {singinInputs.map((input, idx) => (
                 <CommonInput
                   key={idx}
@@ -105,7 +106,9 @@ function SignIn() {
               ))}
               <div className="mb-4 min-w-[200px] flex justify-between">
                 <CommonInput
-                  className={"mb-4 flex flex-row-reverse gap-2"}
+                  className={
+                    "mb-4 flex justify-start items-center gap-2 text-sm"
+                  }
                   type={"checkbox"}
                   labelname={"remberMe"}
                   label={"RemberMe"}
@@ -127,24 +130,24 @@ function SignIn() {
                   {isLoading ? "Signing In..." : "Signin"}
                 </button>
               </div>
-              <div className="mb-3 text-center grid grid-cols-3 items-center">
-                <hr /> <p>or</p> <hr />
-              </div>
-              <div className="mb-3">
-                <OAuth />
-              </div>
-              <footer className="text-center">
-                <small>
-                  Don't have an Account?{" "}
-                  <Link to={"/SignUp"} replace={true} className="text-blue-500">
-                    Sign Up
-                  </Link>
-                </small>
-              </footer>
             </form>
+            <div className="mb-3 text-center grid grid-cols-3 items-center">
+              <hr /> <p>or</p> <hr />
+            </div>
+            <div className="mb-3">
+              <OAuth />
+            </div>
+            <footer className="text-center">
+              <small>
+                Don't have an Account?{" "}
+                <Link to={"/SignUp"} replace={true} className="text-blue-500">
+                  Sign Up
+                </Link>
+              </small>
+            </footer>
           </div>
         </div>
-      </section>
+      </motion.section>
     );
   }
 

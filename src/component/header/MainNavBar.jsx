@@ -13,7 +13,7 @@ import { setBeforeSubmit } from "../../redux/slices/postSlice";
 import profileIcon from "/ProfOutlook.png";
 import useClickOutside from "../../hooks/useClickOutside";
 import ProfileButton from "../ProfileButton";
-import useScrollDirection from "../../hooks/useScrollDirection"; // Import the custom hook
+// import useScrollDirection from "../../hooks/useScrollDirection"; // Import the custom hook
 import LoginMenu from "./loginMenu";
 
 const ConfirmationBox = React.lazy(() =>
@@ -23,7 +23,7 @@ const ConfirmationBox = React.lazy(() =>
 import SearchBar from "../searchBar";
 
 function MainNavBar() {
-  const { NavetransformY } = useScrollDirection();
+  // const { NavetransformY } = useScrollDirection();
   const location = useLocation();
   const dispatch = useDispatch();
   const loginMenuRef = useRef();
@@ -49,12 +49,9 @@ function MainNavBar() {
   console.log(location);
   return (
     <header
-      className={`fixed top-0 transform-all duration-300 ease-in-out border-b bg-white dark:bg-[#0f0f0f] border-inherit ${
-        !isLogin && "bg-opacity-30 backdrop-blur-[2px]"
+      className={`fixed top-0 transform-all duration-300 ease-in-out border-b bg-white  border-inherit dark:border-[#383838] ${
+        !isLogin ? " bg-opacity-20 backdrop-blur-[2px]" : "dark:bg-[#222222]"
       } w-full z-10`}
-      style={{
-        transform: `translateY(${NavetransformY}px)`,
-      }}
     >
       <nav className="relative w-full z-10 py-3 px-7 sm:px-20 lg:px-28">
         <div className="flex items-center justify-between w-full m-auto">
@@ -151,7 +148,7 @@ function MainNavBar() {
                 </Link>
                 <Link
                   to="/signup"
-                  className="border-2 border-black transition-colors duration-500 rounded-full px-2 py-1"
+                  className="border-2 border-inherit transition-colors duration-500 rounded-full px-2 py-1"
                 >
                   Start Writing
                 </Link>

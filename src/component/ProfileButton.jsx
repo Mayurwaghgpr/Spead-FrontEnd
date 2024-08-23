@@ -1,13 +1,10 @@
 import React, { memo } from "react";
 import { useSelector } from "react-redux";
+import userImageSrc from "../utils/userImageSrc";
 
-const ProfileButton = ({
-  profileIcon,
-  isMenuOpen,
-  setIsMenuOpen,
-  className,
-}) => {
+const ProfileButton = ({ profileIcon, setIsMenuOpen, className }) => {
   const { isLogin, user } = useSelector((state) => state.auth);
+  const { userImageurl } = userImageSrc(user);
   return (
     <button
       onClick={() => setIsMenuOpen((prev) => !prev)}
@@ -17,7 +14,7 @@ const ProfileButton = ({
     >
       <img
         className="cursor-pointer object-cover object-top rounded-full w-full  h-full"
-        src={user?.userImage ? `${user?.userImage}` : profileIcon}
+        src={userImageurl}
         title={user?.name}
         alt={user?.name}
       />

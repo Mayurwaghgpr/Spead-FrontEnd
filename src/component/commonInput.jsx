@@ -10,14 +10,14 @@ function CommonInput({
 }) {
   return (
     <div className={className}>
-      <label htmlFor={name} className="">
+      <label htmlFor={name} className=" w-full">
         {labelname}
       </label>
       <input
         type={type}
         id={name}
         name={name}
-        className="p-3 focus:shadow-inner outline-none focus:shadow-slate-900 bg-gray-200 w-full rounded-lg"
+        className={`p-3 focus:shadow-inner outline-none focus:shadow-slate-900 bg-gray-200 rounded-lg `}
         placeholder={name}
         disabled={isLoading}
         {...props}

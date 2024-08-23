@@ -8,18 +8,6 @@ const ProtectedRoute = ({ children }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const Authorization = JSON.parse(localStorage.getItem("Authorization"));
-
-  if (Authorization?.status === false) {
-    dispatch(
-      setToast({
-        message: Authorization?.message || "Unauthorized",
-        type: "error",
-      })
-    );
-    navigate("/signin", { replace: true });
-  }
-
   return !isLogin ? <Navigate to="/signin" replace /> : children;
 };
 

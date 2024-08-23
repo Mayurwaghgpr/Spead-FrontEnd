@@ -27,7 +27,7 @@ function SearchBar({
 
   return (
     <div
-      className={`relative  ${className} dark:*:bg-[#0f0f0f] dark:bg-[#0f0f0f]  dark:*:border-[#383838]   `}
+      className={`relative  ${className}    dark:*:border-[#383838]  bg-inherit  `}
     >
       <div
         className={`w-full h-full   flex justify-center pr-3  items-center gap-3 bg-inherit rounded-full border overflow-hidden  `}

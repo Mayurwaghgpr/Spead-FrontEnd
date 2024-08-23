@@ -53,6 +53,9 @@ body {
 .no-scrollbar::-webkit-scrollbar{
     display: none;
 }
+
+
+
 .lds-ring,
 .lds-ring div {
     box-sizing: border-box;
@@ -72,10 +75,9 @@ body {
     width: 44px;
     height: 44px;
     margin: 4px;
-    border: 3px solid #334155 ;
     border-radius: 50%;
-    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-    border-color: #334155 transparent transparent transparent;
+    animation: lds-ring 1s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color:  transparent transparent transparent;
 }
 
 .lds-ring div:nth-child(1) {
