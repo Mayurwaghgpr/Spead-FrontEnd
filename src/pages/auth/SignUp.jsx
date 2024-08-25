@@ -67,6 +67,7 @@ function SignUp() {
       name: "password",
       labelname: "Password",
       className: "mb-3 w-full flex flex-col gap-2",
+      autocomplete: "new-password",
     },
   ];
 
@@ -75,7 +76,7 @@ function SignUp() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="sm:flex relative justify-start z-10 h-screen items-center flex-col top-0 left-0 bottom-0 text-black right-0 overflow-scroll  bg-[#ffff]"
+      className="sm:flex relative justify-start z-10 min-h-screen h-screen  items-center flex-col top-0 left-0 bottom-0 text-black right-0 overflow-scroll  bg-[#ffff]"
     >
       {(isError || validation) && (
         <div className="text-red-500 my-4 w-full flex justify-center bg-red-100 py-2">
@@ -91,7 +92,7 @@ function SignUp() {
         <i className="bi bi-x-lg"></i>
       </button>
 
-      <div className="flex flex-col justify-tart gap-3 p-7 min-w-[300px] sm:w-[500px] rounded-xl bg-white ">
+      <div className="flex flex-col justify-between gap-3 p-7 min-w-[300px] sm:w-[500px] h-full rounded-xl bg-white ">
         <header className="text-2xl mt-2 text-center flex justify-center items-center">
           {"{...Spread}"}
         </header>
@@ -102,7 +103,7 @@ function SignUp() {
           </h1>
           <form
             onSubmit={signUp}
-            className="flex flex-col py-2 w-full items-center justify-start"
+            className="flex flex-col py-2 w-full items-center justify-start text-sm"
           >
             {signUpInputs.map((input) => (
               <CommonInput

@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import React, { memo, useCallback, useMemo } from "react";
 import userApi from "../../Apis/userApi";
 import { useMutation, useQueryClient } from "react-query";
 import { useSelector } from "react-redux";
@@ -7,7 +7,6 @@ function Follow({ className, People }) {
   const { user } = useSelector((state) => state.auth);
   const { followUser, unfollowUser } = userApi();
   const queryClient = useQueryClient();
-
   const invalidateQueries = () => {
     queryClient.invalidateQueries(["userProfile"]);
     queryClient.invalidateQueries(["loggedInUser"]);
@@ -32,24 +31,24 @@ function Follow({ className, People }) {
   );
 
   const isFollowing = user?.Following?.some(
-    (followed) => followed?.id === People.id
+    (followed) => followed?.id === People?.id
   );
 
   const handleClick = useCallback(() => {
     if (isFollowing) {
-      unfollowMutation({ followerId: user?.id, followedId: People.id });
+      unfollowMutation({ followerId: user?.id, followedId: People?.id });
     } else {
-      followMutation({ followerId: user?.id, followedId: People.id });
+      followMutation({ followerId: user?.id, followedId: People?.id });
     }
-  }, [isFollowing, user?.id, People.id, unfollowMutation, followMutation]);
-  console.log({ People, isFollowing: isFollowing });
+  }, [isFollowing, user?.id, People?.id, unfollowMutation, followMutation]);
+
   return (
     <div className={className}>
       {followLoading || unfollowLoading ? (
         <div className="w-full relative h-full flex justify-center items-center rounded-3xl bg-inherit transition-all duration-300">
           <div className="dotloader"></div>
         </div>
-      ) : People.id !== user?.id ? (
+      ) : People?.id !== user?.id ? (
         <button
           onClick={handleClick}
           className="w-full h-full bg-inherit rounded-3xl transition-all duration-300"
@@ -66,4 +65,4 @@ function Follow({ className, People }) {
   );
 }
 
-export default Follow;
+export default memo(Follow);

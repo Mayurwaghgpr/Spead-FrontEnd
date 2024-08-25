@@ -11,10 +11,12 @@ import MainNavBar from "./component/header/MainNavBar";
 import ProtectedRoute from "./utils/ProtectedRoutes";
 import TostNotify from "./component/otherUtilityComp/TostNotify";
 import ScrollToTopButton from "./component/otherUtilityComp/ScrollToTopButton";
-import PersistentUser from "./component/persistentUser";
+import PersistentUser from "./utils/persistentUser";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import Spiner from "./component/loaders/Spinner";
 import { AnimatePresence } from "framer-motion";
+import ForgotPass from "./pages/auth/ForgotPass";
+import ResetPassword from "./pages/auth/ResetPassword";
 
 // Lazy load components
 const SignUp = lazy(() => import("./pages/auth/SignUp"));
@@ -117,6 +119,8 @@ function App() {
             />
             <Route path="*" element={<PageError />} />
             <Route path="/Read" element={<ReadList />} />
+            <Route path="/ForgotPass" element={<ForgotPass />} />
+            <Route path="/Resetpassword/:token" element={<ResetPassword />} />
           </Routes>
         </Suspense>
       </AnimatePresence>

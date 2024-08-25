@@ -5,6 +5,7 @@ function userApi() {
   const BASE_URL = import.meta.env.VITE_BASE_URL;
 
   const getLogInUserData = async () => {
+    console.log("persisted");
     try {
       const result = await axios.get(`${BASE_URL}/user/loggedInUser`, {
         withCredentials: true,

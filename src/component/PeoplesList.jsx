@@ -6,6 +6,7 @@ import userApi from "../Apis/userApi";
 import { useMutation } from "react-query";
 import Follow from "./buttons/follow";
 import userImageSrc from "../utils/userImageSrc";
+import { motion } from "framer-motion";
 function PeoplesList({ people, index, className }) {
   const [isUserhover, setuserHower] = useState(false);
   const userRef = useRef();
@@ -32,11 +33,17 @@ function PeoplesList({ people, index, className }) {
         >
           <h1 className="">{people?.username}</h1>
           {isUserhover && (
-            <div className=" absolute max-w-[300px] w-full flex flex-col gap-2  mt-[140px] bg-white font-normal text-[12px] p-3 overflow-hidden overflow-ellipsis rounded-md ">
-              <div className=" flex gap-4 justify-start items-center">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 100 }}
+              exit={{ opacity: 0 }}
+              key={people.id}
+              className=" absolute w-auto flex flex-col gap-2 border  mt-[90px] bg-white font-normal text-[12px] p-3 overflow-hidden overflow-ellipsis rounded-md "
+            >
+              <div className=" flex gap-4 justify-start items-center font-medium ">
                 {" "}
                 <img
-                  className="h-[30px] rounded-full w-[30px] object-cover object-top"
+                  className="h-[1.5rem] rounded-full w-[1.5rem] object-cover object-top"
                   src={
                     people?.userImage
                       ? `${import.meta.env.VITE_BASE_URL}/${people?.userImage}`
@@ -44,11 +51,11 @@ function PeoplesList({ people, index, className }) {
                   }
                   alt={`${people?.username}'s profile picture`}
                 />
-                <h1>{people?.username}</h1>
+                <h1 className=" text-sm">{people?.username}</h1>
               </div>
 
               <p>{people?.userInfo}</p>
-            </div>
+            </motion.div>
           )}
         </div>
       </Link>

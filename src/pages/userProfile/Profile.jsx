@@ -20,7 +20,7 @@ function Profile() {
 
   const { isLogin, user } = useSelector((state) => state.auth);
   const { userProfile, FollowInfo } = useSelector((state) => state.profile);
-
+  console.log(params);
   const profileId = params.id || user?.id;
 
   const { isError, isFetching, isLoading } = useQuery(
@@ -99,9 +99,9 @@ function Profile() {
   }
 
   return (
-    <div className="flex justify-center  mt-16  dark:*:border-[#383838]">
+    <div className="flex justify-center  mt-14  dark:*:border-[#383838]">
       <div className=" md:w-[80%]  lg:w-[70%] xl:w-[60%]  w-full flex flex-col h-full">
-        <div id="Profile" className="flex-grow w-full p-4">
+        <div id="Profile" className="flex-grow w-full sm:p-4">
           <ProfileHeader profileId={profileId} />
           <div className="w-full flex gap-5 border-t p-2 px-4">
             <div className="w-full flex gap-5">

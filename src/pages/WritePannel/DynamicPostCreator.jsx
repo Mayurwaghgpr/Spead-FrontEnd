@@ -5,7 +5,7 @@ import { usePostCreator } from "./hooks/usePostCreator";
 import { setElements } from "../../redux/slices/postSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Ibutton from "../../component/Ibutton";
-import useScrollDirection from "../../hooks/useScrollDirection";
+// import useScrollDirection from "../../hooks/useScrollDirection";
 function DynamicPostCreator() {
   const {
     isScale,
@@ -22,7 +22,7 @@ function DynamicPostCreator() {
     focusedIndex,
   } = usePostCreator();
   const dispatch = useDispatch();
-  const { maintransformY } = useScrollDirection();
+  // const { maintransformY } = useScrollDirection();
   const { elements, beforsubmit } = useSelector((state) => state.posts);
   // console.log(elements);
   const removeElement = useCallback(

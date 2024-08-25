@@ -46,7 +46,6 @@ function MainNavBar() {
       localStorage.setItem("ThemeMode", "light");
     }
   }, [ThemeMode]);
-  console.log(location);
   return (
     <header
       className={`fixed top-0 transform-all duration-300 ease-in-out border-b bg-white  border-inherit dark:border-[#383838] ${
@@ -148,7 +147,7 @@ function MainNavBar() {
                 </Link>
                 <Link
                   to="/signup"
-                  className="border-2 border-inherit transition-colors duration-500 rounded-full px-2 py-1"
+                  className="border border-inherit transition-colors duration-500 rounded-full px-2 py-1"
                 >
                   Start Writing
                 </Link>

@@ -78,16 +78,18 @@ function Viewblogs() {
   }
 
   return (
-    <main className="flex flex-col sm:flex-row justify-center bottom-0 border-inherit transition-all duration-300 ease-in-out dark:border-[#383838]">
-      <Aside
-        className="lg:flex gap-20 h-screen border-inherit transition-all duration-200 ease-in-out flex-col p-3 hidden text-xl w-full max-w-[350px] fixed top-16 left-0 py-8 border-e px-10 box-border"
-        FechingPreps={fetchingPreps}
-        isLoadingPreps={isLoadingPreps}
-        PrepsData={prepsData}
-        handleTopicClick={handleTopicClick}
-      />
-      <div className=" dark:bg-[#222222] relative bg-white  mt-16">
-        <div className="flex transition-all duration-200 dark:border-[#383838] ease-in-out z-[5] bg-inherit border-b px-5 h-[3rem] mb-1 justify-start gap-3 w-full fixed top-16">
+    <main className="flex flex-col relative sm:flex-row   justify-end  w-full bottom-0 border-inherit transition-all duration-300 ease-in-out dark:border-[#383838]">
+      {/* <div className=" relative  w-[20rem] lg:block hidden">
+        <Aside
+          className="lg:flex hidden  flex-col w-full px-10 py-3 justify-center border sticky  top-16  "
+          FechingPreps={fetchingPreps}
+          isLoadingPreps={isLoadingPreps}
+          PrepsData={prepsData}
+          handleTopicClick={handleTopicClick}
+        />
+      </div> */}
+      <div className="flex flex-col items-end dark:bg-[#222222] relative bg-white mt-5  mx-10">
+        <div className="flex transition-all duration-200 dark:border-[#383838] ease-in-out z-[5] bg-inherit border rounded-lg  items-center px-5 py-2  justify-start gap-3 w-full sticky top-20 ">
           <ul className="flex gap-3 h-full mt-2 border-inherit">
             <li className="rounded-full capitalize">
               <button
@@ -126,7 +128,7 @@ function Viewblogs() {
                   />
                 ))
               )
-            : [...Array(4)].map((_, idx) => (
+            : [...Array(10)].map((_, idx) => (
                 <PostPreview className="border-inherit" key={idx} />
               ))}
           {isFetchingNextPage && (
@@ -134,13 +136,22 @@ function Viewblogs() {
               <Spinner />
             </div>
           )}
-          {!postsData && !isLoadingPosts && (
-            <div className="relative w-full flex text-inherit text-black justify-center h-[70vh] flex-col items-center">
-              <h1 className="absolute text-6xl font-roboto">No Posts</h1>
-              {/* <img className="" src={nopost} alt="No posts" loading="lazy" /> */}
+          {!postsData && (
+            <div className="flex justify-center items-center w-full h-full text-3xl ">
+              <h2>No posts</h2>
             </div>
           )}
         </div>
+      </div>
+      <div className="relative">
+        {" "}
+        <Aside
+          className="lg:flex hidden  flex-col w-[24rem] min-h-screen px-10 py-3 justify-start sticky gap-5  top-16  "
+          FechingPreps={fetchingPreps}
+          isLoadingPreps={isLoadingPreps}
+          PrepsData={prepsData}
+          handleTopicClick={handleTopicClick}
+        />
       </div>
     </main>
   );

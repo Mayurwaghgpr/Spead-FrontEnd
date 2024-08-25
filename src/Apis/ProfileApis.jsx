@@ -6,7 +6,7 @@ function useProfileApi() {
   const fetchUserProfile = async (id) => {
     console.log("use", id);
     try {
-      const response = await axios.get(`${BASE_URL}/user/profile/:${id}`, {
+      const response = await axios.get(`${BASE_URL}/user/profile/${id}`, {
         withCredentials: true,
       });
       return response.data;
