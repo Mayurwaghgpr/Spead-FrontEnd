@@ -1,8 +1,8 @@
 import React from "react";
 
-function Spiner() {
+function Spiner({ className }) {
   return (
-    <div className=" lds-ring border-inherit ">
+    <div className={`loader  ${className}`}>
       <div></div>
       <div></div>
       <div></div>

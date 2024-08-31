@@ -3,7 +3,7 @@ import Comment from "../../component/postsComp/comment";
 import { format } from "date-fns";
 import { Link, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import profileIcon from "/user.png";
+import DOMPurify from "dompurify";
 import "boxicons";
 import { useQuery } from "react-query";
 
@@ -14,7 +14,7 @@ import CodeDisplay from "../../component/CodeDisplay";
 import usePublicApis from "../../Apis/publicApis";
 
 function FullBlogView() {
-  const [openComments, setopenComments] = useState(false);
+  const [openComments, setOpenComments] = useState(false);
   const { id } = useParams();
   const dispatch = useDispatch();
   const { fetchDataById } = usePublicApis();
@@ -39,45 +39,41 @@ function FullBlogView() {
       <div className="flex justify-center items-center h-64">Loading...</div>
     );
   }
-
-  const firstContent = postDatabyId?.[0];
-  const { User, createdAt, title, subtitelpagraph, titleImage } =
-    firstContent || {};
+  const { postTopdata } = postDatabyId;
 
   return (
     <main className="container mx-auto py-6 mt-16 dark:*:border-[#383838]">
       <article className="max-w-4xl mx-auto p-6 rounded-lg flex flex-col justify-center items-center ">
         <header className="mb-6 w-full">
           <h1 className="text-3xl break-words lg:text-5xl font-bold mb-2">
-            {title}
+            {postTopdata?.title}
           </h1>
           <section className="mb-6">
             <p className="text-lg lg:text-2xl leading-relaxed">
-              {subtitelpagraph}
+              {postTopdata?.subtitelpagraph}
             </p>
           </section>
           <div className="flex items-center my-4">
             <img
-              alt={`${User?.username}'s profile`}
+              alt={`${postTopdata?.User?.username}'s profile`}
               src={
-                User?.userImage
-                  ? `${import.meta.env.VITE_BASE_URL}/${User?.userImage}`
-                  : profileIcon
+                postTopdata?.User?.userImage &&
+                `${postTopdata?.User?.userImage}`
               }
               className="w-12 h-12 rounded-full mr-4 object-cover object-top"
               loading="lazy"
             />
             <div>
               <Link
-                to={`/profile/@${User?.username
+                to={`/profile/@${postTopdata?.User?.username
                   ?.split(" ")
                   .slice(0, -1)
-                  .join("")}/${User?.id}`}
+                  .join("")}/${postTopdata?.User?.id}`}
               >
-                {User?.username}
+                {postTopdata?.User?.username}
               </Link>
               <p className="text-sm ">
-                {format(new Date(createdAt), "LLL dd, yyyy")}
+                {format(new Date(postTopdata?.createdAt), "LLL dd, yyyy")}
               </p>
             </div>
           </div>
@@ -90,7 +86,7 @@ function FullBlogView() {
               <span>35</span>
             </button>
             <button
-              onClick={() => setopenComments(true)}
+              onClick={() => setOpenComments(true)}
               className="flex items-center gap-1"
             >
               <i className="bi bi-chat"></i>
@@ -98,18 +94,18 @@ function FullBlogView() {
             </button>
           </div>
           <div className="flex gap-7 justify-between">
-            <Bookmark post={firstContent} />
+            <Bookmark post={postTopdata} />
             <button className="flex items-center gap-1 text-gray-600 hover:text-gray-900">
               <i className="bi bi-three-dots"></i>
             </button>
           </div>
         </div>
 
-        {titleImage && (
+        {postTopdata?.titleImage && (
           <figure className="my-6 w-full">
             <img
               className="w-full rounded-lg"
-              src={`${import.meta.env.VITE_BASE_URL}/${titleImage}`}
+              src={`${postTopdata?.titleImage}`}
               alt="Main Blog Image"
               loading="lazy"
             />
@@ -117,13 +113,15 @@ function FullBlogView() {
           </figure>
         )}
 
-        <div className="w-full flex flex-col justify-center items-center  gap-5">
-          {postDatabyId?.map((item) => (
-            <section key={item.id} className="mb-6">
+        <div className="w-full flex flex-col justify-center text-start items-center gap-5">
+          {/* {console.log({ postDatabyId })} */}
+          {postDatabyId?.otherContent?.map((item) => (
+            <section key={item.id} className="mb-6 w-full px-2">
+              {console.log(item)}
               {item.imageUrl && (
                 <figure className="mb-4">
                   <img
-                    src={`${import.meta.env.VITE_BASE_URL}/${item.imageUrl}`}
+                    src={`${item.imageUrl}`}
                     alt="Content"
                     className="w-full rounded-lg object-cover object-center"
                     loading="lazy"
@@ -131,10 +129,15 @@ function FullBlogView() {
                   <figcaption className="text-center">{item.title}</figcaption>
                 </figure>
               )}
-              {item?.Content?.type === "text" ? (
-                <p className="text-lg ">{item.Content}</p>
+              {item?.type === "text" ? (
+                <p
+                  dangerouslySetInnerHTML={{
+                    __html: DOMPurify.sanitize(item.Content),
+                  }}
+                  className="text-lg w-full "
+                ></p>
               ) : (
-                item?.Content?.type === "url" && (
+                item?.type === "url" && (
                   <CopyToClipboardInput
                     type={item.Content.type}
                     code={item.Content}
@@ -145,7 +148,7 @@ function FullBlogView() {
           ))}
         </div>
       </article>
-      {openComments && <Comment setopenComments={setopenComments} />}
+      {openComments && <Comment setOpenComments={setOpenComments} />}
     </main>
   );
 }

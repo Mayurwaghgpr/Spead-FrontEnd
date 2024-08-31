@@ -11,10 +11,10 @@ function LangSelector({ setLanguage }) {
   return (
     <select
       onChange={(e) => setLanguage(e.target.value)}
-      className="p-2 border rounded"
+      className="p-2 border rounded max-w-[10rem] "
     >
       {languages.map((lang) => (
-        <option key={lang.value} value={lang.value}>
+        <option className="w-full" key={lang.value} value={lang.value}>
           {lang.name}
         </option>
       ))}

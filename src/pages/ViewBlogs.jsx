@@ -9,8 +9,7 @@ import SomthingWentWrong from "./ErrorPages/somthingWentWrong";
 import Spinner from "../component/loaders/Spinner";
 import useLastPostObserver from "../hooks/useLastPostObserver";
 import usePublicApis from "../Apis/publicApis";
-import Aside from "../component/Aside";
-import nopost from "../assets/3385493.webp";
+import Aside from "../component/homeComp/Aside";
 
 function Viewblogs() {
   const dispatch = useDispatch();
@@ -88,8 +87,8 @@ function Viewblogs() {
           handleTopicClick={handleTopicClick}
         />
       </div> */}
-      <div className="flex flex-col items-end dark:bg-[#222222] relative bg-white mt-5  mx-10">
-        <div className="flex transition-all duration-200 dark:border-[#383838] ease-in-out z-[5] bg-inherit border rounded-lg  items-center px-5 py-2  justify-start gap-3 w-full sticky top-20 ">
+      <div className="flex flex-col items-end dark:bg-[#222222] relative bg-white mt-5 w-[43rem]  mx-10">
+        <div className="flex transition-all duration-200 dark:border-[#383838] ease-in-out z-[5] bg-inherit border rounded-lg  items-center px-5 py-2  justify-start gap-3 w-full overflow-auto sticky top-20  no-scrollbar">
           <ul className="flex gap-3 h-full mt-2 border-inherit">
             <li className="rounded-full capitalize">
               <button
@@ -109,7 +108,7 @@ function Viewblogs() {
         </div>
         <div
           id="PostContainer"
-          className={`relative flex flex-col ${
+          className={`relative flex flex-col gap-3  mt-16 ${
             !postsData && " py-10 "
           } w-full lg:w-[730px] max-w-[730px] min-h-screen snap-center sm:px-10 dark:border-[#383838]`}
         >
@@ -117,7 +116,7 @@ function Viewblogs() {
             ? postsData?.pages?.map((page) =>
                 page?.map((post, idx) => (
                   <PostPreview
-                    className="border-inherit"
+                    className="border-inherit p-3"
                     ref={
                       page?.length > 3 && page?.length === idx + 1
                         ? lastpostRef

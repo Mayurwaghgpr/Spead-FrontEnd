@@ -12,14 +12,11 @@ const initialState = {
     status: false,
   },
  
-  ToastState: [
-   
-// {message:'success',type:'success'},
-// {message:'success',type:'success'},
-// {message:'success',type:'success'},
-// {message:'success',type:'success'}
-  ],
-  ThemeMode: localStorage.getItem("ThemeMode") === "dark" ||false ,
+  ToastState: [],
+  ThemeMode: localStorage.getItem("ThemeMode") === "dark" || false,
+  
+  isScale: false,
+  // focusedIndex: 0,
 };
 
 const uiSlice = createSlice({
@@ -33,17 +30,24 @@ const uiSlice = createSlice({
       state.isConfirm = action.payload;
     },
     setToast: (state, action) => {
-      state.ToastState.push({ id: uuidv4(), ...action.payload });
+      state.ToastState.push({ id: uuidv4(), ...action.payload});
     },
     removeToast: (state, action) => {
       state.ToastState = state.ToastState.filter(el => el.id !== action.payload);
     },
     setThemeMode: (state) => {
       state.ThemeMode = !state.ThemeMode
-    }
+    },
+    setIsScale: (state,action) => {
+      state.isScale = !state.isScale
+    },
+    // setFocusedIndex: (state,action) => {
+    //   state.focusedIndex= action.payload
+    // },
+
   },
 });
 
-export const { setConfirmBox, setIsConfirm, setToast, removeToast,setThemeMode } = uiSlice.actions;
+export const { setConfirmBox, setIsConfirm, setToast, removeToast,setThemeMode ,setIsScale} = uiSlice.actions;
 
 export default uiSlice.reducer;

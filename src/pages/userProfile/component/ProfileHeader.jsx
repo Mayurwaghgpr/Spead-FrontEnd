@@ -14,8 +14,8 @@ const ProfileHeader = React.memo(({ profileId }) => {
 
   const { userImageurl, IsuserFromOAth } = userImageSrc(userProfile);
   return (
-    <div className="flex flex-col justify-evenly dark:bg-inherit dark:*:border-[#383838] dark:border-[#383838]   ">
-      <div className="flex w-full justify-start items-center flex-col gap-2  ">
+    <div className="flex flex-col justify-evenly dark:bg-inherit  dark:*:border-[#383838] dark:border-[#383838]   ">
+      <div className="flex w-full justify-start items-center flex-col gap-2 pt-3  ">
         <div className="relative flex  h-full border p-2 py-5  w-full justify-start rounded-lg  items-basline   gap-5 sm:gap-9 border-inherit px-4">
           <div>
             <div className="lg:min-w-[80px] lg:min-h-[80px] h-[70px] w-[70px]   ">

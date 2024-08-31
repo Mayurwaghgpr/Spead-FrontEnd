@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setIsLogin, setUser } from "../../redux/slices/authSlice";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { LoginUser } from "../../Apis/authapi";
-import CommonInput from "../../component/commonInput";
+import CommonInput from "../../component/otherUtilityComp/commonInput";
 import OAuth from "./OAuth";
 import { motion } from "framer-motion";
 
@@ -65,7 +65,7 @@ function SignIn() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className={`sm:flex relative justify-evenly z-10 items-center h-fit flex-col   top-0 left-0 bottom-0 right-0 text-black  bg-[#ffff] border-inherit`}
+        className={`sm:flex relative justify-evenly z-10 items-center h-[47rem] flex-col   top-0 left-0 bottom-0 right-0 text-black  bg-[#ffff] border-inherit`}
       >
         {isError && (
           <div className="text-red-500 my-4 w-full flex justify-center  bg-red-100 py-2 ">

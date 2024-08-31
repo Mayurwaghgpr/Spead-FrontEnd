@@ -74,6 +74,7 @@ function userApi() {
           withCredentials: true,
         }
       );
+      console.log({ result });
       return result.data;
     } catch (error) {}
   };

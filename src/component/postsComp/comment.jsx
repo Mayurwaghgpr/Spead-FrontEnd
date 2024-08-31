@@ -1,11 +1,11 @@
 import React, { memo, useEffect } from "react";
 import { useSelector } from "react-redux";
 
-function Comment({ setopenComments }) {
+function Comment({ setOpenComments }) {
   const { isLogin, user } = useSelector((state) => state.auth);
   return (
     <section
-      onClick={({ target }) => setopenComments(false)}
+      onClick={({ target }) => setOpenComments(false)}
       className="flex justify-end  w-full right-1 bg-black bg-opacity-10 shadow h-full fixed top-0 z-40 "
     >
       <div

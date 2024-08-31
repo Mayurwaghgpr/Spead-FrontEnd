@@ -1,43 +1,32 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { removeToast } from "../../redux/slices/uiSlice";
-
+import { motion } from "framer-motion";
 function ToastItem({ ToastContent }) {
   const dispatch = useDispatch();
   const [isVisible, setVisble] = useState(true);
-
+  const timerRef = useRef({});
   useEffect(() => {
-    let timeoutId1;
-    let timeoutId2;
-    if (ToastContent.id) {
-      clearTimeout(timeoutId1);
-      clearTimeout(timeoutId2);
-    }
-
-    timeoutId1 = setTimeout(() => {
-      setVisble(false);
+    timerRef[ToastContent.id] = setTimeout(() => {
+      dispatch(removeToast(ToastContent.id));
     }, 2000);
 
-    timeoutId2 = setTimeout(() => {
-      dispatch(removeToast(ToastContent.id));
-    }, 2300);
-
     return () => {
-      clearTimeout(timeoutId1);
-      clearTimeout(timeoutId2);
+      clearTimeout(timerRef[ToastContent.id]);
     };
   }, [dispatch, ToastContent.id]);
 
   const status =
     ToastContent.type === "success"
-      ? "bg-green-300"
-      : ToastContent.type === "error" && "bg-red-300";
-
+      ? "bg-green-300 "
+      : ToastContent.type === "error"
+      ? "bg-red-300"
+      : ToastContent.type === "warning"
+      ? "bg-yellow-300 "
+      : "bg-sky-300";
   return (
-    <div
-      className={`transition-all duration-500 ease-in-out ${status} shadow-lg relative flex  flex-col rounded-lg w-full ${
-        isVisible ? "opacity-100" : "opacity-0 -translate-y-2"
-      }`}
+    <span
+      className={`animate-slide-in-left pointer-events-auto  ${status} shadow-lg  flex  flex-col rounded-lg  `}
     >
       <div className="w-full flex  p-4">
         <div className="w-full break-words flex">
@@ -45,15 +34,16 @@ function ToastItem({ ToastContent }) {
         </div>
         <button
           onClick={() => {
+            clearTimeout(timerRef[ToastContent.id]);
             dispatch(removeToast(ToastContent?.id));
           }}
           className="ml-4"
         >
-          X
+          <i className="bi bi-x-lg"></i>
         </button>
       </div>
       {/* <div className={`w-1 h-1 bg-sky-500 rounded-lg`}></div> */}
-    </div>
+    </span>
   );
 }
 

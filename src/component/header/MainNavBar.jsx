@@ -20,7 +20,7 @@ const ConfirmationBox = React.lazy(() =>
   import("../otherUtilityComp/ConfirmationBox")
 );
 
-import SearchBar from "../searchBar";
+import SearchBar from "../homeComp/searchBar";
 
 function MainNavBar() {
   // const { NavetransformY } = useScrollDirection();
@@ -49,8 +49,8 @@ function MainNavBar() {
   return (
     <header
       className={`fixed top-0 transform-all duration-300 ease-in-out border-b bg-white  border-inherit dark:border-[#383838] ${
-        !isLogin ? " bg-opacity-20 backdrop-blur-[2px]" : "dark:bg-[#222222]"
-      } w-full z-10`}
+        !isLogin ? " bg-opacity-50 backdrop-blur-lg" : "dark:bg-[#222222]"
+      } w-full z-[5]`}
     >
       <nav className="relative w-full z-10 py-3 px-7 sm:px-20 lg:px-28">
         <div className="flex items-center justify-between w-full m-auto">
@@ -63,7 +63,7 @@ function MainNavBar() {
             {location.pathname === "/write" && isLogin && (
               <div className="flex justify-end items-center">
                 <button
-                  className="bg-sky-100 px-3 py-1 text-sm rounded-3xl"
+                  className="bg-sky-100 dark:bg-gray-800 px-3 py-1 text-sm rounded-3xl"
                   onClick={() => dispatch(setBeforeSubmit(true))}
                 >
                   Publish
@@ -138,7 +138,7 @@ function MainNavBar() {
                 )}
               </div>
             ) : (
-              <div className="flex gap-3 justify-end w-full items-center">
+              <div className="flex gap-3 justify-end w-full items-center text-sm">
                 <Link
                   to="/signin"
                   className="transition-colors duration-500 rounded-3xl sm:px-3 py-2"
