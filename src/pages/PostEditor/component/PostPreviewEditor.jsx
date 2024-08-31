@@ -83,7 +83,7 @@ function PostPreviewEditor({ imageFiles, setImageFiles, handleTextChange }) {
   const imageElements = elements?.filter((el) => el.type === "image");
 
   return (
-    <main className="fixed top-0 right-0 left-0 z-[100] bg-white bottom-0 w-full h-screen flex justify-center flex-col gap-5 items-center">
+    <main className="fixed top-0 right-0 left-0 z-[100] bg-white dark:bg-[#222222] bottom-0 w-full h-screen flex justify-center flex-col gap-5 items-center">
       <div className="w-full max-w-[900px] text-center ">
         <div className="w-full text-end">
           <button onClick={() => dispatch(setBeforeSubmit(false))}> X</button>
@@ -103,11 +103,11 @@ function PostPreviewEditor({ imageFiles, setImageFiles, handleTextChange }) {
         aria-disabled={mutation.isLoading}
         className="max-h-[500px] h-full w-full max-w-[900px] flex gap-2  "
       >
-        <div className=" w-full flex flex-col justify-center items-center">
+        <div className=" w-full flex flex-col justify-center items-center bg-inherit">
           <h1 className="w-full text-lg mb-2">Post Preview</h1>
-          <div className="w-full h-[300px]  bg-slate-100 flex justify-center items-center">
+          <div className="w-full h-[300px]   flex justify-center items-center bg-inherit">
             <label className=" w-full h-full " htmlFor="titleimage">
-              {imageElements?.length > 0 ? (
+              {imageElements?.length ? (
                 <img
                   className=" w-full h-full "
                   src={imageElements[0]?.file}
@@ -116,6 +116,7 @@ function PostPreviewEditor({ imageFiles, setImageFiles, handleTextChange }) {
               ) : null}
             </label>
             <input
+              className=""
               hidden
               type="file"
               name=""
@@ -132,7 +133,7 @@ function PostPreviewEditor({ imageFiles, setImageFiles, handleTextChange }) {
           </div>
           <div className="w-full h-full gap-1 flex flex-col justify-start items-center ">
             <input
-              className=" p-2 w-full border-b placeholder:text-sm  outline-none focus:border-black"
+              className=" p-2 w-full border-b placeholder:text-sm  outline-none focus:border-black bg-inherit"
               type="text"
               name="title"
               defaultValue={elements[0]?.data}
@@ -143,7 +144,7 @@ function PostPreviewEditor({ imageFiles, setImageFiles, handleTextChange }) {
               }
             />
             <input
-              className=" p-2 w-full border-b placeholder:text-sm  outline-none focus:border-black"
+              className=" p-2 w-full border-b placeholder:text-sm  outline-none focus:border-black bg-inherit"
               type="text"
               name="subtitle"
               defaultValue={elements[1]?.data}
@@ -162,7 +163,7 @@ function PostPreviewEditor({ imageFiles, setImageFiles, handleTextChange }) {
             </div>
             <div>
               <input
-                className=" p-2 w-full border-b placeholder:text-sm  outline-none focus:border-black"
+                className=" p-2 w-full border-b placeholder:text-sm  outline-none focus:border-black bg-inherit"
                 type="text"
                 placeholder="Add Topics ..."
                 onChange={(e) => setTopic(e.target.value)}

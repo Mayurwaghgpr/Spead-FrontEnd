@@ -19,14 +19,11 @@ function ConfirmationBox() {
   };
   // console.log(confirmBox);
   return createPortal(
-    <div className="flex justify-center z-[60]  transition-transform delay-700 items-center fixed top-0 bottom-0 left-0 right-0  backdrop-blur-[.5px]">
-      <div className="p-3 flex flex-col justify-between   h-[200px] bg-slate-200 sm:w-[400px] rounded-xl">
+    <div className="flex justify-center z-[30]  transition-transform delay-700 items-center fixed top-0 bottom-0 left-0 right-0  bg-opacity-20 bg-black backdrop-blur-sm   border-inherit ">
+      <div className="p-3  flex flex-col justify-between bg-white dark:bg-[#222222]  text-inherit  h-[200px] z-50  border border-inherit  sm:w-[400px] rounded-xl ">
         <div className="text-lg flex justify-between">
-          <h1></h1>
-          <button
-            className=" bg-inherit hover:shadow-xl bg-none "
-            onClick={handleCancel}
-          >
+          <h1>Confirm</h1>
+          <button className="" onClick={handleCancel}>
             <i className="bi bi-x-lg"></i>
           </button>
         </div>
@@ -37,14 +34,14 @@ function ConfirmationBox() {
           <button
             onClick={handleCancel}
             name="cancel"
-            className=" bg-white p-2 rounded-3xl"
+            className=" p-2 rounded-3xl"
           >
             Cancel
           </button>
           <button
             onClick={handleConfirm}
             name="confirm"
-            className="p-2 rounded-3xl bg-slate-400"
+            className="p-2 rounded-3xl bg-gray-400 dark:bg-gray-800"
           >
             Confirm
           </button>

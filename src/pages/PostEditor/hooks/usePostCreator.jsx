@@ -134,9 +134,9 @@ export const usePostCreator = () => {
   );
 
   const handleTextChange = useCallback(
-    (id, value) => {
+    (id, value, lang = null) => {
       const updatedElements = elements.map((el) =>
-        el.id === id ? { ...el, data: value } : el
+        el.id === id ? { ...el, data: value, ...(lang && { lang }) } : el
       );
       debouncedUpdateElements(updatedElements);
     },

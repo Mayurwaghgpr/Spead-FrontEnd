@@ -26,10 +26,10 @@ function ToastItem({ ToastContent }) {
       : "bg-sky-300";
   return (
     <span
-      className={`animate-slide-in-left pointer-events-auto  ${status} shadow-lg  flex  flex-col rounded-lg  `}
+      className={` animate-slide-in-left pointer-events-auto  ${status} shadow-lg  flex  flex-col rounded-lg  w-fit  `}
     >
-      <div className="w-full flex  p-4">
-        <div className="w-full break-words flex">
+      <div className=" flex  p-4">
+        <div className=" break-words flex">
           <p className="word-break">{ToastContent?.message}</p>
         </div>
         <button

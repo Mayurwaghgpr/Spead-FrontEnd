@@ -94,7 +94,7 @@ function SignUp() {
 
       <div className="flex flex-col justify-between gap-3 p-7 min-w-[300px] sm:w-[500px] h-full rounded-xl bg-white ">
         <header className="text-2xl mt-2 text-center flex justify-center items-center">
-          {"{...Spread}"}
+          {"Spread"}
         </header>
 
         <div className="flex flex-col justify- w-full px-5 ">

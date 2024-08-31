@@ -56,7 +56,7 @@ function MainNavBar() {
         <div className="flex items-center justify-between w-full m-auto">
           <div className="py-1">
             <Link to="/" className="font-medium sm:text-2xl lg:text-3xl">
-              ...Spread
+              Spread
             </Link>
           </div>
           <div className="flex gap-8 justify-end items-center sm:w-full font-light">

@@ -79,7 +79,7 @@ function FullBlogView() {
           </div>
         </header>
 
-        <div className="flex justify-between items-center border-inherit border-y px-3 py-3 text-lg font-light  w-full">
+        <div className="flex justify-between text-sm  items-center border-inherit border-y px-3 py-3  font-light  w-full">
           <div className="flex gap-4">
             <button className="flex items-center gap-1">
               <i className="bi bi-hand-thumbs-up"></i>
@@ -112,41 +112,33 @@ function FullBlogView() {
             <figcaption></figcaption>
           </figure>
         )}
-
-        <div className="w-full flex flex-col justify-center text-start items-center gap-5">
-          {/* {console.log({ postDatabyId })} */}
-          {postDatabyId?.otherContent?.map((item) => (
-            <section key={item.id} className="mb-6 w-full px-2">
-              {console.log(item)}
-              {item.imageUrl && (
-                <figure className="mb-4">
-                  <img
-                    src={`${item.imageUrl}`}
-                    alt="Content"
-                    className="w-full rounded-lg object-cover object-center"
-                    loading="lazy"
-                  />
-                  <figcaption className="text-center">{item.title}</figcaption>
-                </figure>
-              )}
-              {item?.type === "text" ? (
-                <p
-                  dangerouslySetInnerHTML={{
-                    __html: DOMPurify.sanitize(item.Content),
-                  }}
-                  className="text-lg w-full "
-                ></p>
-              ) : (
-                item?.type === "url" && (
-                  <CopyToClipboardInput
-                    type={item.Content.type}
-                    code={item.Content}
-                  />
-                )
-              )}
-            </section>
-          ))}
-        </div>
+        {/* {console.log({ postDatabyId })} */}
+        {postDatabyId?.otherContent?.map((item) => (
+          <section key={item.id} className="mb-6 w-full px-2">
+            {console.log(item)}
+            {item.imageUrl && (
+              <figure className="mb-4">
+                <img
+                  src={`${item.imageUrl}`}
+                  alt="Content"
+                  className="w-full rounded-lg object-cover object-center"
+                  loading="lazy"
+                />
+                <figcaption className="text-center">{item.title}</figcaption>
+              </figure>
+            )}
+            {item?.type === "text" ? (
+              <p
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(item.Content),
+                }}
+                className="text-lg w-full "
+              ></p>
+            ) : (
+              item?.type !== "text" && <CopyToClipboardInput item={item} />
+            )}
+          </section>
+        ))}
       </article>
       {openComments && <Comment setOpenComments={setOpenComments} />}
     </main>

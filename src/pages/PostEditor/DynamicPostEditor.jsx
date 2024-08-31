@@ -61,7 +61,7 @@ function DynamicPostEditor() {
     },
     [removeElement, addElement, dispatch]
   );
-
+  console.log(elements);
   return (
     <main className="flex flex-col justify-between mt-16">
       <div

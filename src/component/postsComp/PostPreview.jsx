@@ -181,7 +181,7 @@ const PostPreview = forwardRef(({ post, className, Saved }, ref) => {
                   {menuId === post?.id && (
                     <div
                       id={post?.id}
-                      className="absolute sm:top-5 mt-2 p-1 z-[100] bg-white dark:bg-[#0f0f0f]  border before:content-normal before:absolute before:-top-[0.3rem] before:right-[3rem] before:h-[10px] before:w-[10px] before:rotate-45 before:bg-white before:border-l before:border-t border-gray-300 rounded-lg"
+                      className="absolute sm:top-5 mt-2 p-1 z-[100] bg-white dark:bg-[#0f0f0f]  border before:content-normal before:absolute before:-top-[0.3rem] before:right-[3rem] before:h-[10px] before:w-[10px] before:rotate-45 before:bg-inherit before:border-l before:border-t border-gray-300 rounded-lg"
                     >
                       <ul
                         ref={menuRef}

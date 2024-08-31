@@ -7,7 +7,7 @@ const initialState = {
     submit: false,
     beforsubmit: false,
     elements:[
-    {className:'text-5xl text-gray-300', type: "text", data: "Title", id: uuidv4(), index: 0 },
+    {className:'text-5xl text-gray-300', type: "text", data: "", id: uuidv4(), index: 0 },
     ],
     
 }

@@ -31,7 +31,17 @@ const WriteElements = ({
       );
 
     case "code":
-      return <CodeEditor />;
+      return (
+        <CodeEditor
+          inputRefs={inputRefs}
+          element={element}
+          index={index}
+          handleTextChange={handleTextChange}
+          handleKeyDown={handleKeyDown}
+          focusedIndex={focusedIndex}
+          setFocusedIndex={setFocusedIndex}
+        />
+      );
 
     case "image":
       return (
