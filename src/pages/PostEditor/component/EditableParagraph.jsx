@@ -11,7 +11,6 @@ const EditableParagraph = ({
   setFocusedIndex,
 }) => {
   const [showToolbar, setShowToolbar] = useState(false);
-  const dispatch = useDispatch();
 
   const applyStyle = useCallback((style, value = null) => {
     document.execCommand(style, false, value);
@@ -23,8 +22,8 @@ const EditableParagraph = ({
   }, []);
 
   const handleFocus = useCallback(() => {
-    dispatch(setFocusedIndex(index));
-  }, [dispatch, index]);
+    setFocusedIndex(index);
+  }, [index]);
 
   return (
     <div className="relative">
@@ -34,7 +33,10 @@ const EditableParagraph = ({
         contentEditable="true"
         suppressContentEditableWarning
         onInput={(e) => handleTextChange(element.id, e.target.innerHTML)}
-        onKeyDown={(e) => handleKeyDown(e, element.id, index)}
+        onKeyDown={(e) => {
+          if (e.key === "Backspace" || e.key === "Enter" || e.key === "delete")
+            handleKeyDown(e, element.id, index);
+        }}
         onFocus={handleFocus}
         onMouseUp={handleSelectedText}
         onKeyUp={handleSelectedText}

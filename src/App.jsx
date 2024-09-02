@@ -18,6 +18,7 @@ import { AnimatePresence } from "framer-motion";
 import ForgotPass from "./pages/auth/ForgotPass";
 import ResetPassword from "./pages/auth/ResetPassword";
 import LoaderScreen from "./component/loaders/loaderScreen";
+import ConfirmationBox from "./component/otherUtilityComp/ConfirmationBox";
 
 // Lazy load components
 const SignUp = lazy(() => import("./pages/auth/SignUp"));
@@ -40,12 +41,12 @@ function App() {
   const dispatch = useDispatch();
   const location = useLocation();
   const { isLogin } = useSelector((state) => state.auth);
-  const LocalTheme = localStorage.getItem("ThemeMode");
 
   return (
     <>
       <ToastContainer />
       <PersistentUser />
+      {<ConfirmationBox />}
       <AnimatePresence mode="wait">
         <MainNavBar />
         <Suspense fallback={<LoaderScreen />}>

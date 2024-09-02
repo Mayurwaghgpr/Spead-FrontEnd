@@ -20,6 +20,7 @@ function DynamicPostEditor() {
     setImageFiles,
     focusedIndex,
     setFocusedIndex,
+    handleKeyDown,
   } = usePostCreator();
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -28,40 +29,6 @@ function DynamicPostEditor() {
   const { elements, beforsubmit } = useSelector((state) => state.posts);
   const { isScale } = useSelector((state) => state.ui);
 
-  const removeElement = useCallback(
-    (id) => {
-      const updatedImageFiles = imageFiles
-        ?.filter((el) => el.id !== id)
-        .map((el, idx) => ({ ...el, index: idx }));
-      setImageFiles(updatedImageFiles);
-
-      const updatedElements = elements
-        .filter((el) => el.id !== id)
-        .map((el, idx) => ({ ...el, index: idx }));
-      dispatch(setElements(updatedElements));
-
-      return updatedElements.length;
-    },
-    [elements, dispatch]
-  );
-  const handleKeyDown = useCallback(
-    (event, id, index) => {
-      if (event.key === "Backspace" && !event.target.innerText) {
-        const newLength = removeElement(id);
-        if (newLength < elements.length) {
-          setTimeout(() => inputRefs.current[index - 1]?.focus(), 0);
-        }
-        setFocusedIndex(index - 1);
-      } else if (event.key === "Enter" && !event.shiftKey) {
-        event.preventDefault();
-        addElement("text");
-        setTimeout(() => inputRefs.current[index + 1]?.focus(), 0);
-        setFocusedIndex(index + 1);
-      }
-    },
-    [removeElement, addElement, dispatch]
-  );
-  console.log(elements);
   return (
     <main className="flex flex-col justify-between mt-16">
       <div

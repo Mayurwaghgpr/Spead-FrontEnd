@@ -10,12 +10,14 @@ import Spinner from "../component/loaders/Spinner";
 import useLastPostObserver from "../hooks/useLastPostObserver";
 import usePublicApis from "../Apis/publicApis";
 import Aside from "../component/homeComp/Aside";
+import PostsApis from "../Apis/PostsApis";
 
 function Viewblogs() {
   const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
   const { isLogin, user } = useSelector((state) => state.auth);
-  const { userPrepsData, fetchDataAll } = usePublicApis();
+  const { userPrepsData } = usePublicApis();
+  const { fetchDataAll } = PostsApis();
 
   const selectedTopic = searchParams.get("topic");
 
@@ -39,7 +41,7 @@ function Viewblogs() {
     hasNextPage,
     refetch,
   } = useInfiniteQuery(
-    ["posts", selectedTopic],
+    ["Allposts", selectedTopic],
     ({ pageParam = 1 }) => fetchDataAll({ pageParam, topic: selectedTopic }),
     {
       getNextPageParam: (lastPage, allPages) =>
@@ -47,6 +49,7 @@ function Viewblogs() {
       retry: false,
     }
   );
+  console.log(postsData);
 
   const { lastpostRef } = useLastPostObserver(
     fetchNextPage,
@@ -113,20 +116,18 @@ function Viewblogs() {
           } w-full lg:w-[730px] max-w-[730px] min-h-screen snap-center sm:px-10 dark:border-[#383838]`}
         >
           {!isLoadingPosts
-            ? postsData?.pages?.map((page) =>
-                page?.map((post, idx) => (
-                  <PostPreview
-                    className="border-inherit p-3"
-                    ref={
-                      page?.length > 3 && page?.length === idx + 1
-                        ? lastpostRef
-                        : null
-                    }
-                    key={post.id}
-                    post={post}
-                  />
-                ))
-              )
+            ? postsData?.pages?.map((post, idx, arr) => (
+                <PostPreview
+                  className="border-inherit p-3"
+                  ref={
+                    arr?.length > 3 && arr?.length === idx + 1
+                      ? lastpostRef
+                      : null
+                  }
+                  key={post.id}
+                  post={post}
+                />
+              ))
             : [...Array(10)].map((_, idx) => (
                 <PostPreview className="border-inherit" key={idx} />
               ))}
@@ -142,10 +143,10 @@ function Viewblogs() {
           )}
         </div>
       </div>
-      <div className="relative">
+      <div className="relative border-inherit">
         {" "}
         <Aside
-          className="lg:flex hidden  flex-col w-[24rem] min-h-screen px-10 py-3 justify-start sticky gap-5  top-16  "
+          className="lg:flex hidden  border-inherit flex-col w-[24rem] min-h-screen px-10 py-3 justify-start sticky gap-5  top-16  "
           FechingPreps={fetchingPreps}
           isLoadingPreps={isLoadingPreps}
           PrepsData={prepsData}

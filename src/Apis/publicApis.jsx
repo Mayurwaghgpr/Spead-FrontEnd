@@ -15,30 +15,7 @@ function usePublicApis() {
       return result.data;
     } catch (error) {
       console.error("Error fetching user preferences data:", error);
-      throw { error: true, message: error.message };
-    }
-  };
-
-  // Fetch all posts with pagination and filtering by topic
-  const fetchDataAll = async ({ pageParam, topic }) => {
-    try {
-      const response = await axios.get(`${BASE_URL}/public/posts`, {
-        params: {
-          limit: 3,
-          page: pageParam,
-          type: topic,
-        },
-        withCredentials: true,
-      });
-      return response.data;
-    } catch (error) {
-      if (error.response && error.response.status === 401) {
-        // localStorage.removeItem("userAccount");
-        // dispatch(setToast({ message: error.response.data, type: "error" }));
-        localStorage.removeItem("AccessToken");
-      } else {
-        throw error.response;
-      }
+      throw error;
     }
   };
 
@@ -56,7 +33,7 @@ function usePublicApis() {
         // localStorage.removeItem("userAccount");
         localStorage.removeItem("AccessToken");
       }
-      throw { error: true, message: error.message };
+      throw error;
     }
   };
 
@@ -71,8 +48,86 @@ function usePublicApis() {
     );
     return searchResult.data;
   };
+  const followUser = async ({ followerId, followedId }) => {
+    try {
+      const result = await axios.put(
+        `${BASE_URL}/public/follow/`,
+        { followerId, followedId },
+        { withCredentials: true }
+      );
+      return result.data;
+    } catch (error) {
+      throw error.respons;
+    }
+  };
 
-  return { userPrepsData, fetchDataAll, fetchDataById, fetchSearchData };
+  const LikePost = async (likedPostId) => {
+    try {
+      const result = await axios.put(
+        `${BASE_URL}/public/Like`,
+        { likedPostId },
+        {
+          withCredentials: true,
+        }
+      );
+      return result.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const unfollowUser = async ({ followerId, followedId }) => {
+    try {
+      const result = await axios.post(
+        `${BASE_URL}/public/unfollow`,
+        { followerId, followedId },
+        { withCredentials: true }
+      );
+      return result.data;
+    } catch (error) {
+      console.log(error);
+      throw error.respons;
+    }
+  };
+
+  const ArchivePost = async (postId) => {
+    try {
+      const result = await axios.put(
+        `${BASE_URL}/public/Archive`,
+        { postId },
+        { withCredentials: true }
+      );
+      return result.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+  const removePostFromArchive = async (id) => {
+    console.log(id);
+    try {
+      const result = await axios.delete(
+        `${BASE_URL}/public/removeFromArchive?id=${id}`,
+        {
+          withCredentials: true,
+        }
+      );
+      console.log({ result });
+      return result.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  return {
+    userPrepsData,
+    fetchDataById,
+    fetchSearchData,
+    LikePost,
+    removePostFromArchive,
+    unfollowUser,
+    ArchivePost,
+    followUser,
+  };
 }
 
 export default usePublicApis;

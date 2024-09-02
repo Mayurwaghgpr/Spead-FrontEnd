@@ -125,7 +125,7 @@ export const usePostCreator = () => {
     },
     [elements, dispatch, focusedIndex]
   );
-  console.log({ imageFiles });
+  // console.log({ imageFiles });
   const debouncedUpdateElements = useCallback(
     debounce((updatedElements) => {
       dispatch(setElements(updatedElements));
@@ -157,7 +157,44 @@ export const usePostCreator = () => {
     },
     [elements, dispatch]
   );
+  const removeElement = useCallback(
+    (id) => {
+      const updatedImageFiles = imageFiles
+        ?.filter((el) => el.id !== id)
+        .map((el, idx) => ({ ...el, index: idx }));
+      setImageFiles(updatedImageFiles);
 
+      const updatedElements = elements
+        .filter((el) => el.id !== id)
+        .map((el, idx) => ({ ...el, index: idx }));
+      dispatch(setElements(updatedElements));
+
+      return updatedElements.length;
+    },
+    [elements]
+  );
+  const handleKeyDown = useCallback(
+    (event, id, index) => {
+      console.log(event.target.innerText);
+      if (
+        (event.key === "Backspace" && !event.target.innerText) ||
+        (event.key === "delete" && !event.target.innerText)
+      ) {
+        const newLength = removeElement(id);
+        if (newLength < elements.length) {
+          setTimeout(() => inputRefs.current[index - 1]?.focus(), 0);
+        }
+        setFocusedIndex(index - 1);
+      }
+      if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        addElement("text");
+        setTimeout(() => inputRefs.current[index + 1]?.focus(), 0);
+        setFocusedIndex(index + 1);
+      }
+    },
+    [removeElement, addElement]
+  );
   return {
     addElement,
     handleFileChange,
@@ -169,5 +206,6 @@ export const usePostCreator = () => {
     setImageFiles,
     setFocusedIndex,
     focusedIndex,
+    handleKeyDown,
   };
 };

@@ -12,6 +12,7 @@ import Bookmark from "../../component/buttons/Bookmark";
 import CopyToClipboardInput from "../../component/CopyToClipboardInput";
 import CodeDisplay from "../../component/CodeDisplay";
 import usePublicApis from "../../Apis/publicApis";
+import Like from "../../component/buttons/Like";
 
 function FullBlogView() {
   const [openComments, setOpenComments] = useState(false);
@@ -80,11 +81,8 @@ function FullBlogView() {
         </header>
 
         <div className="flex justify-between text-sm  items-center border-inherit border-y px-3 py-3  font-light  w-full">
-          <div className="flex gap-4">
-            <button className="flex items-center gap-1">
-              <i className="bi bi-hand-thumbs-up"></i>
-              <span>35</span>
-            </button>
+          <div className="flex   gap-4">
+            <Like className={"text-sm"} post={postTopdata} />
             <button
               onClick={() => setOpenComments(true)}
               className="flex items-center gap-1"

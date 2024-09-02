@@ -11,11 +11,11 @@ function LangSelector({ setLanguage }) {
   return (
     <select
       onChange={(e) => setLanguage(e.target.value)}
-      className="p-2 border  bg-inherit z-10 outline-none rounded max-w-[10rem] "
+      className="p-2 border  z-10 outline-none rounded max-w-[10rem] text-xs "
     >
       {languages.map((lang) => (
         <option
-          className="w-full bg-inherit"
+          className="w-full bg-inherit "
           key={lang.value}
           value={lang.value}
         >

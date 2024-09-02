@@ -3,10 +3,16 @@ import TopicsSkeletonLoader from "../loaders/TopicsSkeletonLoader";
 import PeoplesList from "../PeoplesList";
 import FollowPeopleLoader from "../loaders/FollowPeopleLoader";
 
-function Aside({ FechingPreps, isLoadingPreps, PrepsData, className }) {
+function Aside({
+  FechingPreps,
+  isLoadingPreps,
+  PrepsData,
+  className,
+  handleTopicClick,
+}) {
   return (
     <aside className={`${className}`}>
-      <div className="flex flex-col w-full p-6 items-center text-start gap-2 border rounded-xl">
+      <div className="flex flex-col w-full p-6 items-center text-start gap-2 border rounded-xl border-inherit">
         <h1 className="font-normal text-start w-full sm:text-sm lg:text-md xl:text-lg">
           Suggested topics
         </h1>
@@ -30,7 +36,7 @@ function Aside({ FechingPreps, isLoadingPreps, PrepsData, className }) {
           </ul>
         </div>
       </div>
-      <div className="sticky flex flex-col justify-start min-h-[23rem] top-16 border rounded-xl p-5 ">
+      <div className="sticky flex flex-col justify-start min-h-[23rem] top-16 border rounded-xl p-5 border-inherit">
         <div className="h-full text-sm">
           <h1 className="font-normal text-start w-full sm:text-sm lg:text-md xl:text-lg">
             Follow People

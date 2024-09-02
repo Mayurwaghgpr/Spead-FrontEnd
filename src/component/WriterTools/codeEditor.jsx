@@ -1,6 +1,8 @@
 import React, { useState, useRef } from "react";
 import LangSelector from "./LangSelector";
 import Editor from "@monaco-editor/react";
+import { setThemeMode } from "../../redux/slices/uiSlice";
+import { useSelector } from "react-redux";
 
 function CodeEditor({
   element,
@@ -11,25 +13,31 @@ function CodeEditor({
   setFocusedIndex,
 }) {
   const [language, setLanguage] = useState("javascript");
-
-  // Create a ref to hold the editor instance
+  const { ThemeMode } = useSelector((state) => state.ui);
+  // Ref to hold the Monaco editor instance
   const editorRef = useRef(null);
 
   return (
-    <div className="p-3 border flex flex-col gap-5 overflow-hidden">
+    <div
+      className="p-5 border flex flex-col gap-5 overflow-scroll h-[30rem] focus:border-green-200 outline-none "
+      onFocus={() => setFocusedIndex(index)}
+      contentEditable
+      suppressContentEditableWarning
+      onKeyDown={(e) => {
+        if (e.key === "Backspace" || e.key === "Enter" || e.key === "delete")
+          handleKeyDown(e, element.id, index);
+      }}
+      ref={(editor) => (inputRefs.current[index] = editor)}
+    >
       <LangSelector setLanguage={setLanguage} />
       <Editor
         height="500px"
         language={language}
         value={element.data}
+        theme={ThemeMode ? "vs-dark" : "light"}
         onMount={(editor) => {
-          // Set the editor instance to the ref
           editorRef.current = editor;
-          inputRefs.current[index] = editor; // Keep it compatible with your existing refs
         }}
-        onFocus={() => setFocusedIndex(index)}
-        onKeyDown={(e) => handleKeyDown(e, element.id, index)}
-        theme="vs-dark" // You can change the theme to 'light' or any other theme available
         onChange={(value) => {
           handleTextChange(element.id, value, language);
         }}

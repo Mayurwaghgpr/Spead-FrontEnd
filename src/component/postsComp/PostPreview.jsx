@@ -15,13 +15,14 @@ import {
   setIsConfirm,
   setToast,
 } from "../../redux/slices/uiSlice";
-import { useQueryClient, useMutation } from "react-query";
+import { useQueryClient, useMutation, useQuery } from "react-query";
 import { setTopiclist } from "../../redux/slices/postSlice";
 import profileIcon from "/ProfOutlook.png";
 import PostsApis from "../../Apis/PostsApis";
 import userApi from "../../Apis/userApi";
 import useClickOutside from "../../hooks/useClickOutside";
 import Bookmark from "../buttons/Bookmark";
+import Like from "../buttons/Like";
 
 const PostPreview = forwardRef(({ post, className, Saved }, ref) => {
   const [postIdToDelete, setPostIdToDelete] = useState("");
@@ -35,21 +36,15 @@ const PostPreview = forwardRef(({ post, className, Saved }, ref) => {
   const { confirmBox, isConfirm } = useSelector((state) => state.ui);
   const { user } = useSelector((state) => state.auth);
 
-  const deletePostMutation = useMutation((id) => DeletePostApi(id), {
+  useQuery({
+    queryKey: "DeletePost",
+    queryFn: () => DeletePostApi(postIdToDelete),
     onSuccess: () => {
-      queryClient.invalidateQueries(["posts"]);
+      queryClient.invalidateQueries(["Allposts"]);
     },
     onError: () => {},
+    enabled: !!(isConfirm && postIdToDelete),
   });
-
-  useEffect(() => {
-    if (isConfirm.type === "deletepost" && isConfirm.status && postIdToDelete) {
-      deletePostMutation.mutate(postIdToDelete);
-      setPostIdToDelete("");
-      dispatch(setIsConfirm({ type: "", status: false }));
-      dispatch(setTopiclist([]));
-    }
-  }, [isConfirm, postIdToDelete, deletePostMutation, dispatch]);
 
   const confirmDeletePost = useCallback(
     (id) => {
@@ -147,18 +142,16 @@ const PostPreview = forwardRef(({ post, className, Saved }, ref) => {
             </div>
           </Link>
           {post && (
-            <div className=" flex w-full h-full justify-between items-center px-4  mt-3">
+            <div className=" flex w-full h-full justify-between text-sm  items-center px-4  mt-3">
               <div className=" flex justify-start items-center gap-5">
-                <span className=" text-xs rounded-lg ">
+                <span className=" font-light  rounded-lg ">
                   {post?.createdAt
                     ? format(new Date(post?.createdAt), "LLL-dd-yyyy")
                     : ""}
                 </span>
-                <div className="flex  cursor-pointer">
-                  <button className=" ">
-                    <i className="bi bi-hand-thumbs-up"></i>
-                  </button>
-                </div>
+
+                <Like className={""} post={post} />
+
                 <div className="flex  cursor-pointer">
                   <button className=" ">
                     <i className="bi bi-chat"></i>

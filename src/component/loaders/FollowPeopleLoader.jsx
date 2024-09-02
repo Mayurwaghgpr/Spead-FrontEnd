@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 const FollowPeopleLoader = ({ items, className }) => (
   <ul className={` w-full `}>
@@ -12,4 +12,4 @@ const FollowPeopleLoader = ({ items, className }) => (
   </ul>
 );
 
-export default FollowPeopleLoader;
+export default memo(FollowPeopleLoader);

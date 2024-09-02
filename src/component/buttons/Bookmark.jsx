@@ -2,13 +2,13 @@ import React, { useCallback, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { setToast } from "../../redux/slices/uiSlice";
-import userApi from "../../Apis/userApi";
+import usePublicApis from "../../Apis/publicApis";
 
 function Bookmark({ className, post }) {
-  const [iconClicked, setIcon] = useState("");
+  const [bookmarkIcon, setIcon] = useState("");
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const { ArchivePost, removePostFromArchive } = userApi();
+  const { ArchivePost, removePostFromArchive } = usePublicApis();
   const queryClient = useQueryClient();
 
   const addToArchiveMutation = useMutation((id) => ArchivePost(id), {
@@ -45,7 +45,9 @@ function Bookmark({ className, post }) {
     },
     [addToArchiveMutation]
   );
-
+  const isBookmarked = user?.SavedPosts?.some(
+    (savedPost) => savedPost?.id === post?.id
+  );
   return (
     <div className={`${className}`}>
       {" "}
@@ -64,8 +66,7 @@ function Bookmark({ className, post }) {
           }
         }}
         className={`bi cursor-pointer transition-all duration-700 ${
-          user?.SavedPosts?.some((savedPost) => savedPost?.id === post?.id) ||
-          iconClicked === `bookmark-${post?.id}`
+          isBookmarked || bookmarkIcon === `bookmark-${post?.id}`
             ? "bi-bookmark-fill"
             : "bi-bookmark"
         }`}

@@ -59,16 +59,14 @@ function Profile() {
 
   const RenderPosts = () => {
     if (postsData?.pages.length > 0) {
-      return postsData.pages.map((page) =>
-        page.map((post, idx) => (
-          <PostPreview
-            className
-            ref={page.length === idx + 1 ? lastpostRef : null}
-            key={post.id}
-            post={post}
-          />
-        ))
-      );
+      return postsData.pages.map((post, idx, arr) => (
+        <PostPreview
+          className
+          ref={arr.length === idx + 1 ? lastpostRef : null}
+          key={post.id}
+          post={post}
+        />
+      ));
     }
 
     if (profileId === user?.id) {
@@ -125,8 +123,7 @@ function Profile() {
         </div>
       </div>
 
-      {FollowInfo.Info && <ProfileinfoCard className={` `} />}
-
+      {FollowInfo.Info && <ProfileinfoCard className={``} />}
       <ScrollToTopButton />
     </div>
   );

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 function Spiner({ className }) {
   return (
@@ -11,4 +11,4 @@ function Spiner({ className }) {
   );
 }
 
-export default Spiner;
+export default memo(Spiner);

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 const TopicsSkeletonLoader = ({ items }) => (
   <>
@@ -13,4 +13,4 @@ const TopicsSkeletonLoader = ({ items }) => (
   </>
 );
 
-export default TopicsSkeletonLoader;
+export default memo(TopicsSkeletonLoader);
