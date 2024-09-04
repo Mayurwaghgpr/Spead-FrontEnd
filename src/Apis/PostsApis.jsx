@@ -44,9 +44,12 @@ function PostsApis() {
 
   const DeletePostApi = async (id) => {
     try {
-      const response = await axios.delete(`${BASE_URL}/posts/${id.trim()}`, {
-        withCredentials: true,
-      });
+      const response = await axios.delete(
+        `${BASE_URL}/posts/delete/${id.trim()}`,
+        {
+          withCredentials: true,
+        }
+      );
       console.log("DeletePostApi response:", response);
       return response.data; // Return the actual data
     } catch (error) {

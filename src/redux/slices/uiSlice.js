@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from 'uuid';
-console.log(localStorage.getItem("ThemeMode") === "dark")
+const Theme=localStorage.getItem("ThemeMode")
 
 const initialState = {
 
@@ -13,7 +13,7 @@ const initialState = {
   },
  
   ToastState: [],
-  ThemeMode: localStorage.getItem("ThemeMode") === "dark" || false,
+  ThemeMode:Theme ,
   
   isScale: false,
   // focusedIndex: 0,
@@ -35,8 +35,8 @@ const uiSlice = createSlice({
     removeToast: (state, action) => {
       state.ToastState = state.ToastState.filter(el => el.id !== action.payload);
     },
-    setThemeMode: (state) => {
-      state.ThemeMode = !state.ThemeMode
+    setThemeMode: (state,action) => {
+      state.ThemeMode =action.payload
     },
     setIsScale: (state,action) => {
       state.isScale = !state.isScale

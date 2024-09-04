@@ -21,7 +21,7 @@ function FullBlogView() {
   const { fetchDataById } = usePublicApis();
 
   const {
-    data: postDatabyId,
+    data: postFullview,
     isLoading,
     isError,
     error,
@@ -40,41 +40,40 @@ function FullBlogView() {
       <div className="flex justify-center items-center h-64">Loading...</div>
     );
   }
-  const { postTopdata } = postDatabyId;
-
+  console.log(postFullview);
   return (
     <main className="container mx-auto py-6 mt-16 dark:*:border-[#383838]">
       <article className="max-w-4xl mx-auto p-6 rounded-lg flex flex-col justify-center items-center ">
         <header className="mb-6 w-full">
           <h1 className="text-3xl break-words lg:text-5xl font-bold mb-2">
-            {postTopdata?.title}
+            {postFullview?.title}
           </h1>
           <section className="mb-6">
             <p className="text-lg lg:text-2xl leading-relaxed">
-              {postTopdata?.subtitelpagraph}
+              {postFullview?.subtitelpagraph}
             </p>
           </section>
           <div className="flex items-center my-4">
             <img
-              alt={`${postTopdata?.User?.username}'s profile`}
+              alt={`${postFullview?.User?.username}'s profile`}
               src={
-                postTopdata?.User?.userImage &&
-                `${postTopdata?.User?.userImage}`
+                postFullview?.User?.userImage &&
+                `${postFullview?.User?.userImage}`
               }
               className="w-12 h-12 rounded-full mr-4 object-cover object-top"
               loading="lazy"
             />
             <div>
               <Link
-                to={`/profile/@${postTopdata?.User?.username
+                to={`/profile/@${postFullview?.User?.username
                   ?.split(" ")
                   .slice(0, -1)
-                  .join("")}/${postTopdata?.User?.id}`}
+                  .join("")}/${postFullview?.User?.id}`}
               >
-                {postTopdata?.User?.username}
+                {postFullview?.User?.username}
               </Link>
               <p className="text-sm ">
-                {format(new Date(postTopdata?.createdAt), "LLL dd, yyyy")}
+                {format(new Date(postFullview?.createdAt), "LLL dd, yyyy")}
               </p>
             </div>
           </div>
@@ -82,7 +81,7 @@ function FullBlogView() {
 
         <div className="flex justify-between text-sm  items-center border-inherit border-y px-3 py-3  font-light  w-full">
           <div className="flex   gap-4">
-            <Like className={"text-sm"} post={postTopdata} />
+            <Like className={"text-sm"} post={postFullview} />
             <button
               onClick={() => setOpenComments(true)}
               className="flex items-center gap-1"
@@ -92,18 +91,18 @@ function FullBlogView() {
             </button>
           </div>
           <div className="flex gap-7 justify-between">
-            <Bookmark post={postTopdata} />
+            <Bookmark post={postFullview} />
             <button className="flex items-center gap-1 text-gray-600 hover:text-gray-900">
               <i className="bi bi-three-dots"></i>
             </button>
           </div>
         </div>
 
-        {postTopdata?.titleImage && (
+        {postFullview?.titleImage && (
           <figure className="my-6 w-full">
             <img
               className="w-full rounded-lg"
-              src={`${postTopdata?.titleImage}`}
+              src={`${postFullview?.titleImage}`}
               alt="Main Blog Image"
               loading="lazy"
             />
@@ -111,13 +110,12 @@ function FullBlogView() {
           </figure>
         )}
         {/* {console.log({ postDatabyId })} */}
-        {postDatabyId?.otherContent?.map((item) => (
-          <section key={item.id} className="mb-6 w-full px-2">
-            {console.log(item)}
-            {item.imageUrl && (
+        {postFullview?.postContent?.map((item) => (
+          <section key={item.id} className="mb-6 w-full ">
+            {item.type === "image" && (
               <figure className="mb-4">
                 <img
-                  src={`${item.imageUrl}`}
+                  src={`${item.content}`}
                   alt="Content"
                   className="w-full rounded-lg object-cover object-center"
                   loading="lazy"
@@ -128,12 +126,13 @@ function FullBlogView() {
             {item?.type === "text" ? (
               <p
                 dangerouslySetInnerHTML={{
-                  __html: DOMPurify.sanitize(item.Content),
+                  __html: DOMPurify.sanitize(item.content),
                 }}
                 className="text-lg w-full "
               ></p>
             ) : (
-              item?.type !== "text" && <CopyToClipboardInput item={item} />
+              item?.type !== "text" ||
+              (item?.type !== "image" && <CopyToClipboardInput item={item} />)
             )}
           </section>
         ))}

@@ -53,7 +53,7 @@ const CopyToClipboardInput = ({ item }) => {
                 {item.Content}
               </SyntaxHighlighter>
             ) : (
-              <p className="w-full h-full"> {item.Content}</p>
+              <p className="w-full h-full"> {item.content}</p>
             )}
           </div>
         }

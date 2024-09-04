@@ -34,7 +34,7 @@ const FullBlogView = lazy(() => import("./pages/FullBlogView/FullBlogView"));
 const ProfileEditor = lazy(() => import("./pages/userProfile/ProfileEditor"));
 const About = lazy(() => import("./pages/About"));
 const ReadList = lazy(() => import("./pages/ReadList"));
-const Settings = lazy(() => import("./component/settings"));
+const Settings = lazy(() => import("./pages/settings/settings"));
 
 function App() {
   const navigate = useNavigate();

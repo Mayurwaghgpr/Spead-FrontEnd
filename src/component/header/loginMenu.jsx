@@ -58,7 +58,7 @@ function LoginMenu({ MenuOpen, setIsMenuOpen }) {
           tabIndex="-1"
         >
           <i className="bi bi-bookmark"></i>
-          Archive
+          Saved
         </Link>
 
         {/* Stories Link */}

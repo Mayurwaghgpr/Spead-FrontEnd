@@ -38,7 +38,7 @@ const TextTools = ({ applyStyle }) => {
 
   return isInputVisible ? (
     <div
-      className={`bg-gray-500 flex justify-evenly items-center gap-2  p-2    rounded-md transition-transform duration-100 z-10 -top-8 after:absolute after:bg-inherit after:size-3 after:-z-10 after:rotate-45 after:top-10 after:right-[50%]  absolute`}
+      className={`bg-gray-500  flex justify-evenly items-center gap-2  p-2    rounded-md transition-transform duration-100 z-0 -top-8 after:absolute after:bg-inherit after:size-3 after:-z-10 after:rotate-45 after:top-10 after:right-[50%]  absolute`}
     >
       <input
         placeholder="Enter url "

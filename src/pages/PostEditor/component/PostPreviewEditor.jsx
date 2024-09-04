@@ -68,14 +68,14 @@ function PostPreviewEditor({ imageFiles, setImageFiles, handleTextChange }) {
 
     if (submit && !beforeSubmit) {
       const formData = new FormData();
-      const textElements = elements.filter((el) => el.type !== "image");
-      formData.append("blog", JSON.stringify(textElements));
+      // const textElements = elements.filter((el) => el.type == "image");
+      formData.append("blog", JSON.stringify(elements));
       formData.append("Topic", Topic);
       imageFiles.forEach((el, idx) => {
         formData.append(`image-${el.index}`, el.file);
         formData.append(`description-${el.index}`, el.data);
       });
-
+      // console.log(elements);
       mutation.mutate(formData);
     }
   }, [submit, dispatch, elements, Topic, mutation]);

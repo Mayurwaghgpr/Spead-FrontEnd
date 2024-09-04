@@ -38,10 +38,10 @@ function MainNavBar() {
 
   // Handle dark mode based on ThemeMode
   useMemo(() => {
-    if (ThemeMode) {
+    if (ThemeMode === "dark") {
       document.documentElement.classList.add("dark");
       localStorage.setItem("ThemeMode", "dark");
-    } else {
+    } else if (ThemeMode === "light") {
       document.documentElement.classList.remove("dark");
       localStorage.setItem("ThemeMode", "light");
     }

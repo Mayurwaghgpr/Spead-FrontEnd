@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import LangSelector from "./LangSelector";
+import Selector from "../otherUtilityComp/Selector";
 import Editor from "@monaco-editor/react";
 import { setThemeMode } from "../../redux/slices/uiSlice";
 import { useSelector } from "react-redux";
@@ -16,7 +16,12 @@ function CodeEditor({
   const { ThemeMode } = useSelector((state) => state.ui);
   // Ref to hold the Monaco editor instance
   const editorRef = useRef(null);
-
+  const languages = [
+    { name: "JavaScript", value: "javascript" },
+    { name: "Python", value: "python" },
+    { name: "CSS", value: "css" },
+    { name: "HTML", value: "markup" },
+  ];
   return (
     <div
       className="p-5 border flex flex-col gap-5 overflow-scroll h-[30rem] focus:border-green-200 outline-none "
@@ -29,7 +34,11 @@ function CodeEditor({
       }}
       ref={(editor) => (inputRefs.current[index] = editor)}
     >
-      <LangSelector setLanguage={setLanguage} />
+      <Selector
+        className={`p-2 border  z-10 outline-none rounded max-w-[10rem] text-xs `}
+        options={languages}
+        setOptions={setLanguage}
+      />
       <Editor
         height="500px"
         language={language}

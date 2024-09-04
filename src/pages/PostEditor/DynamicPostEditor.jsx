@@ -30,7 +30,7 @@ function DynamicPostEditor() {
   const { isScale } = useSelector((state) => state.ui);
 
   return (
-    <main className="flex flex-col justify-between mt-16">
+    <main className="flex flex-col  justify-between mt-16">
       <div
         className={`flex sm:pl-0 pl-3 sm:justify-center sm:items-center flex-col ${
           elements.length === 0 ? "pt-[4rem]" : "pt-0"

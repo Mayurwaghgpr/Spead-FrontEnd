@@ -116,18 +116,20 @@ function Viewblogs() {
           } w-full lg:w-[730px] max-w-[730px] min-h-screen snap-center sm:px-10 dark:border-[#383838]`}
         >
           {!isLoadingPosts
-            ? postsData?.pages?.map((post, idx, arr) => (
-                <PostPreview
-                  className="border-inherit p-3"
-                  ref={
-                    arr?.length > 3 && arr?.length === idx + 1
-                      ? lastpostRef
-                      : null
-                  }
-                  key={post.id}
-                  post={post}
-                />
-              ))
+            ? postsData?.pages?.map((page) =>
+                page.map((post, idx, arr) => (
+                  <PostPreview
+                    className="border-inherit p-3"
+                    ref={
+                      arr?.length > 3 && arr?.length === idx + 1
+                        ? lastpostRef
+                        : null
+                    }
+                    key={post?.id}
+                    post={post}
+                  />
+                ))
+              )
             : [...Array(10)].map((_, idx) => (
                 <PostPreview className="border-inherit" key={idx} />
               ))}

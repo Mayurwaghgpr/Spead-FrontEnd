@@ -93,23 +93,28 @@ export const usePostCreator = () => {
         } else if (
           focusedIndex !== null &&
           focusedIndex >= 0 &&
-          elements[focusedIndex].data === ""
+          elements[focusedIndex].data === "" &&
+          !elements[focusedIndex].file
         ) {
           previousElements[focusedIndex] = newElement;
           previousElements = previousElements.map((el, idx) => ({
             ...el,
             index: idx,
           }));
+          setImageFiles((prev) => [
+            ...prev,
+            { ...newElement, file: file, index: focusedIndex },
+          ]);
         } else {
           newIndex = elements.length;
           newElement.index = newIndex;
           previousElements.push(newElement);
+          setImageFiles((prev) => [
+            ...prev,
+            { ...newElement, file: file, index: focusedIndex + 1 },
+          ]);
         }
 
-        setImageFiles((prev) => [
-          ...prev,
-          { ...newElement, file: file, index: newIndex },
-        ]);
         dispatch(setElements(previousElements));
         if (imageInputRef.current) {
           imageInputRef.current.value = null;
@@ -132,7 +137,7 @@ export const usePostCreator = () => {
     }),
     [dispatch]
   );
-
+  console.log({ imageFiles });
   const handleTextChange = useCallback(
     (id, value, lang = null) => {
       const updatedElements = elements.map((el) =>

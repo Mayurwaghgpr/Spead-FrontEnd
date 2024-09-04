@@ -39,11 +39,12 @@ const PostPreview = forwardRef(({ post, className, Saved }, ref) => {
   useQuery({
     queryKey: "DeletePost",
     queryFn: () => DeletePostApi(postIdToDelete),
-    onSuccess: () => {
+    onSuccess: (data) => {
+      dispatch(setToast({ message: ` ${data.message} ✨`, type: "success" }));
       queryClient.invalidateQueries(["Allposts"]);
     },
     onError: () => {},
-    enabled: !!(isConfirm && postIdToDelete),
+    enabled: !!(isConfirm.status && postIdToDelete),
   });
 
   const confirmDeletePost = useCallback(
