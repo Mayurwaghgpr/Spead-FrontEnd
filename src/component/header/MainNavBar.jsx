@@ -31,21 +31,10 @@ function MainNavBar() {
 
   const { confirmBox, ThemeMode } = useSelector((state) => state.ui);
   const { isLogin, user } = useSelector((state) => state.auth);
-  const LocalTheme = localStorage.getItem("ThemeMode");
 
   const { isMenuOpen, setIsMenuOpen, isSearchBar, setSearchBar } =
     useClickOutside(loginMenuRef, searchRef);
 
-  // Handle dark mode based on ThemeMode
-  useMemo(() => {
-    if (ThemeMode === "dark") {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("ThemeMode", "dark");
-    } else if (ThemeMode === "light") {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("ThemeMode", "light");
-    }
-  }, [ThemeMode]);
   return (
     <header
       className={`fixed top-0  transform-all duration-300 ease-in-out border-b bg-white  border-inherit dark:border-[#383838] ${

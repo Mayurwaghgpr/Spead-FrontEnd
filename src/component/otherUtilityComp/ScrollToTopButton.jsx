@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 
 function ScrollToTopButton() {
   const [isVisible, setIsVisible] = useState(false);
@@ -33,29 +32,12 @@ function ScrollToTopButton() {
   return (
     <>
       {isVisible && (
-        <motion.button
-          initial={{ translateY: 100 }}
-          animate={{ translateY: 0 }}
-          transition={{ ease: "backInOut" }}
-          exit={{ translateY: 100 }}
-          onClick={scrollToTop}
+        <div
           title="Scroll to Top"
-          className={`fixed transition-all duration-500 z-30 right-10 bottom-10 shadow-md shadow-slate-300 bg-slate-200 rounded-xl p-2  capitalize`}
+          className={`fixed transition-all duration-500 z-30 right-10 bottom-10 shadow-md text-inherit  border border-inherit rounded-xl p-2  capitalize`}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            className="bi bi-arrow-up"
-            viewBox="0 0 16 16"
-          >
-            <path
-              fillRule="evenodd"
-              d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5"
-            />
-          </svg>
-        </motion.button>
+          <i className="bi bi-arrow-up"></i>
+        </div>
       )}
     </>
   );

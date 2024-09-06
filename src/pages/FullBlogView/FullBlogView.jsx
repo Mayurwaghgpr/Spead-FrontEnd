@@ -10,9 +10,9 @@ import { useQuery } from "react-query";
 import SomthingWentWrong from "../ErrorPages/somthingWentWrong";
 import Bookmark from "../../component/buttons/Bookmark";
 import CopyToClipboardInput from "../../component/CopyToClipboardInput";
-import CodeDisplay from "../../component/CodeDisplay";
 import usePublicApis from "../../Apis/publicApis";
 import Like from "../../component/buttons/Like";
+import Menu from "../../component/postsComp/menu";
 
 function FullBlogView() {
   const [openComments, setOpenComments] = useState(false);
@@ -43,12 +43,12 @@ function FullBlogView() {
   console.log(postFullview);
   return (
     <main className="container mx-auto py-6 mt-16 dark:*:border-[#383838]">
-      <article className="max-w-4xl mx-auto p-6 rounded-lg flex flex-col justify-center items-center ">
-        <header className="mb-6 w-full">
-          <h1 className="text-3xl break-words lg:text-5xl font-bold mb-2">
-            {postFullview?.title}
-          </h1>
+      <article className="max-w-4xl mx-auto p-6 rounded-lg flex flex-col justify-center items-center px-2 ">
+        <header className="mb-6 w-full px-3">
           <section className="mb-6">
+            <h1 className="text-3xl break-words lg:text-5xl font-bold mb-2">
+              {postFullview?.title}
+            </h1>
             <p className="text-lg lg:text-2xl leading-relaxed">
               {postFullview?.subtitelpagraph}
             </p>
@@ -79,7 +79,7 @@ function FullBlogView() {
           </div>
         </header>
 
-        <div className="flex justify-between text-sm  items-center border-inherit border-y px-3 py-3  font-light  w-full">
+        <div className="flex justify-between   items-center border-inherit border-y px-3 py-3  font-light  w-full">
           <div className="flex   gap-4">
             <Like className={"text-sm"} post={postFullview} />
             <button
@@ -92,9 +92,7 @@ function FullBlogView() {
           </div>
           <div className="flex gap-7 justify-between">
             <Bookmark post={postFullview} />
-            <button className="flex items-center gap-1 text-gray-600 hover:text-gray-900">
-              <i className="bi bi-three-dots"></i>
-            </button>
+            <Menu post={postFullview} />
           </div>
         </div>
 
@@ -111,8 +109,8 @@ function FullBlogView() {
         )}
         {/* {console.log({ postDatabyId })} */}
         {postFullview?.postContent?.map((item) => (
-          <section key={item.id} className="mb-6 w-full ">
-            {item.type === "image" && (
+          <section key={item.id} className="mb-6 w-full border-inherit ">
+            {item.type === "image" && item.content && (
               <figure className="mb-4">
                 <img
                   src={`${item.content}`}
@@ -131,8 +129,8 @@ function FullBlogView() {
                 className="text-lg w-full "
               ></p>
             ) : (
-              item?.type !== "text" ||
-              (item?.type !== "image" && <CopyToClipboardInput item={item} />)
+              item?.type !== "text" &&
+              item?.type !== "image" && <CopyToClipboardInput item={item} />
             )}
           </section>
         ))}

@@ -14,7 +14,7 @@ const CommonInput = forwardRef(function CommonInput(
         type={type}
         id={name}
         name={name}
-        className={`p-3 border border-black outline-none  bg-gray-200 rounded-lg `}
+        className={`p-3 border border-black outline-none  rounded-lg `}
         placeholder={name}
         disabled={isLoading}
         {...props}

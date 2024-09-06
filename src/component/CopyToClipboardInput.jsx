@@ -4,7 +4,7 @@ import {
   darcula,
   lightfair,
 } from "react-syntax-highlighter/dist/esm/styles/hljs";
-
+import { FaCheck } from "react-icons/fa6";
 const CopyToClipboardInput = ({ item }) => {
   const [copySuccess, setCopySuccess] = useState("");
   const contentref = useRef();
@@ -14,7 +14,7 @@ const CopyToClipboardInput = ({ item }) => {
         ? contentref.current.innerText
         : contentref.current.textContent;
     navigator.clipboard.writeText(inputValue).then(
-      () => setCopySuccess("Copied!"),
+      () => setCopySuccess("Copied !"),
       () => setCopySuccess("Failed to copy.")
     );
     let timeout = setTimeout(() => {
@@ -22,21 +22,27 @@ const CopyToClipboardInput = ({ item }) => {
     }, 2000);
     return () => clearTimeout(timeout);
   }, [item.type]);
-
+  // console.log("conten", item.content);
   return (
-    <div className={`flex flex-col max-w-4xl h-full w-full rounded-lg border`}>
-      <div className="w-full flex justify-end py-2 bg-slate-400 rounded-t-lg">
+    <div
+      className={`flex flex-col max-w-4xl h-full w-full rounded-lg border border-inherit`}
+    >
+      <div className="w-full min-h-[2.5rem] flex justify-end py-2 bg-gray-700 rounded-t-lg">
         <button
           className="flex relative px-4 justify-center items-center gap-3 text-sm"
           onClick={handleCopyClick}
         >
-          <i className="bi bi-copy"></i>{" "}
           {copySuccess ? (
-            <span className=" absolute -top-2 -right-20 rounded-md   bg-gray-700 p-2 ">
+            <span className=" rounded-md  flex gap-2 items-center  ">
+              <FaCheck />
               {copySuccess}
             </span>
           ) : (
-            "Copy"
+            <span className="flex items-center gap-2">
+              {" "}
+              <i className="bi bi-copy"></i>
+              Copy
+            </span>
           )}
         </button>
       </div>
@@ -50,7 +56,7 @@ const CopyToClipboardInput = ({ item }) => {
                 wrapLines={true}
                 showLineNumbers={true}
               >
-                {item.Content}
+                {item.content}
               </SyntaxHighlighter>
             ) : (
               <p className="w-full h-full"> {item.content}</p>

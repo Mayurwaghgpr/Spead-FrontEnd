@@ -7,7 +7,6 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { LoginUser } from "../../Apis/authapi";
 import CommonInput from "../../component/otherUtilityComp/commonInput";
 import OAuth from "./OAuth";
-import { motion } from "framer-motion";
 
 function SignIn() {
   const location = useLocation();
@@ -61,11 +60,8 @@ function SignIn() {
 
   if (!isLogin) {
     return (
-      <motion.section
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className={`sm:flex relative justify-evenly z-10 items-center h-[47rem] flex-col   top-0 left-0 bottom-0 right-0 text-black  bg-[#ffff] border-inherit`}
+      <section
+        className={`sm:flex relative justify-evenly z-50 items-center h-[47rem] flex-col   top-0 left-0 bottom-0 right-0  dark:bg-[#222222] border-inherit`}
       >
         {isError && (
           <div className="text-red-500 my-4 w-full flex justify-center  bg-red-100 py-2 ">
@@ -81,12 +77,12 @@ function SignIn() {
         </button>
 
         <div
-          className={`flex flex-col justify-between items-center p-8 h-full   min-w-[300px] sm:w-[500px]  transition-all duration-300 delay-150 `}
+          className={`flex flex-col justify-between items-center p-8 h-full  min-w-[300px] sm:w-[500px]  transition-all duration-300 delay-150 `}
         >
           <header className="text-2xl  text-center flex justify-center items-center">
             {"Spread"}
           </header>
-          <div className="flex w-full h-full  flex-col justify-center px-5">
+          <div className="flex w-full h-full  flex-col justify-center px-5 ">
             <form
               onSubmit={handleLogin}
               className="flex flex-col  justify-center w-full  border-inheri text-sm"
@@ -128,8 +124,8 @@ function SignIn() {
                 {passVisible && (
                   <button
                     type="submit"
-                    className={`bg-slate-400 min-w-[200px] text-white p-3 w-full  rounded-lg ${
-                      isLoading && "cursor-wait bg-blue-100"
+                    className={`bg-gray-800 min-w-[200px]  p-3 w-full  rounded-lg ${
+                      isLoading && "cursor-wait "
                     }`}
                     disabled={isLoading}
                   >
@@ -144,7 +140,7 @@ function SignIn() {
                   setpassVisible(true);
                 }}
                 type="button"
-                className={`bg-slate-400 min-w-[200px] text-white p-3 w-full  rounded-lg ${
+                className={`bg-slate-400 min-w-[200px] text-white p-3 w-full   rounded-lg ${
                   isLoading && "cursor-wait bg-blue-100"
                 }`}
                 disabled={userRef.current?.value}
@@ -153,7 +149,7 @@ function SignIn() {
               </button>
             )}
 
-            <div className="mb-3 text-center grid grid-cols-3 items-center">
+            <div className="mb-3 text-center grid grid-cols-3 my-4 items-center">
               <hr /> <p>or</p> <hr />
             </div>
             <div className="mb-3 ">
@@ -178,7 +174,7 @@ function SignIn() {
             </footer>
           </div>
         </div>
-      </motion.section>
+      </section>
     );
   }
 

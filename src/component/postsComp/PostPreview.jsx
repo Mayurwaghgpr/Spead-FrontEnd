@@ -23,13 +23,14 @@ import userApi from "../../Apis/userApi";
 import useClickOutside from "../../hooks/useClickOutside";
 import Bookmark from "../buttons/Bookmark";
 import Like from "../buttons/Like";
+import Menu from "./menu";
 
 const PostPreview = forwardRef(({ post, className, Saved }, ref) => {
   const [postIdToDelete, setPostIdToDelete] = useState("");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const menuRef = useRef();
+
   const queryClient = useQueryClient();
   const { DeletePostApi } = PostsApis();
 
@@ -47,27 +48,11 @@ const PostPreview = forwardRef(({ post, className, Saved }, ref) => {
     enabled: !!(isConfirm.status && postIdToDelete),
   });
 
-  const confirmDeletePost = useCallback(
-    (id) => {
-      dispatch(
-        setConfirmBox({
-          message: "Do you really want to delete the post?",
-          status: true,
-          type: "deletepost",
-        })
-      );
-      setPostIdToDelete(id);
-      setMenuId("");
-    },
-    [dispatch]
-  );
-  const { menuId, setMenuId } = useClickOutside(menuRef);
-
   return (
     <>
       <article
         ref={ref}
-        className={` border-b  flex w-full mt-1 h  flex-col ${className} `}
+        className={` border-b  border-inherit flex w-full mt-1 h  flex-col ${className} `}
       >
         <div className="p-3 flex leading-0 flex-col h-full justify-center  gap-3 w-full ">
           <div className="flex gap-2 text-sm justify-start items-center">
@@ -79,7 +64,7 @@ const PostPreview = forwardRef(({ post, className, Saved }, ref) => {
               className="flex gap-3"
             >
               <div
-                className={`h-[40px] w-[40px] hover:opacity-75 rounded-full `}
+                className={`h-[2rem] w-[2rem] hover:opacity-75 rounded-full `}
               >
                 {post ? (
                   <img
@@ -143,68 +128,28 @@ const PostPreview = forwardRef(({ post, className, Saved }, ref) => {
             </div>
           </Link>
           {post && (
-            <div className=" flex w-full h-full justify-between text-sm  items-center px-4  mt-3">
+            <div className=" flex w-full h-full justify-between text-sm  items-center  mt-3">
               <div className=" flex justify-start items-center gap-5">
                 <span className=" font-light  rounded-lg ">
                   {post?.createdAt
                     ? format(new Date(post?.createdAt), "LLL-dd-yyyy")
                     : ""}
                 </span>
-
                 <Like className={""} post={post} />
-
                 <div className="flex  cursor-pointer">
                   <button className=" ">
                     <i className="bi bi-chat"></i>
                   </button>
                 </div>
               </div>
-              <div className="relative  flex justify-center gap-5 items-center">
+              <div className="flex justify-end gap-5 items-center">
                 <Bookmark post={post || null} />
-
-                <div className="relative flex justify-center items-center">
-                  <button
-                    className="cursor-pointer"
-                    onClick={() =>
-                      setMenuId((prev) => (prev === "" ? post?.id : ""))
-                    }
-                    type="button"
-                  >
-                    <i className="bi bi-three-dots-vertical  "></i>
-                  </button>
-                  {menuId === post?.id && (
-                    <div
-                      id={post?.id}
-                      className="absolute sm:top-5 mt-2 p-1 z-[100] bg-white dark:bg-[#0f0f0f]  border before:content-normal before:absolute before:-top-[0.3rem] before:right-[3rem] before:h-[10px] before:w-[10px] before:rotate-45 before:bg-inherit before:border-l before:border-t border-gray-300 rounded-lg"
-                    >
-                      <ul
-                        ref={menuRef}
-                        className="flex flex-col justify-center p-2 w-[100px]"
-                      >
-                        {post?.user?.id.toString() ===
-                          user.id.toString().trim() && (
-                          <>
-                            <li>
-                              <button
-                                className="w-full"
-                                onClick={() => confirmDeletePost(post?.id)}
-                              >
-                                Delete Post
-                              </button>
-                            </li>
-                            <li>Edit</li>
-                          </>
-                        )}
-                      </ul>
-                    </div>
-                  )}
-                </div>
+                <Menu post={post} />
               </div>
             </div>
           )}
         </div>
       </article>
-      {confirmBox?.status && <ConfirmationBox />}
     </>
   );
 });

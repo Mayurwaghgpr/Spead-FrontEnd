@@ -10,7 +10,7 @@ function OAuth({ service, icon, className }, { ...props }) {
     <button
       type="button"
       onClick={handelGoogleAuth}
-      className={`bg-gray-200  flex items-center p-3 w-full justify-center gap-5 rounded-lg  border-inherit border ${className}`}
+      className={`bg-inherit flex items-center p-3 w-full justify-center gap-5 rounded-lg  border-inherit border ${className}`}
       {...props}
     >
       {icon}

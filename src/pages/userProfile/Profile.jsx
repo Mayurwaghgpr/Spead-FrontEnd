@@ -62,7 +62,6 @@ function Profile() {
       return postsData.pages.map((page) =>
         page.map((post, idx, arr) => (
           <PostPreview
-            className
             ref={arr.length === idx + 1 ? lastpostRef : null}
             key={post.id}
             post={post}
@@ -73,13 +72,10 @@ function Profile() {
 
     if (profileId === user?.id) {
       return (
-        <div className="max-w-[600px] min-w-[200px] w-full flex flex-col justify-center items-center text-2xl border-dashed border-2 rounded-lg max-h-[300px] h-full min-h-[200px]">
+        <div className="max-w-[600px] min-w-[200px] w-full flex flex-col justify-center items-center text-2xl border-dashed border-2 rounded-lg max-h-[300px] h-full min-h-[200px] border-inherit">
           No posts yet{" "}
           {isLogin && (
-            <Link
-              to="/write"
-              className="text-slate-500 font-thin hover:text-slate-800"
-            >
+            <Link to="/write" className="text-gray-500 font-thin ">
               Add New Post +
             </Link>
           )}
@@ -101,18 +97,17 @@ function Profile() {
   return (
     <div className="flex justify-center  mt-16  dark:*:border-[#383838]">
       <div className=" md:w-[80%]  lg:w-[70%] xl:w-[60%]  w-full flex flex-col h-full">
-        <div id="Profile" className="flex-grow w-full sm:p-4">
+        <div id="Profile" className="flex-grow w-full sm:p-4 border-inherit">
           <ProfileHeader profileId={profileId} />
-          <div className="w-full flex gap-5 border-t p-2 px-4">
+          <div className="w-full flex gap-5 border-t p-2 px-4 border-inherit">
             <div className="w-full flex gap-5">
               <p className="hover:underline cursor-pointer">Home</p>
               <p className="hover:underline cursor-pointer">About</p>
             </div>
           </div>
           <div
-            className={`lg:px-5 p-3 pt-5 min-h-[50vh] ${
-              !postsData?.pages?.length &&
-              "flex justify-center items-center border-inherit"
+            className={`lg:px-5 p-3 pt-5 min-h-[50vh] dark:*:border-[#383838] ${
+              !postsData?.pages?.length && "flex justify-center items-center "
             }`}
           >
             <RenderPosts />

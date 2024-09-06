@@ -20,10 +20,11 @@ function LoginMenu({ MenuOpen, setIsMenuOpen }) {
   const handleProfileClick = () => {
     setIsMenuOpen(false);
   };
+
   const { userImageurl } = userImageSrc(user);
   return (
-    <div className="fixed z-[100] shadow-lg px-2 right-10 mt-2 rounded-2xl dark:bg-[#222222] bg-white transition-all duration-300 ease-linear dark:border-[#383838] dark:border">
-      <div className="flex min-w-[270px] text-md flex-col h-full p-4 gap-3 items-start justify-between font-light transition-all ease-linear duration-75   dark:*:border-[#383838]">
+    <div className="fixed z-[100] shadow-lg px-2 text-sm right-10 mt-2 rounded-2xl dark:bg-[#222222] bg-white  dark:border-[#383838] dark:border">
+      <div className="flex min-w-[17rem] flex-col h-full p-4 gap-3 items-start justify-between dark:*:border-[#383838]">
         {/* Profile Link */}
         <Link
           className="flex justify-center items-center gap-2 w-full"
@@ -41,7 +42,7 @@ function LoginMenu({ MenuOpen, setIsMenuOpen }) {
           location.pathname !== "/profile" &&
           isLogin && (
             <Link
-              className="text-lg sm:hidden flex gap-2"
+              className=" sm:hidden flex gap-2"
               to="/write"
               tabIndex="-1"
               title="Write"
@@ -78,6 +79,7 @@ function LoginMenu({ MenuOpen, setIsMenuOpen }) {
           className="flex justify-start items-center gap-2 w-full"
           role="menuitem"
           tabIndex="-1"
+          state={{ from: location.pathname }}
         >
           <i className="bi bi-gear"></i>
           Settings

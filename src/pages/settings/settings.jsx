@@ -1,19 +1,21 @@
-import React, { memo, useEffect } from "react";
+import React, { memo, useEffect, useRef } from "react";
 
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import Theme from "./Theme";
 import { LuGithub } from "react-icons/lu";
 
 function Settings() {
   const navigate = useNavigate();
+
   const settingItem = [
-    { name: "Theme", icon: <i className="bi bi-gear"></i> },
-    { name: "Sync github", icon: <LuGithub /> },
+    { name: "General", icon: <i className="bi bi-gear"></i>, stub: "" },
+    { name: "Sync Github", icon: <LuGithub />, stub: "githubSynch" },
   ];
+
   return (
     <div
       onClick={(e) => {
-        navigate(-1);
+        navigate("..", { relative: "path" });
       }}
       className="fixed  top-0 left-0 right-0 bottom-0 flex justify-center items-center z-[100] bg-black border-inherit bg-opacity-30 px-4"
     >
@@ -21,32 +23,24 @@ function Settings() {
         onClick={(e) => e.stopPropagation()}
         className=" relative sm:w-[70%] h-[600px] flex flex-col  overflow-hidden items-center border bg-white dark:bg-[#222222] border-inherit rounded-lg"
       >
-        <header className="w-full text-4xl p-3">
+        <header className="w-full text-4xl p-5 border-b border-inherit">
           <h1> Settings</h1>
         </header>
-        <div className="h-full py-3 flex justify-between text-sm w-full">
-          <aside className=" h-full  px-4  min-w-fit flex flex-col gap-10">
-            <ul className=" flex flex-col gap-2">
+        <div className="h-full py-3 flex justify-between text-sm w-full border-inherit">
+          <aside className=" h-full  px-6  min-w-fit flex flex-col gap-10 ">
+            <ul className=" flex flex-col gap-4">
               {settingItem.map((setting) => (
-                <li className="flex justify-start items-center gap-1">
+                <Link
+                  to={setting.stub}
+                  className="flex justify-start items-center gap-1 cursor-pointer"
+                >
                   <span>{setting.icon}</span>
                   {setting.name}
-                </li>
+                </Link>
               ))}
             </ul>
-            <div className="">
-              <Link className="flex items-center gap-1">
-                <span>
-                  <i className="bi bi-person"></i>
-                </span>
-                Profile
-              </Link>
-            </div>
           </aside>
-          <div className=" w-full">
-            {<Outlet />}
-            <Theme />
-          </div>
+          <div className=" w-full border-inherit">{<Outlet />}</div>
         </div>
       </div>
     </div>

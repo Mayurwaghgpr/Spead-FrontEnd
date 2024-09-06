@@ -1,4 +1,4 @@
-import React, { useEffect, Suspense, lazy } from "react";
+import React, { useEffect, Suspense, lazy, useMemo, useState } from "react";
 import {
   Routes,
   Route,
@@ -19,6 +19,8 @@ import ForgotPass from "./pages/auth/ForgotPass";
 import ResetPassword from "./pages/auth/ResetPassword";
 import LoaderScreen from "./component/loaders/loaderScreen";
 import ConfirmationBox from "./component/otherUtilityComp/ConfirmationBox";
+import Theme from "./pages/settings/Theme";
+import General from "./pages/settings/General";
 
 // Lazy load components
 const SignUp = lazy(() => import("./pages/auth/SignUp"));
@@ -41,6 +43,40 @@ function App() {
   const dispatch = useDispatch();
   const location = useLocation();
   const { isLogin } = useSelector((state) => state.auth);
+  const { ThemeMode } = useSelector((state) => state.ui);
+  const [systemTheme, setSystemTheme] = useState(
+    window.matchMedia("(prefers-color-scheme: dark)").matches
+  );
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
+    const handleSystemThemeChange = (e) => {
+      setSystemTheme(e.matches); // Update state when system theme changes
+    };
+
+    mediaQuery.addEventListener("change", handleSystemThemeChange);
+
+    // Cleanup event listener when component unmounts
+    return () =>
+      mediaQuery.removeEventListener("change", handleSystemThemeChange);
+  }, []);
+
+  // Handle dark mode based on ThemeMode
+  useMemo(() => {
+    if (ThemeMode === "dark") {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("ThemeMode", "dark");
+    } else if (ThemeMode === "light") {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("ThemeMode", "light");
+    } else if (ThemeMode === "system") {
+      if (systemTheme) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    }
+  }, [ThemeMode, systemTheme]);
 
   return (
     <>
@@ -104,7 +140,20 @@ function App() {
                   <Settings />
                 </ProtectedRoute>
               }
-            />
+            >
+              <Route
+                path=""
+                element={
+                  <ProtectedRoute>
+                    <General />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="githubSynch"
+                element={<ProtectedRoute>{<div></div>}</ProtectedRoute>}
+              />
+            </Route>
             <Route
               path="/FullView/:username/:id"
               element={
@@ -119,8 +168,9 @@ function App() {
             <Route path="/Resetpassword/:token" element={<ResetPassword />} />
           </Routes>
         </Suspense>
+        <ConfirmationBox />
+        <ScrollToTopButton />
       </AnimatePresence>
-      {<ScrollToTopButton />}
     </>
   );
 }

@@ -113,7 +113,7 @@ function Viewblogs() {
           id="PostContainer"
           className={`relative flex flex-col gap-3  mt-16 ${
             !postsData && " py-10 "
-          } w-full lg:w-[730px] max-w-[730px] min-h-screen snap-center sm:px-10 dark:border-[#383838]`}
+          } w-full lg:w-[730px] max-w-[730px] min-h-screen snap-center sm:px-10 dark:border-[#383838] border-inherit`}
         >
           {!isLoadingPosts
             ? postsData?.pages?.map((page) =>

@@ -8,7 +8,6 @@ import { RegisterUser } from "../../Apis/authapi.jsx";
 import CommonInput from "../../component/otherUtilityComp/commonInput.jsx";
 import { passwordRegex, emailRegex } from "../../utils/regex.js";
 import OAuth from "./OAuth.jsx";
-import { motion } from "framer-motion";
 
 function SignUp() {
   const [validation, setValidation] = useState("");
@@ -72,12 +71,7 @@ function SignUp() {
   ];
 
   return (
-    <motion.section
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="sm:flex relative justify-start z-10   h-[47rem]   items-center flex-col top-0 left-0 bottom-0 text-black right-0 overflow-scroll  bg-[#ffff]"
-    >
+    <section className="sm:flex relative justify-start z-50   h-[47rem]   items-center flex-col top-0 left-0 bottom-0 text-black right-0 overflow-scroll  bg-[#ffff]">
       {(isError || validation) && (
         <div className="text-red-500 my-4 w-full flex justify-center bg-red-100 py-2">
           {error?.response?.data.message || validation}
@@ -129,7 +123,7 @@ function SignUp() {
             <div className="mb-4 w-full">
               <button
                 type="submit"
-                className="bg-slate-500 p-3 w-full text-center text-white rounded-lg"
+                className="bg-slate-500 p-3 w-full text-center rounded-lg"
                 disabled={isLoading}
               >
                 {isLoading ? "Signing Up..." : "Sign Up"}
@@ -154,7 +148,7 @@ function SignUp() {
           </form>
         </div>
       </div>
-    </motion.section>
+    </section>
   );
 }
 

@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import abbreviateNumber from "../../utils/numAbrivation";
 
 function Like({ post, className }) {
-  // const [likeIcon, setlikeIcon] = useState();
   const { LikePost } = usePublicApis();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
@@ -28,8 +27,8 @@ function Like({ post, className }) {
       );
     },
   });
+  // It will check if the logged in  user id is in the Likedby array of post
   const isLiked = post?.Likes?.some((like) => like.likedBy === user.id);
-  console.log({ isLiked });
   return (
     <div className={`flex cursor-pointer items-end font-light ${className}`}>
       {" "}

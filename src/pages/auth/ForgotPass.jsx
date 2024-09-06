@@ -31,7 +31,7 @@ function ForgotPass() {
   };
   return (
     <section
-      className={`sm:flex relative justify-evenly z-10 items-center h-screen flex-col   top-0 left-0 bottom-0 right-0 text-black  bg-[#ffff] border-inherit`}
+      className={`sm:flex relative justify-evenly z-50 items-center h-screen flex-col   top-0 left-0 bottom-0 right-0 text-black  bg-[#ffff] border-inherit`}
     >
       {isError && (
         <div className="text-red-500 my-4 w-full flex justify-center  bg-red-100 py-2 ">
@@ -81,7 +81,7 @@ function ForgotPass() {
             <div className="mb-4">
               <button
                 type="submit"
-                className={`bg-slate-400 min-w-[200px] text-white p-3 w-full  rounded-lg ${
+                className={`bg-gray-400 min-w-[200px] text-white p-3 w-full  rounded-lg ${
                   isLoading && "cursor-wait bg-blue-100"
                 }`}
                 disabled={isLoading}
