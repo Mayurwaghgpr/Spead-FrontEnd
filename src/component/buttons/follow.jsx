@@ -24,7 +24,7 @@ function Follow({ className, People }) {
   return (
     <div className={className}>
       {followLoading ? (
-        <div className="w-full relative h-full flex justify-center items-center rounded-3xl bg-inherit transition-all duration-300">
+        <div className="w-full relative h-full flex justify-center  rounded-3xl bg-inherit transition-all duration-300 items-center">
           <div className="dotloader"></div>
         </div>
       ) : People?.id !== user?.id ? (

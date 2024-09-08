@@ -22,18 +22,19 @@ function Menu({ post }) {
     },
     [dispatch]
   );
+
   const menuItem = [
     {
       id: uuidv4(),
       itemName: "Delete Post",
-      icon: <i class="bi bi-trash2"></i>,
+      icon: <i className="bi bi-trash2"></i>,
       itemMethod: () => confirmDeletePost(post?.id),
     },
     {
       id: uuidv4(),
       itemName: "Edite Post",
-      icon: <i class="bi bi-vignette"></i>,
-      itemMethod: () => confirmDeletePost(post?.id),
+      icon: <i className="bi bi-vignette"></i>,
+      itemMethod: () => {},
     },
   ];
   return (
@@ -51,7 +52,11 @@ function Menu({ post }) {
           className="absolute sm:top-5 mt-2 p-2 gap-2 flex flex-col  w-32  bg-white dark:bg-[#0f0f0f]  border before:content-normal before:absolute before:-top-[0.3rem] before:right-[3.6rem] before:h-[10px] before:w-[10px] before:rotate-45 before:bg-inherit before:border-l before:border-t border-gray-300 rounded-lg"
         >
           {menuItem.map((item, idx) => (
-            <li className="w-full flex gap-2" onClick={item.itemMethod}>
+            <li
+              key={item.id}
+              className="w-full flex gap-2 cursor-pointer"
+              onClick={item.itemMethod}
+            >
               {item.icon}
               {item.itemName}
             </li>

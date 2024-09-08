@@ -9,35 +9,39 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import MainNavBar from "./component/header/MainNavBar";
 import ProtectedRoute from "./utils/ProtectedRoutes";
-import ToastContainer from "./component/otherUtilityComp/ToastContainer";
-import ScrollToTopButton from "./component/otherUtilityComp/ScrollToTopButton";
 import PersistentUser from "./utils/persistentUser";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import Spiner from "./component/loaders/Spinner";
 import { AnimatePresence } from "framer-motion";
-import ForgotPass from "./pages/auth/ForgotPass";
-import ResetPassword from "./pages/auth/ResetPassword";
 import LoaderScreen from "./component/loaders/loaderScreen";
-import ConfirmationBox from "./component/otherUtilityComp/ConfirmationBox";
-import Theme from "./pages/settings/Theme";
-import General from "./pages/settings/General";
 
 // Lazy load components
+
 const SignUp = lazy(() => import("./pages/auth/SignUp"));
 const SignIn = lazy(() => import("./pages/auth/SignIn"));
+const ForgotPass = lazy(() => import("./pages/auth/ForgotPass"));
+const ResetPassword = lazy(() => import("./pages/auth/ResetPassword"));
 const ViewBlogs = lazy(() => import("./pages/ViewBlogs"));
 const Home = lazy(() => import("./pages/Home"));
 const PageError = lazy(() => import("./pages/ErrorPages/Page404"));
 const Profile = lazy(() => import("./pages/userProfile/Profile"));
-const DynamicPostEditor = lazy(() =>
-  import("./pages/PostEditor/DynamicPostEditor")
+const DynamicPostEditor = lazy(
+  () => import("./pages/PostEditor/DynamicPostEditor")
 );
 const FullBlogView = lazy(() => import("./pages/FullBlogView/FullBlogView"));
 const ProfileEditor = lazy(() => import("./pages/userProfile/ProfileEditor"));
 const About = lazy(() => import("./pages/About"));
 const ReadList = lazy(() => import("./pages/ReadList"));
 const Settings = lazy(() => import("./pages/settings/settings"));
-
+const General = lazy(() => import("./pages/settings/General"));
+const ConfirmationBox = lazy(
+  () => import("./component/otherUtilityComp/ConfirmationBox")
+);
+const ScrollToTopButton = lazy(
+  () => import("./component/otherUtilityComp/ScrollToTopButton")
+);
+const ToastContainer = lazy(
+  () => import("./component/otherUtilityComp/ToastContainer")
+);
 function App() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -84,9 +88,9 @@ function App() {
       <PersistentUser />
       {<ConfirmationBox />}
       <AnimatePresence mode="wait">
-        <MainNavBar />
         <Suspense fallback={<LoaderScreen />}>
-          <Routes location={location} key={location.key || location.pathname}>
+          <MainNavBar />
+          <Routes location={location} key={location.key}>
             <Route
               path="/"
               element={

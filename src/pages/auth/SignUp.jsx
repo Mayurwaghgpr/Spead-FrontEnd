@@ -71,7 +71,7 @@ function SignUp() {
   ];
 
   return (
-    <section className="sm:flex relative justify-start z-50   h-[47rem]   items-center flex-col top-0 left-0 bottom-0 text-black right-0 overflow-scroll  bg-[#ffff]">
+    <section className="sm:flex relative justify-start z-50   h-[47rem]   items-center flex-col top-0 left-0 bottom-0 right-0 overflow-scroll bg-[#ffff] dark:bg-[#222222]">
       {(isError || validation) && (
         <div className="text-red-500 my-4 w-full flex justify-center bg-red-100 py-2">
           {error?.response?.data.message || validation}
@@ -86,7 +86,7 @@ function SignUp() {
         <i className="bi bi-x-lg"></i>
       </button>
 
-      <div className="flex flex-col justify-between gap-3 p-7 min-w-[300px] sm:w-[500px] h-full rounded-xl bg-white ">
+      <div className="flex flex-col justify-between gap-3 p-7 min-w-[300px] sm:w-[500px] h-full rounded-xl bg-white dark:bg-inherit ">
         <header className="text-2xl mt-2 text-center flex justify-center items-center">
           {"Spread"}
         </header>
@@ -135,7 +135,16 @@ function SignUp() {
               <hr className="flex-1" />
             </div>
             <div className="mb-4 w-full">
-              <OAuth />
+              <OAuth
+                className={"mb-3"}
+                service={"google"}
+                icon={<i className="bi bi-google"></i>}
+              />
+              <OAuth
+                service={"Apple"}
+                icon={<i className="bi bi-apple"></i>}
+                disabled={true}
+              />
             </div>
             <footer className="text-center">
               <small>

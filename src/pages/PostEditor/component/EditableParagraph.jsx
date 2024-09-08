@@ -26,7 +26,7 @@ const EditableParagraph = ({
   }, [index]);
 
   return (
-    <div className="relative">
+    <div className=" w-full h-full">
       {showToolbar && <TextTools applyStyle={applyStyle} />}
       <p
         ref={(el) => (inputRefs.current[index] = el)}
@@ -40,7 +40,7 @@ const EditableParagraph = ({
         onFocus={handleFocus}
         onMouseUp={handleSelectedText}
         onKeyUp={handleSelectedText}
-        className={`border-l border-gray-300 p-2 w-full min-h-10 z-10 outline-none cursor-text`}
+        className={`border-l border-gray-300 p-2 w-full  min-h-10 z-10 outline-none cursor-text`}
       ></p>
     </div>
   );

@@ -1,12 +1,14 @@
-import React, { useCallback, useEffect, useMemo } from "react";
+import React, { lazy, Suspense, useCallback, useEffect, useMemo } from "react";
+
 import WriteElements from "./component/WriteElements";
-import PostPreviewEditor from "./component/PostPreviewEditor";
+
 import { usePostCreator } from "./hooks/usePostCreator";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsScale } from "../../redux/slices/uiSlice";
 import { useSearchParams } from "react-router-dom";
-import InputTypeSelector from "./component/InputTypeSelector";
-import { setElements } from "../../redux/slices/postSlice";
+import LoaderScreen from "../../component/loaders/loaderScreen";
+const PostPreviewEditor = lazy(() => import("./component/PostPreviewEditor"));
+const InputTypeSelector = lazy(() => import("./component/InputTypeSelector"));
 
 function DynamicPostEditor() {
   const {
@@ -30,63 +32,58 @@ function DynamicPostEditor() {
   const { isScale } = useSelector((state) => state.ui);
 
   return (
-    <main className="flex flex-col  justify-between mt-16">
-      <div
-        className={`flex sm:pl-0 pl-3 sm:justify-center sm:items-center flex-col ${
-          elements.length === 0 ? "pt-[4rem]" : "pt-0"
-        }`}
-      >
+    <main className="flex flex-col justify-between mt-16 ">
+      <div className={`flex  justify-center items-center  flex-col mt-4`}>
         {elements.map((element, index) => (
-          <div key={element.id} className="flex justify-center items-center">
+          <div
+            key={element.id}
+            className="flex relative justify-start items-center gap-2  xl:w-[60rem] lg:w-[50rem] w-full px-2 "
+          >
             {focusedIndex === index && element.data === "" && (
               <div
-                className={`sm:flex hidden justify-between items-center mt-2 absolute transition-transform duration-100 sm:left-56 left-5 sm:overflow-hidden ${
-                  isScale ? "z-20" : "z-0"
-                }`}
+                className={`flex justify-between  items-center  transition-transform duration-100 sm:overflow-hidden`}
               >
                 <span
                   onClick={() => dispatch(setIsScale())}
                   title="more inputs"
-                  className={`group h-[40px] z-[100] w-[40px] bg-none rounded-full border text-3xl font-extralight flex justify-center items-center cursor-pointer transition-transform duration-100 ${
+                  className={` w-[2.5rem] z-10 rounded-full border text-3xl font-extralight flex justify-center items-center cursor-pointer transition-transform duration-100 ${
                     isScale ? "rotate-0" : " rotate-45"
                   }`}
                 >
                   <i className="bi bi-x"></i>
                 </span>
-                {
-                  <InputTypeSelector
-                    imageInputRef={imageInputRef}
-                    addElement={addElement}
-                    handleFileChange={handleFileChange}
-                  />
-                }
               </div>
             )}
-            <div className="justify-start mt-4 flex sm:w-[900px] w-full">
-              <div className="flex flex-col w-full gap-2">
-                <WriteElements
-                  element={element}
-                  handleTextChange={handleTextChange}
-                  index={index}
-                  handleKeyDown={handleKeyDown}
-                  handleContentEditableChange={handleContentEditableChange}
-                  inputRefs={inputRefs}
-                  imageInputRef={imageInputRef}
-                  focusedIndex={focusedIndex}
-                  setFocusedIndex={setFocusedIndex}
-                />
-              </div>
+            <InputTypeSelector
+              imageInputRef={imageInputRef}
+              addElement={addElement}
+              handleFileChange={handleFileChange}
+            />
+            <div className="flex w-full  min-h-10">
+              <WriteElements
+                element={element}
+                handleTextChange={handleTextChange}
+                index={index}
+                handleKeyDown={handleKeyDown}
+                handleContentEditableChange={handleContentEditableChange}
+                inputRefs={inputRefs}
+                imageInputRef={imageInputRef}
+                focusedIndex={focusedIndex}
+                setFocusedIndex={setFocusedIndex}
+              />
             </div>
           </div>
         ))}
-        {beforsubmit && (
-          <PostPreviewEditor
-            handleTextChange={handleTextChange}
-            handleContentEditableChange={handleContentEditableChange}
-            imageFiles={imageFiles}
-            setImageFiles={setImageFiles}
-          />
-        )}
+        <Suspense fallback={<LoaderScreen />}>
+          {beforsubmit && (
+            <PostPreviewEditor
+              handleTextChange={handleTextChange}
+              handleContentEditableChange={handleContentEditableChange}
+              imageFiles={imageFiles}
+              setImageFiles={setImageFiles}
+            />
+          )}
+        </Suspense>
       </div>
     </main>
   );

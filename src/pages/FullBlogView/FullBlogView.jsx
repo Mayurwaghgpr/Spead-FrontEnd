@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import Comment from "../../component/postsComp/comment";
+import React, { lazy, useEffect, useState } from "react";
 import { format } from "date-fns";
 import { Link, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -7,12 +6,16 @@ import DOMPurify from "dompurify";
 import "boxicons";
 import { useQuery } from "react-query";
 
-import SomthingWentWrong from "../ErrorPages/somthingWentWrong";
 import Bookmark from "../../component/buttons/Bookmark";
-import CopyToClipboardInput from "../../component/CopyToClipboardInput";
 import usePublicApis from "../../Apis/publicApis";
 import Like from "../../component/buttons/Like";
 import Menu from "../../component/postsComp/menu";
+
+const SomthingWentWrong = lazy(() => import("../ErrorPages/somthingWentWrong"));
+const Comment = lazy(() => import("../../component/postsComp/comment"));
+const CopyToClipboardInput = lazy(
+  () => import("../../component/CopyToClipboardInput")
+);
 
 function FullBlogView() {
   const [openComments, setOpenComments] = useState(false);

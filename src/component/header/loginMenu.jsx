@@ -1,8 +1,6 @@
 import React, { memo, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import logoutIcon from "/logout.png";
-import profileIcon from "/ProfOutlook.png";
 import useLogout from "../../utils/logout";
 import userImageSrc from "../../utils/userImageSrc";
 
@@ -23,7 +21,7 @@ function LoginMenu({ MenuOpen, setIsMenuOpen }) {
 
   const { userImageurl } = userImageSrc(user);
   return (
-    <div className="fixed z-[100] shadow-lg px-2 text-sm right-10 mt-2 rounded-2xl dark:bg-[#222222] bg-white  dark:border-[#383838] dark:border">
+    <div className="fixed z-[100] shadow-lg px-2 text-sm right-24 mt-2 rounded-lg dark:bg-[#222222] bg-white  dark:border-[#383838] dark:border">
       <div className="flex min-w-[17rem] flex-col h-full p-4 gap-3 items-start justify-between dark:*:border-[#383838]">
         {/* Profile Link */}
         <Link

@@ -1,8 +1,8 @@
-import React from "react";
+import React, { lazy } from "react";
 import EditableParagraph from "./EditableParagraph";
-import CodeEditor from "../../../component/WriterTools/codeEditor";
-// import PostFigure from "./PostFigure";
-// import { setFocusedIndex } from "../../../redux/slices/uiSlice";
+const CodeEditor = lazy(
+  () => import("../../../component/WriterTools/codeEditor")
+);
 
 const WriteElements = ({
   element,

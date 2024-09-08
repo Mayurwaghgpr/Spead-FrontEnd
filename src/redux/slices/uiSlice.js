@@ -35,6 +35,9 @@ const uiSlice = createSlice({
     removeToast: (state, action) => {
       state.ToastState = state.ToastState.filter(el => el.id !== action.payload);
     },
+    removeAllToast: (state,action) => {
+       state.ToastState=[]
+    },
     setThemeMode: (state,action) => {
       state.ThemeMode =action.payload
     },
@@ -48,6 +51,6 @@ const uiSlice = createSlice({
   },
 });
 
-export const { setConfirmBox, setIsConfirm, setToast, removeToast,setThemeMode ,setIsScale} = uiSlice.actions;
+export const { setConfirmBox, setIsConfirm, setToast, removeToast,setThemeMode ,setIsScale,removeAllToast} = uiSlice.actions;
 
 export default uiSlice.reducer;

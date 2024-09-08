@@ -105,12 +105,9 @@ function usePublicApis() {
   const removePostFromArchive = async (id) => {
     console.log(id);
     try {
-      const result = await axios.delete(
-        `${BASE_URL}/public/removeFromArchive?id=${id}`,
-        {
-          withCredentials: true,
-        }
-      );
+      const result = await axios.delete(`${BASE_URL}/public/Archive?id=${id}`, {
+        withCredentials: true,
+      });
       console.log({ result });
       return result.data;
     } catch (error) {

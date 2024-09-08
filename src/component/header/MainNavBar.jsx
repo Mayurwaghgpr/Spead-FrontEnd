@@ -16,8 +16,8 @@ import ProfileButton from "../ProfileButton";
 // import useScrollDirection from "../../hooks/useScrollDirection"; // Import the custom hook
 import LoginMenu from "./loginMenu";
 
-const ConfirmationBox = React.lazy(() =>
-  import("../otherUtilityComp/ConfirmationBox")
+const ConfirmationBox = React.lazy(
+  () => import("../otherUtilityComp/ConfirmationBox")
 );
 
 import SearchBar from "../homeComp/searchBar";
@@ -39,7 +39,7 @@ function MainNavBar() {
     <header
       className={`fixed top-0  transform-all duration-300 ease-in-out border-b bg-white  border-inherit dark:border-[#383838] ${
         !isLogin ? " bg-opacity-50 backdrop-blur-lg" : "dark:bg-[#222222]"
-      } w-full z-[50]`}
+      } w-full z-40`}
     >
       <nav className="relative w-full z-10 py-3 px-7 sm:px-20 lg:px-28">
         <div className="flex items-center justify-between w-full m-auto">

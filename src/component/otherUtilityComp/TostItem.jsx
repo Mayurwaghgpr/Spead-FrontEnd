@@ -1,48 +1,51 @@
-import React, { memo, useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
-import { removeToast } from "../../redux/slices/uiSlice";
-import { motion } from "framer-motion";
+import React, { memo, useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { removeToast, removeAllToast } from "../../redux/slices/uiSlice";
+
 function ToastItem({ ToastContent }) {
   const dispatch = useDispatch();
-  const [isVisible, setVisble] = useState(true);
   const timerRef = useRef({});
+  const { ToastState } = useSelector((state) => state.ui);
+
   useEffect(() => {
-    timerRef[ToastContent.id] = setTimeout(() => {
+    // Set timeout for each toast
+    timerRef.current[ToastContent.id] = setTimeout(() => {
       dispatch(removeToast(ToastContent.id));
     }, 2000);
 
+    // Clean up timeout when component unmounts or when toast is dismissed
     return () => {
-      clearTimeout(timerRef[ToastContent.id]);
+      clearTimeout(timerRef.current[ToastContent.id]);
     };
   }, [dispatch, ToastContent.id]);
 
   const status =
     ToastContent.type === "success"
-      ? "bg-green-300 "
+      ? "bg-green-300"
       : ToastContent.type === "error"
-      ? "bg-red-300"
-      : ToastContent.type === "warning"
-      ? "bg-yellow-300 "
-      : "bg-sky-300";
+        ? "bg-red-300"
+        : ToastContent.type === "warning"
+          ? "bg-yellow-300"
+          : "bg-sky-300";
+
   return (
     <span
-      className={` animate-slide-in-left pointer-events-auto  ${status} shadow-xl  flex  flex-col rounded-lg  w-fit  `}
+      className={`animate-slide-in-left transition-all duration-300 ease-in-out pointer-events-auto ${status} shadow-xl flex flex-col rounded-lg w-fit`}
     >
-      <div className=" flex  p-4">
-        <div className=" break-words flex">
+      <div className="flex p-4">
+        <div className="break-words flex">
           <p className="word-break">{ToastContent?.message}</p>
         </div>
         <button
           onClick={() => {
-            clearTimeout(timerRef[ToastContent.id]);
-            dispatch(removeToast(ToastContent?.id));
+            clearTimeout(timerRef.current[ToastContent.id]);
+            dispatch(removeToast(ToastContent.id));
           }}
           className="ml-4"
         >
           <i className="bi bi-x-lg"></i>
         </button>
       </div>
-      {/* <div className={`w-1 h-1 bg-sky-500 rounded-lg`}></div> */}
     </span>
   );
 }

@@ -1,19 +1,17 @@
-import React, { useCallback } from "react";
+import React, { useCallback, lazy } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useInfiniteQuery, useQuery } from "react-query";
 
-// import ScrollToTopButton from "../component/otherUtilityComp/ScrollToTopButton";
-import PostPreview from "../component/postsComp/PostPreview";
-import SomthingWentWrong from "./ErrorPages/somthingWentWrong";
-import Spinner from "../component/loaders/Spinner";
+const PostPreview = lazy(() => import("../component/postsComp/PostPreview"));
+const SomthingWentWrong = lazy(() => import("./ErrorPages/somthingWentWrong"));
+const Spinner = lazy(() => import("../component/loaders/Spinner"));
 import useLastPostObserver from "../hooks/useLastPostObserver";
 import usePublicApis from "../Apis/publicApis";
 import Aside from "../component/homeComp/Aside";
 import PostsApis from "../Apis/PostsApis";
 
 function Viewblogs() {
-  const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
   const { isLogin, user } = useSelector((state) => state.auth);
   const { userPrepsData } = usePublicApis();
@@ -49,7 +47,6 @@ function Viewblogs() {
       retry: false,
     }
   );
-  console.log(postsData);
 
   const { lastpostRef } = useLastPostObserver(
     fetchNextPage,
@@ -117,7 +114,7 @@ function Viewblogs() {
         >
           {!isLoadingPosts
             ? postsData?.pages?.map((page) =>
-                page.map((post, idx, arr) => (
+                page?.map((post, idx, arr) => (
                   <PostPreview
                     className="border-inherit p-3"
                     ref={

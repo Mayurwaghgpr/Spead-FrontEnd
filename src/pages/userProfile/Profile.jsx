@@ -9,18 +9,15 @@ import { useInfiniteQuery, useQuery } from "react-query";
 import Spinner from "../../component/loaders/Spinner";
 import ProfileinfoCard from "../../component/ProfileinfoCard";
 import useLastPostObserver from "../../hooks/useLastPostObserver";
-// import useScrollDirection from "../../hooks/useScrollDirection";
 import useProfileApi from "../../Apis/ProfileApis";
 
 function Profile() {
-  // const scrollDirection = useScrollDirection();
   const dispatch = useDispatch();
   const params = useParams();
   const { fetchUserProfile, fetchUserData } = useProfileApi();
 
   const { isLogin, user } = useSelector((state) => state.auth);
   const { userProfile, FollowInfo } = useSelector((state) => state.profile);
-  console.log(params);
   const profileId = params.id || user?.id;
 
   const { isError, isFetching, isLoading } = useQuery(

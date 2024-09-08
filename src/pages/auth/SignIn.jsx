@@ -61,7 +61,7 @@ function SignIn() {
   if (!isLogin) {
     return (
       <section
-        className={`sm:flex relative justify-evenly z-50 items-center h-[47rem] flex-col   top-0 left-0 bottom-0 right-0  dark:bg-[#222222] border-inherit`}
+        className={`sm:flex relative justify-evenly z-50 items-center h-[47rem] flex-col   top-0 left-0 bottom-0 right-0 bg-[#ffff] dark:bg-[#222222] `}
       >
         {isError && (
           <div className="text-red-500 my-4 w-full flex justify-center  bg-red-100 py-2 ">
