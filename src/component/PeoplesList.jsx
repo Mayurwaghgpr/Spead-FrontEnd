@@ -30,7 +30,7 @@ function PeoplesList({ people, index, className }) {
         >
           <h1 className="">{people?.username}</h1>
           {isUserhover && (
-            <div className=" absolute w-auto flex flex-col gap-2 border  mt-[90px] bg-white border-inherit dark:bg-[#222222] font-normal text-[12px] p-3 overflow-hidden overflow-ellipsis rounded-md ">
+            <div className=" absolute z-30 w-auto flex flex-col gap-2 border  mt-[90px] bg-white border-inherit dark:bg-[#222222] font-normal text-[12px] p-3 overflow-hidden overflow-ellipsis rounded-md ">
               <div className=" flex gap-4 justify-start items-center font-medium ">
                 {" "}
                 <img
@@ -38,10 +38,10 @@ function PeoplesList({ people, index, className }) {
                   src={people?.userImage ? `${people?.userImage}` : profileIcon}
                   alt={`${people?.username}'s profile picture`}
                 />
-                <h1 className=" text-sm">{people?.username}</h1>
+                <h1 className=" text-sm hover:underline">{people?.username}</h1>
               </div>
 
-              <p>{people?.userInfo}</p>
+              <p className=" pl-8">{people?.bio}</p>
             </div>
           )}
         </div>

@@ -11,7 +11,6 @@ import MainNavBar from "./component/header/MainNavBar";
 import ProtectedRoute from "./utils/ProtectedRoutes";
 import PersistentUser from "./utils/persistentUser";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import { AnimatePresence } from "framer-motion";
 import LoaderScreen from "./component/loaders/loaderScreen";
 
 // Lazy load components
@@ -87,94 +86,92 @@ function App() {
       <ToastContainer />
       <PersistentUser />
       {<ConfirmationBox />}
-      <AnimatePresence mode="wait">
-        <Suspense fallback={<LoaderScreen />}>
-          <MainNavBar />
-          <Routes location={location} key={location.key}>
-            <Route
-              path="/"
-              element={
-                !isLogin ? (
-                  <Home />
-                ) : (
-                  <ProtectedRoute>
-                    <ViewBlogs />
-                  </ProtectedRoute>
-                )
-              }
-            />
-            <Route
-              path="/signin"
-              element={!isLogin ? <SignIn /> : <Navigate to="/" replace />}
-            />
-            <Route
-              path="/signup"
-              element={!isLogin ? <SignUp /> : <Navigate to="/" replace />}
-            />
-            <Route path="/about" element={<About />} />
+      <Suspense fallback={<LoaderScreen />}>
+        <MainNavBar />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              !isLogin ? (
+                <Home />
+              ) : (
+                <ProtectedRoute>
+                  <ViewBlogs />
+                </ProtectedRoute>
+              )
+            }
+          />
+          <Route
+            path="/signin"
+            element={!isLogin ? <SignIn /> : <Navigate to="/" replace />}
+          />
+          <Route
+            path="/signup"
+            element={!isLogin ? <SignUp /> : <Navigate to="/" replace />}
+          />
+          <Route path="/about" element={<About />} />
 
+          <Route
+            path="/profile/:username/:id"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profileEditor"
+            element={
+              <ProtectedRoute>
+                <ProfileEditor />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/write"
+            element={
+              <ProtectedRoute>
+                <DynamicPostEditor />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/setting"
+            element={
+              <ProtectedRoute>
+                <Settings />
+              </ProtectedRoute>
+            }
+          >
             <Route
-              path="/profile/:username/:id"
+              path=""
               element={
                 <ProtectedRoute>
-                  <Profile />
+                  <General />
                 </ProtectedRoute>
               }
             />
             <Route
-              path="/profileEditor"
-              element={
-                <ProtectedRoute>
-                  <ProfileEditor />
-                </ProtectedRoute>
-              }
+              path="githubSynch"
+              element={<ProtectedRoute>{<div></div>}</ProtectedRoute>}
             />
-            <Route
-              path="/write"
-              element={
-                <ProtectedRoute>
-                  <DynamicPostEditor />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/setting"
-              element={
-                <ProtectedRoute>
-                  <Settings />
-                </ProtectedRoute>
-              }
-            >
-              <Route
-                path=""
-                element={
-                  <ProtectedRoute>
-                    <General />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="githubSynch"
-                element={<ProtectedRoute>{<div></div>}</ProtectedRoute>}
-              />
-            </Route>
-            <Route
-              path="/FullView/:username/:id"
-              element={
-                <ProtectedRoute>
-                  <FullBlogView />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="*" element={<PageError />} />
-            <Route path="/Read" element={<ReadList />} />
-            <Route path="/ForgotPass" element={<ForgotPass />} />
-            <Route path="/Resetpassword/:token" element={<ResetPassword />} />
-          </Routes>
-        </Suspense>
-        <ConfirmationBox />
-        <ScrollToTopButton />
-      </AnimatePresence>
+          </Route>
+          <Route
+            path="/FullView/:username/:id"
+            element={
+              <ProtectedRoute>
+                <FullBlogView />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="*" element={<PageError />} />
+          <Route path="/Read" element={<ReadList />} />
+          <Route path="/ForgotPass" element={<ForgotPass />} />
+          <Route path="/Resetpassword/:token" element={<ResetPassword />} />
+        </Routes>
+      </Suspense>
+      <ConfirmationBox />
+      <ScrollToTopButton />
     </>
   );
 }

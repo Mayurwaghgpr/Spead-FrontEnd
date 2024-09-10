@@ -37,28 +37,31 @@ function DynamicPostEditor() {
         {elements.map((element, index) => (
           <div
             key={element.id}
-            className="flex relative justify-start items-center gap-2  xl:w-[60rem] lg:w-[50rem] w-full px-2 "
+            className="flex relative justify-start items-center gap-2  xl:w-[60rem]  w-full px-2 "
           >
-            {focusedIndex === index && element.data === "" && (
-              <div
-                className={`flex justify-between  items-center  transition-transform duration-100 sm:overflow-hidden`}
-              >
+            <div
+              className={`flex w-[2.5rem] justify-between  items-center  transition-transform duration-100 sm:overflow-hidden`}
+            >
+              {focusedIndex === index && element.data === "" && (
                 <span
                   onClick={() => dispatch(setIsScale())}
                   title="more inputs"
-                  className={` w-[2.5rem] z-10 rounded-full border text-3xl font-extralight flex justify-center items-center cursor-pointer transition-transform duration-100 ${
+                  className={`w-full z-10 rounded-full border text-3xl font-extralight flex justify-center items-center cursor-pointer transition-transform duration-100 ${
                     isScale ? "rotate-0" : " rotate-45"
                   }`}
                 >
                   <i className="bi bi-x"></i>
                 </span>
-              </div>
+              )}
+            </div>
+
+            {focusedIndex === index && element.data === "" && (
+              <InputTypeSelector
+                imageInputRef={imageInputRef}
+                addElement={addElement}
+                handleFileChange={handleFileChange}
+              />
             )}
-            <InputTypeSelector
-              imageInputRef={imageInputRef}
-              addElement={addElement}
-              handleFileChange={handleFileChange}
-            />
             <div className="flex w-full  min-h-10">
               <WriteElements
                 element={element}

@@ -34,7 +34,9 @@ const ProfileHeader = React.memo(({ profileId }) => {
                   <h1 className="lg:text-3xl  text-sm font-medium">
                     {userProfile?.username}
                   </h1>
-                  <span className=" font-light sm:text-md text-xs">he/him</span>
+                  <span className=" font-light sm:text-md text-xs">
+                    {userProfile.pronouns}
+                  </span>
                 </div>
               </div>
               <div className=" flex  gap-4 justify-start ">

@@ -73,7 +73,7 @@ function ForgotPass() {
               type={"email"}
               name={"email"}
               labelname={"Email address "}
-              isLoading={isLoading}
+              disabled={isLoading}
               required={true}
               defaultValue={location.state?.email}
             />

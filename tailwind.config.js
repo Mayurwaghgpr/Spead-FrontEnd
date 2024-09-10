@@ -28,12 +28,19 @@ export default {
           '0%': { transform: 'translateY(0%)' },
           '100%': { transform: 'translateY(-100%)' },
         },
+          fedin: {
+            '0%': { opacity: '0' },
+            '100%': { opacity: '1' }, // Correct opacity range
+          }
       },
       animation: {
         'slide-in-left':'fromLeft .5s ease-in-out forwards',
         'slide-in-right': 'fromRight .5s ease-in-out forwards',
         'slide-in-top': 'fromTop .5s ease-in-out forwards',
         'slide-out-top': 'toTop .5s ease-in-out forwards',
+        'fedin2s':'fedin 2s  ease-in-out',
+        'fedin1s':'fedin 1s  ease-in-out',
+        'fedin.2s':'fedin .2s  ease-in-out'
       },
       
     },

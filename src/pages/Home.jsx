@@ -4,7 +4,6 @@ import Footer from "../component/footer/Footer";
 import image from "../assets/Dashboard.png";
 import bgvideo from "../assets/107240-678130070_small.mp4";
 import SearchBar from "../component/homeComp/searchBar";
-import { motion } from "framer-motion";
 
 function Home() {
   window.scrollTo({
@@ -16,21 +15,18 @@ function Home() {
     <>
       <main className="relative">
         <div className="relative min-h-[40rem] flex justify-center items-center px-10 sm:py-24 sm:mb-1 py-10 text-start h-full border-inherit">
-          <motion.video
-            className="w-full absolute object-cover object-center h-full left-0 top-0 -z-1"
+          <video
+            className="w-full animate-fedin1s  absolute object-cover object-center h-full left-0 top-0 -z-1"
             id="background-video"
             autoPlay
             muted
             loop
             playsInline
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 2 }}
           >
             <source src={bgvideo} type="video/mp4" />
-          </motion.video>
+          </video>
 
-          <div className="container flex flex-col px-3 xl:w-1/2 lg:w-[60%] justify-center break-words relative border-inherit">
+          <div className=" flex flex-col px-3 xl:w-1/2 lg:w-[60%] h-full justify-between  items-center break-words relative border-inherit">
             <div className="bg-white p-7 rounded-lg bg-opacity-50 backdrop-blur-lg flex flex-col gap-2 border-inherit">
               <h1 className="xl:text-2xl lg:text-xl text-lg mb-4">...Spread</h1>
               <h2 className="xl:text-5xl lg:text-4xl sm:text-3xl text-2xl font-[440]">
@@ -84,8 +80,6 @@ function Home() {
             </div>
           </article>
         </div>
-
-        {/* <ContentBoxSection className="w-full bg-gray-900 h-screen"></ContentBoxSection> */}
       </main>
       <Footer />
     </>

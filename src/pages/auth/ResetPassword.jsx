@@ -64,7 +64,7 @@ function ResetPassword() {
               type={"password"}
               name={"password"}
               labelname={"Password"}
-              isLoading={isLoading}
+              disabled={isLoading}
               required
             />
             <div className="mb-4">

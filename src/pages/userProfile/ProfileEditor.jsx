@@ -9,7 +9,8 @@ import { setToast } from "../../redux/slices/uiSlice";
 import { debounce } from "../../utils/debounce";
 import useProfileApi from "../../Apis/ProfileApis";
 import userImageSrc from "../../utils/userImageSrc";
-
+import CommonInput from "../../component/otherUtilityComp/commonInput";
+import { v4 as uuidv4 } from "uuid";
 function ProfileEditor() {
   const { user } = useSelector((state) => state.auth);
   const [newInfo, setNewInfo] = useState(user);
@@ -27,14 +28,14 @@ function ProfileEditor() {
   const { isLoading, isError, mutate } = useMutation(
     (profileUpdated) => EditeUserProfile(profileUpdated),
     {
-      onSuccess: () => {
+      onSuccess: (data) => {
         dispatch(
           setToast({
             message: "Profile updated successfully !",
             type: "success",
           })
         );
-        queryClient.invalidateQueries({ queryKey: ["loggedInUser"] });
+        dispatch(setUser(data));
       },
     }
   );
@@ -91,15 +92,49 @@ function ProfileEditor() {
       }));
     }
   };
-  // console.log(newInfo);
+  const Inputcontant = [
+    {
+      id: uuidv4(),
+      labelname: "User Name",
+      Iname: "username",
+      defaultValue: newInfo?.username,
+      maxLength: 20,
+      length: `${newInfo?.username?.length} / 20`,
+    },
+    {
+      id: uuidv4(),
+      labelname: "Pronouns",
+      Iname: "pronouns",
+      defaultValue: newInfo?.pronoun,
+      maxLength: 10,
+      length: `${newInfo?.pronouns?.length} / 10`,
+    },
+    {
+      id: uuidv4(),
+      labelname: "Email",
+      Iname: "email",
+      defaultValue: newInfo?.email,
+      maxLength: 30,
+      length: `${newInfo?.email?.length} / 30`,
+    },
+    {
+      id: uuidv4(),
+      labelname: "Bio",
+      Iname: "bio",
+      defaultValue: newInfo?.bio,
+      maxLength: 100,
+      length: `${newInfo?.bio?.length} / 100`,
+    },
+  ];
+
   return (
     <div className=" relative flex h-screen justify-center items-start dark:*:border-[#0f0f0f]">
-      <article className=" w-full   flex flex-col max-w-[700px] mt-[70px] shadow-xl  rounded-xl px-4  border-inherit  gap-6 sm:text-sm text-xs py-5">
+      <article className=" w-full   flex flex-col max-w-[700px] mt-[70px] rounded-xl px-4  border-inherit  gap-6 sm:text-sm text-xs py-5">
         <h1 className="w-full text-center text-2xl p-2  bg-inherit  ">
           User Information
         </h1>
         <div
-          className=" flex justify-start gap-3   w-full  font-light border-inherit "
+          className=" flex justify-start gap-3   w-full  border-inherit "
           aria-label="Upload profile picture"
         >
           <div className="flex flex-col  min-w-28 px-2 ">
@@ -110,6 +145,7 @@ function ProfileEditor() {
               src={ProfileImage}
               alt="Profile"
             />
+
             <div className="w-full">
               <input
                 className="w-full p-3 bg-inherit  border border-inherit"
@@ -125,7 +161,7 @@ function ProfileEditor() {
           <div className="flex flex-col w-full ">
             <div className="py-1">
               <button
-                className="rounded-xl text-md font-light text-red-500 px-2 flex gap-2"
+                className="rounded-xl text-md  text-red-500 px-2 flex gap-2"
                 onClick={() =>
                   (newInfo?.userImage !== null || newInfo?.NewImageFile) &&
                   RemoveSelecteImage()
@@ -135,63 +171,28 @@ function ProfileEditor() {
                 Remove
               </button>
             </div>
-            <p className="text-start  break-words font-light ">
+            <p className="text-start  break-words  ">
               Importent: Insert image in JPG,JPEG,PNG format and high quality
             </p>
           </div>
         </div>
-        <div className="flex flex-col w-full items-end h-full  font-light  dark:*:border-[#383838] gap-2">
-          <div className="w-full flex flex-col gap-3">
-            <label className=" px-2" htmlFor="username">
-              User Name
-            </label>
-            <input
-              maxLength={50}
-              className="w-full p-3  bg-inherit  border border-inherit rounded-lg"
-              type="text"
-              name="username"
-              defaultValue={newInfo?.username}
-              onChange={handleChange}
-            />
-            <span className=" flex justify-end">
-              {newInfo?.username?.length}/50
-            </span>
-          </div>
-          <div className="w-full flex flex-col gap-3">
-            <label className=" px-2" htmlFor="email">
-              Email
-            </label>
-            <input
-              maxLength={30}
-              className="w-full p-3  bg-inherit  border border-inherit rounded-lg"
-              type="text"
-              name="email"
-              defaultValue={newInfo?.email}
-              onChange={handleChange}
-            />
-            <span className=" flex justify-end">
-              {newInfo?.email?.length}/30
-            </span>
-          </div>
+        <div className="flex flex-col w-full items-end h-full   dark:*:border-[#383838] gap-2 px-2 ">
+          {Inputcontant.map((input) => (
+            <>
+              {" "}
+              <CommonInput
+                className="w-full flex flex-col gap-3 bg-inherit "
+                type={input.type}
+                Iname={input.Iname}
+                labelname={input.labelname}
+                disabled={isLoading}
+                maxLength={input.maxLength}
+                onChange={handleChange}
+              />
+              <span className=" flex justify-end">{input.length}</span>
+            </>
+          ))}
 
-          <div className="w-full flex flex-col gap-3">
-            <label className=" px-2" htmlFor="userInfo">
-              Bio
-            </label>
-            <input
-              maxLength={30}
-              className="w-full p-3  bg-inherit  border border-inherit rounded-lg"
-              type="text"
-              name="userInfo"
-              id="userInfo"
-              placeholder="About you"
-              onChange={handleChange}
-              defaultValue={newInfo?.userInfo}
-            />
-            <span className=" flex justify-end">
-              {newInfo?.userInfo?.length}/100
-            </span>
-          </div>
           <div className="mt-5 py-2">
             <button
               className={`px-4 py-1 rounded-xl border border-sky-300`}

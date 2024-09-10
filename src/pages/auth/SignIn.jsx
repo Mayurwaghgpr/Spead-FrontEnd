@@ -61,7 +61,7 @@ function SignIn() {
   if (!isLogin) {
     return (
       <section
-        className={`sm:flex relative justify-evenly z-50 items-center h-[47rem] flex-col   top-0 left-0 bottom-0 right-0 bg-[#ffff] dark:bg-[#222222] `}
+        className={`sm:flex relative animate-fedin.2s justify-evenly z-50 items-center h-[47rem] flex-col   top-0 left-0 bottom-0 right-0 bg-[#ffff] dark:bg-[#222222] `}
       >
         {isError && (
           <div className="text-red-500 my-4 w-full flex justify-center  bg-red-100 py-2 ">
@@ -94,7 +94,7 @@ function SignIn() {
                 type={emailimputCred.type}
                 name={emailimputCred.name}
                 labelname={emailimputCred.labelname}
-                isLoading={isLoading}
+                disabled={isLoading}
                 required
               />
               {passVisible && (
@@ -103,7 +103,7 @@ function SignIn() {
                   type={passInputCred.type}
                   name={passInputCred.name}
                   labelname={passInputCred.labelname}
-                  isLoading={isLoading}
+                  disabled={isLoading}
                   required
                 />
               )}
@@ -159,9 +159,9 @@ function SignIn() {
                 icon={<i className="bi bi-google"></i>}
               />
               <OAuth
-                service={"Apple"}
-                icon={<i className="bi bi-apple"></i>}
-                disabled={true}
+                className={"mb-3"}
+                service={"github"}
+                icon={<i className="bi bi-github"></i>}
               />
             </div>
             <footer className="text-center">

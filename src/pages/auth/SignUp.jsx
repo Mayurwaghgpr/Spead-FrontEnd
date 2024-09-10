@@ -8,7 +8,7 @@ import { RegisterUser } from "../../Apis/authapi.jsx";
 import CommonInput from "../../component/otherUtilityComp/commonInput.jsx";
 import { passwordRegex, emailRegex } from "../../utils/regex.js";
 import OAuth from "./OAuth.jsx";
-
+import { v4 as uuidv4 } from "uuid";
 function SignUp() {
   const [validation, setValidation] = useState("");
   const dispatch = useDispatch();
@@ -50,20 +50,23 @@ function SignUp() {
 
   const signUpInputs = [
     {
+      id: uuidv4(),
       type: "text",
-      name: "username",
+      Iname: "username",
       labelname: "User Name",
       className: "mb-3 w-full flex flex-col gap-2",
     },
     {
+      id: uuidv4(),
       type: "email",
-      name: "email",
+      Iname: "email",
       labelname: "Email",
       className: "mb-3 w-full flex flex-col gap-2",
     },
     {
+      id: uuidv4(),
       type: "password",
-      name: "password",
+      Iname: "password",
       labelname: "Password",
       className: "mb-3 w-full flex flex-col gap-2",
       autocomplete: "new-password",
@@ -71,7 +74,7 @@ function SignUp() {
   ];
 
   return (
-    <section className="sm:flex relative justify-start z-50   h-[47rem]   items-center flex-col top-0 left-0 bottom-0 right-0 overflow-scroll bg-[#ffff] dark:bg-[#222222]">
+    <section className="sm:flex animate-fedin.2s relative justify-start z-50   h-[47rem]   items-center flex-col top-0 left-0 bottom-0 right-0 overflow-scroll bg-[#ffff] dark:bg-[#222222]">
       {(isError || validation) && (
         <div className="text-red-500 my-4 w-full flex justify-center bg-red-100 py-2">
           {error?.response?.data.message || validation}
@@ -101,12 +104,12 @@ function SignUp() {
           >
             {signUpInputs.map((input) => (
               <CommonInput
-                key={input.name}
+                key={input.id}
                 className={input.className}
                 type={input.type}
                 labelname={input.labelname}
-                name={input.name}
-                isLoading={isLoading}
+                Iname={input.Iname}
+                disabled={isLoading}
               />
             ))}
             <div className="flex justify-start w-full">
@@ -117,7 +120,6 @@ function SignUp() {
                 type={"checkbox"}
                 labelname={"RemberMe"}
                 label={"RemberMe"}
-                in
               />
             </div>
             <div className="mb-4 w-full">

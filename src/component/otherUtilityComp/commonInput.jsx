@@ -1,22 +1,22 @@
 import React, { forwardRef, memo } from "react";
 
 const CommonInput = forwardRef(function CommonInput(
-  { className, type, name, labelname, isLoading, ...props },
+  { className, type, Iname, labelname, disabled, ...props },
   ref
 ) {
   return (
     <div className={className}>
-      <label htmlFor={name} className=" w-full">
+      <label htmlFor={Iname} className=" w-full">
         {labelname}
       </label>
       <input
         ref={ref}
         type={type}
-        id={name}
-        name={name}
-        className={`p-3 border border-black outline-none  rounded-lg `}
-        placeholder={name}
-        disabled={isLoading}
+        id={Iname}
+        name={Iname}
+        className={`p-3 border border-inherit bg-inherit outline-none  rounded-lg `}
+        // placeholder={Iname}
+        disabled={disabled}
         {...props}
       />
     </div>

@@ -54,14 +54,15 @@ function useProfileApi() {
     if (newData.NewImageFile) {
       formData.append("NewImageFile", newData.NewImageFile);
     }
-    formData.append("username", newData.username);
-    formData.append("email", newData.email);
-    formData.append("userInfo", newData.userInfo);
+
     if (newData.removeImage) {
       formData.append("userImage", newData.userImage);
       formData.append("removeImage", newData.removeImage);
     }
-
+    formData.append("username", newData.username);
+    formData.append("email", newData.email);
+    formData.append("pronouns", newData.pronouns);
+    formData.append("bio", newData.bio);
     try {
       const response = await axios.post(
         `${BASE_URL}/user/EditProfile`,
@@ -75,7 +76,7 @@ function useProfileApi() {
           withCredentials: true,
         }
       );
-      return response;
+      return response.data;
     } catch (err) {
       console.error(
         "Error updating profile:",
