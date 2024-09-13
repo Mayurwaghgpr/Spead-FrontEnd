@@ -1,13 +1,41 @@
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import useClickOutside from "../../hooks/useClickOutside";
 import { useDispatch, useSelector } from "react-redux";
-import { setConfirmBox } from "../../redux/slices/uiSlice";
+import { setConfirmBox, setToast } from "../../redux/slices/uiSlice";
 import { v4 as uuidv4 } from "uuid";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useQuery, useQueryClient } from "react-query";
+import PostsApis from "../../Apis/PostsApis";
 function Menu({ post }) {
-  const menuRef = useRef();
+  const [postIdToDelete, setPostIdToDelete] = useState("");
   const dispatch = useDispatch();
-  const { menuId, setMenuId } = useClickOutside(menuRef);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const menuRef = useRef();
+
+  const { isConfirm } = useSelector((state) => state.ui);
   const { user } = useSelector((state) => state.auth);
+
+  const queryClient = useQueryClient();
+  const { DeletePostApi } = PostsApis();
+
+  const { menuId, setMenuId } = useClickOutside(menuRef);
+
+  useQuery({
+    queryKey: "DeletePost",
+    queryFn: () => DeletePostApi(postIdToDelete),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries(["Allposts"]);
+      dispatch(setToast({ message: ` ${data.message} ✨`, type: "success" }));
+    },
+    onError: () => {},
+    enabled: !!(isConfirm.status && postIdToDelete),
+    onSettled: () => {
+      if (location.pathname !== "/") {
+        navigate(-1);
+      }
+    },
+  });
   const confirmDeletePost = useCallback(
     (id) => {
       dispatch(

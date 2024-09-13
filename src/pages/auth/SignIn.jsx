@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import googleIcon from "../../assets/search.png";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsLogin, setUser } from "../../redux/slices/authSlice";
@@ -61,7 +60,7 @@ function SignIn() {
   if (!isLogin) {
     return (
       <section
-        className={`sm:flex relative animate-fedin.2s justify-evenly z-50 items-center h-[47rem] flex-col   top-0 left-0 bottom-0 right-0 bg-[#ffff] dark:bg-[#222222] `}
+        className={`sm:flex relative animate-fedin.2s justify-evenly z-50 items-center h-[47rem] flex-col   top-0 left-0 bottom-0 right-0 bg-[#ffff] dark:bg-[#222222]   dark:*:border-[#383838] `}
       >
         {isError && (
           <div className="text-red-500 my-4 w-full flex justify-center  bg-red-100 py-2 ">
@@ -77,15 +76,15 @@ function SignIn() {
         </button>
 
         <div
-          className={`flex flex-col justify-between items-center p-8 h-full  min-w-[300px] sm:w-[500px]  transition-all duration-300 delay-150 `}
+          className={`flex flex-col justify-between items-center p-8 h-full  min-w-[300px] sm:w-[500px]  transition-all duration-300 delay-150  *:border-inherit `}
         >
           <header className="text-2xl  text-center flex justify-center items-center">
             {"Spread"}
           </header>
-          <div className="flex w-full h-full  flex-col justify-center px-5 ">
+          <div className="flex w-full h-full  flex-col justify-center px-5  *:border-inherit">
             <form
               onSubmit={handleLogin}
-              className="flex flex-col  justify-center w-full  border-inheri text-sm"
+              className="flex flex-col  justify-center w-full  border-inheri text-sm  *:border-inherit"
             >
               <h1 className="text-2xl text-center font-medium my-4">Welcome</h1>
               <CommonInput
@@ -149,17 +148,17 @@ function SignIn() {
               </button>
             )}
 
-            <div className="mb-3 text-center grid grid-cols-3 my-4 items-center">
+            <div className="mb-3 text-center grid grid-cols-3 my-4 items-center  *:border-inherit">
               <hr /> <p>or</p> <hr />
             </div>
-            <div className="mb-3 ">
+            <div className="mb-4 w-full flex flex-col gap-3  *:border-inherit ">
               <OAuth
-                className={"mb-3"}
+                className={"border"}
                 service={"google"}
                 icon={<i className="bi bi-google"></i>}
               />
               <OAuth
-                className={"mb-3"}
+                className={"border"}
                 service={"github"}
                 icon={<i className="bi bi-github"></i>}
               />

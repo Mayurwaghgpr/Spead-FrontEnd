@@ -40,10 +40,26 @@ function Theme({ className }) {
   }, [ThemeMode]);
 
   const Modes = [
-    { name: "Dark mode", value: "dark" },
-    { name: "Light mode", value: "light" },
-    { name: "System", value: "system" },
+    {
+      name: "Dark mode",
+      value: "dark",
+      icon: <i class="bi bi-moon-stars-fill"></i>,
+    },
+    {
+      name: "Light mode",
+      value: "light",
+      icon: <i class="bi bi-sun-fill"></i>,
+    },
+    {
+      name: "System",
+      value: "system",
+      icon: <i class="bi bi-circle-half"></i>,
+    },
   ];
+  const selectedTheme = useMemo(
+    () => Modes.find((mode) => mode.value === ThemeMode),
+    [ThemeMode]
+  );
 
   return (
     <div className=" relative flex flex-col w-full">
@@ -51,9 +67,10 @@ function Theme({ className }) {
         onClick={() => {
           setShowThemeList((prev) => !prev);
         }}
-        className="w-28 relative capitalize text-center flex items-center justify-center gap-4 dark:bg-slate-700 bg-gray-200 rounded-md"
+        className="min-w-28 w-fit relative capitalize text-center flex items-center justify-center gap-4 dark:bg-slate-700 bg-gray-200 rounded-md"
       >
-        {ThemeMode}
+        {selectedTheme.icon}
+        {selectedTheme.value}
         {
           <i
             className={`bi bi-caret-up  transition-all duration-300  ${
@@ -72,13 +89,7 @@ function Theme({ className }) {
               onClick={() => handeltheme(mode.value)}
               key={mode.value}
             >
-              <span
-                className={` w-5 transition-all  delay-200 ${
-                  ThemeMode === mode.value ? "opacity-100" : "opacity-0"
-                }`}
-              >
-                ✔️
-              </span>
+              {mode.icon}
               {mode.name}
             </li>
           ))}

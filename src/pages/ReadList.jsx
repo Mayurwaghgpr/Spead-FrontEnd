@@ -5,9 +5,11 @@ import PostPreview from "../component/postsComp/PostPreview";
 import Spinner from "../component/loaders/Spinner";
 import useLastPostObserver from "../hooks/useLastPostObserver";
 import emptyPage from "../assets/empty-page.png";
+import { useSelector } from "react-redux";
 
 const ReadList = () => {
   const { getArchivedPosts } = userApi();
+  const { user, isLogin } = useSelector((state) => state.auth);
   const {
     data,
     error,
@@ -38,10 +40,18 @@ const ReadList = () => {
   );
 
   return (
-    <div className="relative w-full flex justify-center mt-6 items-center flex-col bg-inherit bg-white dark:*:border-[#383838] dark:bg-[#222222]">
-      <div className="h-full flex justify-center flex-col items-center sm:w-[60%] w-full bg-inherit">
-        <div className="sticky top-0 text-3xl font-medium z-[1] flex justify-start items-center border rounded-b-lg my-8 min-h-32 w-full bg-inherit">
-          <div className="w-full px-5 h-full bg-inherit">
+    <div className="relative w-full flex justify-center  items-center flex-col bg-inherit bg-white dark:*:border-[#383838] dark:bg-[#222222]">
+      <div className="h-full flex justify-center flex-col mt-20 items-center sm:w-[60%] w-full bg-inherit">
+        <div className="sticky top-20 z-10 p-5  font-medium flex flex-col justify-start items-start gap-4 border border-inherit rounded-b-lg  w-full bg-inherit">
+          <div className=" flex justify-center gap-4 items-center">
+            <img
+              className=" w-10  h-10 rounded-full"
+              src={user.userImage}
+              alt=""
+            />
+            <h2>{user.username}</h2>
+          </div>
+          <div className="w-full text-3xl text-center  h-full bg-inherit">
             <h1>Read List</h1>
           </div>
         </div>
@@ -70,15 +80,8 @@ const ReadList = () => {
             )}
           </div>
         ) : (
-          <div className="relative w-full text-5xl font-light text-center h-[65vh] mt-9">
-            <div className="relative w-full h-full">
-              <img
-                className="w-full h-full bg-inherit object-center object-scale-down"
-                src={emptyPage}
-                alt="Empty Page"
-              />
-            </div>
-            <div className="w-full h-full absolute top-0 left-0 bottom-0 right-0">
+          <div className="relative flex justify-center items-center  w-full text-5xl font-light text-center min-h-[60vh] mt-9">
+            <div className="">
               <h1>Empty!</h1>
               <p>Nothing to Read</p>
             </div>

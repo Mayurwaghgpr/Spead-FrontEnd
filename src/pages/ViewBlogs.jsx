@@ -78,16 +78,7 @@ function Viewblogs() {
 
   return (
     <main className="flex flex-col relative sm:flex-row   justify-end  w-full bottom-0 border-inherit transition-all duration-300 ease-in-out dark:border-[#383838]">
-      {/* <div className=" relative  w-[20rem] lg:block hidden">
-        <Aside
-          className="lg:flex hidden  flex-col w-full px-10 py-3 justify-center border sticky  top-16  "
-          FechingPreps={fetchingPreps}
-          isLoadingPreps={isLoadingPreps}
-          PrepsData={prepsData}
-          handleTopicClick={handleTopicClick}
-        />
-      </div> */}
-      <div className="flex flex-col items-end dark:bg-[#222222] relative bg-white mt-5 w-[43rem]  mx-10">
+      <div className="flex flex-col items-end dark:bg-[#222222] relative bg-white w-[43rem]  mx-10">
         <div className="flex transition-all duration-200 dark:border-[#383838] ease-in-out z-[5] bg-inherit border rounded-lg  items-center px-5 py-2  justify-start gap-3 w-full overflow-auto sticky top-20  no-scrollbar">
           <ul className="flex gap-3 h-full mt-2 border-inherit">
             <li className="rounded-full capitalize">
@@ -110,26 +101,22 @@ function Viewblogs() {
           id="PostContainer"
           className={`relative flex flex-col gap-3  mt-16 ${
             !postsData && " py-10 "
-          } w-full lg:w-[730px] max-w-[730px] min-h-screen snap-center sm:px-10 dark:border-[#383838] border-inherit`}
+          } w-full lg:w-[46rem]   sm:px-10 dark:border-[#383838] border-inherit`}
         >
-          {!isLoadingPosts
-            ? postsData?.pages?.map((page) =>
-                page?.map((post, idx, arr) => (
-                  <PostPreview
-                    className="border-inherit p-3"
-                    ref={
-                      arr?.length > 3 && arr?.length === idx + 1
-                        ? lastpostRef
-                        : null
-                    }
-                    key={post?.id}
-                    post={post}
-                  />
-                ))
-              )
-            : [...Array(10)].map((_, idx) => (
-                <PostPreview className="border-inherit" key={idx} />
-              ))}
+          {postsData?.pages?.map((page) =>
+            page?.map((post, idx, arr) => (
+              <PostPreview
+                className="border-inherit p-3"
+                ref={
+                  arr?.length > 3 && arr?.length === idx + 1
+                    ? lastpostRef
+                    : null
+                }
+                key={post?.id}
+                post={post}
+              />
+            ))
+          )}
           {isFetchingNextPage && (
             <div className="w-full flex justify-center items-center h-full p-5">
               <Spinner />
@@ -141,17 +128,14 @@ function Viewblogs() {
             </div>
           )}
         </div>
-      </div>
-      <div className="relative border-inherit">
-        {" "}
-        <Aside
-          className="lg:flex hidden  border-inherit flex-col w-[24rem] min-h-screen px-10 py-3 justify-start sticky gap-5  top-16  "
-          FechingPreps={fetchingPreps}
-          isLoadingPreps={isLoadingPreps}
-          PrepsData={prepsData}
-          handleTopicClick={handleTopicClick}
-        />
-      </div>
+      </div>{" "}
+      <Aside
+        className="lg:flex hidden  border-inherit flex-col w-[24rem] mt-20  px-10  justify-start gap-5  "
+        FechingPreps={fetchingPreps}
+        isLoadingPreps={isLoadingPreps}
+        PrepsData={prepsData}
+        handleTopicClick={handleTopicClick}
+      />
     </main>
   );
 }

@@ -40,7 +40,7 @@ const EditableParagraph = ({
         onFocus={handleFocus}
         onMouseUp={handleSelectedText}
         onKeyUp={handleSelectedText}
-        className={`border-l border-gray-300 p-2 w-full  min-h-10 z-10 outline-none cursor-text`}
+        className={`border-l border-gray-300 p-2 w-full  min-h-10 z-10 outline-none cursor-text ${(index == 0 && "text-3xl font-semibold") || (index == 1 && "text-xl")}`}
       ></p>
     </div>
   );

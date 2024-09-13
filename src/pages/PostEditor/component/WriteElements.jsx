@@ -49,7 +49,7 @@ const WriteElements = ({
           key={element.id}
           // ref={(el) => (inputRefs.current[index] = el)}
           onFocus={() => setFocusedIndex(index)}
-          className="p-4"
+          className="p-4 w-full"
           onKeyDown={(e) => handleKeyDown(e, element.id, index)}
         >
           <img

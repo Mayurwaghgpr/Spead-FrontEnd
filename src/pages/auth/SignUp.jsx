@@ -54,27 +54,27 @@ function SignUp() {
       type: "text",
       Iname: "username",
       labelname: "User Name",
-      className: "mb-3 w-full flex flex-col gap-2",
+      className: "mb-3 w-full flex flex-col gap-2 border-inherit",
     },
     {
       id: uuidv4(),
       type: "email",
       Iname: "email",
       labelname: "Email",
-      className: "mb-3 w-full flex flex-col gap-2",
+      className: "mb-3 w-full flex flex-col gap-2 border-inherit",
     },
     {
       id: uuidv4(),
       type: "password",
       Iname: "password",
       labelname: "Password",
-      className: "mb-3 w-full flex flex-col gap-2",
+      className: "mb-3 w-full flex flex-col gap-2 border-inherit",
       autocomplete: "new-password",
     },
   ];
 
   return (
-    <section className="sm:flex animate-fedin.2s relative justify-start z-50   h-[47rem]   items-center flex-col top-0 left-0 bottom-0 right-0 overflow-scroll bg-[#ffff] dark:bg-[#222222]">
+    <section className="sm:flex animate-fedin.2s relative justify-start z-50   h-[47rem]   items-center flex-col top-0 left-0 bottom-0 right-0 overflow-scroll  bg-[#ffff] dark:bg-[#222222]  dark:*:border-[#383838]">
       {(isError || validation) && (
         <div className="text-red-500 my-4 w-full flex justify-center bg-red-100 py-2">
           {error?.response?.data.message || validation}
@@ -89,18 +89,18 @@ function SignUp() {
         <i className="bi bi-x-lg"></i>
       </button>
 
-      <div className="flex flex-col justify-between gap-3 p-7 min-w-[300px] sm:w-[500px] h-full rounded-xl bg-white dark:bg-inherit ">
+      <div className="flex flex-col justify-between gap-3 p-7 min-w-[300px] sm:w-[500px] h-full rounded-xl bg-white dark:bg-inherit *:border-inherit ">
         <header className="text-2xl mt-2 text-center flex justify-center items-center">
           {"Spread"}
         </header>
 
-        <div className="flex flex-col justify- w-full px-5 ">
+        <div className="flex flex-col justify- w-full px-5 *:border-inherit">
           <h1 className="text-2xl py-5 text-center font-medium">
             Create an account
           </h1>
           <form
             onSubmit={signUp}
-            className="flex flex-col py-2 w-full items-center justify-start text-sm"
+            className="flex flex-col py-2 w-full items-center justify-start text-sm *:border-inherit "
           >
             {signUpInputs.map((input) => (
               <CommonInput
@@ -131,20 +131,21 @@ function SignUp() {
                 {isLoading ? "Signing Up..." : "Sign Up"}
               </button>
             </div>
-            <div className="mb-3 w-full text-center flex items-center">
+            <div className="mb-3 w-full text-center flex items-center  *:border-inherit">
               <hr className="flex-1" />
               <p className="mx-2">or</p>
               <hr className="flex-1" />
             </div>
-            <div className="mb-4 w-full">
+            <div className="mb-4 w-full flex flex-col gap-3  *:border-inherit ">
               <OAuth
-                className={"mb-3"}
+                className={"border "}
                 service={"google"}
                 icon={<i className="bi bi-google"></i>}
               />
               <OAuth
-                service={"Apple"}
-                icon={<i className="bi bi-apple"></i>}
+                className={"border"}
+                service={"github"}
+                icon={<i className="bi bi-github"></i>}
                 disabled={true}
               />
             </div>

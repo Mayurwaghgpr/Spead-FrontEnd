@@ -10,7 +10,7 @@ function OAuth({ service, icon, className, ...props }) {
     <button
       type="button"
       onClick={handelOAuth}
-      className={`bg-inherit flex items-center p-3 w-full justify-center gap-5 rounded-lg  border-inherit border ${className}`}
+      className={` flex items-center p-3 w-full justify-center gap-5 rounded-lg  ${className}`}
       {...props}
     >
       {icon}

@@ -31,7 +31,7 @@ function CodeEditor({
 
   return (
     <div
-      className="p-5 border flex flex-col gap-5 overflow-scroll h-[30rem] focus:border-green-200 outline-none"
+      className="p-5 border flex flex-col gap-5 overflow-scroll h-[30rem] w-full focus:border-green-200 outline-none"
       onFocus={() => setFocusedIndex(index)}
       contentEditable
       suppressContentEditableWarning

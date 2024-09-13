@@ -5,9 +5,8 @@ import WriteElements from "./component/WriteElements";
 import { usePostCreator } from "./hooks/usePostCreator";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsScale } from "../../redux/slices/uiSlice";
-import { useSearchParams } from "react-router-dom";
-import LoaderScreen from "../../component/loaders/loaderScreen";
-const PostPreviewEditor = lazy(() => import("./component/PostPreviewEditor"));
+import { Outlet } from "react-router-dom";
+
 const InputTypeSelector = lazy(() => import("./component/InputTypeSelector"));
 
 function DynamicPostEditor() {
@@ -25,19 +24,17 @@ function DynamicPostEditor() {
     handleKeyDown,
   } = usePostCreator();
 
-  const [searchParams, setSearchParams] = useSearchParams();
-
   const dispatch = useDispatch();
   const { elements, beforsubmit } = useSelector((state) => state.posts);
   const { isScale } = useSelector((state) => state.ui);
 
   return (
     <main className="flex flex-col justify-between mt-16 ">
-      <div className={`flex  justify-center items-center  flex-col mt-4`}>
+      <div className={`flex  justify-center items-center  flex-col mt-4 gap-2`}>
         {elements.map((element, index) => (
           <div
             key={element.id}
-            className="flex relative justify-start items-center gap-2  xl:w-[60rem]  w-full px-2 "
+            className="flex relative justify-start items-center gap-2  xl:w-[60rem]   w-full px-2 "
           >
             <div
               className={`flex w-[2.5rem] justify-between  items-center  transition-transform duration-100 sm:overflow-hidden`}
@@ -77,16 +74,7 @@ function DynamicPostEditor() {
             </div>
           </div>
         ))}
-        <Suspense fallback={<LoaderScreen />}>
-          {beforsubmit && (
-            <PostPreviewEditor
-              handleTextChange={handleTextChange}
-              handleContentEditableChange={handleContentEditableChange}
-              imageFiles={imageFiles}
-              setImageFiles={setImageFiles}
-            />
-          )}
-        </Suspense>
+        <Outlet context={[imageFiles, setImageFiles, handleTextChange]} />
       </div>
     </main>
   );

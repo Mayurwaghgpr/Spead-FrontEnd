@@ -22,27 +22,10 @@ const Like = lazy(() => import("../buttons/Like"));
 const Menu = lazy(() => import("./menu"));
 
 const PostPreview = forwardRef(({ post, className, Saved }, ref) => {
-  const [postIdToDelete, setPostIdToDelete] = useState("");
+  // const dispatch = useDispatch();
+  // const navigate = useNavigate();
 
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  const queryClient = useQueryClient();
-  const { DeletePostApi } = PostsApis();
-
-  const { confirmBox, isConfirm } = useSelector((state) => state.ui);
-  const { user } = useSelector((state) => state.auth);
-
-  useQuery({
-    queryKey: "DeletePost",
-    queryFn: () => DeletePostApi(postIdToDelete),
-    onSuccess: (data) => {
-      dispatch(setToast({ message: ` ${data.message} ✨`, type: "success" }));
-      queryClient.invalidateQueries(["Allposts"]);
-    },
-    onError: () => {},
-    enabled: !!(isConfirm.status && postIdToDelete),
-  });
+  // const { user } = useSelector((state) => state.auth);
 
   const renderImage = useCallback(() => {
     return post?.user?.userImage ? post.user.userImage : profileIcon;

@@ -24,10 +24,10 @@ const CopyToClipboardInput = ({ item }) => {
   }, [item.type]);
 
   return (
-    <pre className={`!overflow-visible`}>
-      <div className="w-full  min-h-[2.5rem] flex justify-end bg-gray-700  rounded-t-lg"></div>
-      <div className="sticky top-[7rem] w-full  ">
-        <div className="absolute bottom-0 right-2 flex h-7 mb-1  items-center bg-gray-700 rounded-lg text-xs ">
+    <pre className={`  border rounded-lg `}>
+      <div className="w-full  min-h-[2.5rem] flex justify-end dark:bg-gray-700 bg-slate-400 rounded-t-lg "></div>
+      <div className="sticky top-[7rem] w-full">
+        <div className="absolute bottom-0 right-2 flex h-7 mb-1  items-center dark:bg-gray-700 bg-slate-400 rounded-lg text-xs ">
           <button
             className="flex  w-full  px-4  justify-center items-center gap-3  "
             onClick={handleCopyClick}

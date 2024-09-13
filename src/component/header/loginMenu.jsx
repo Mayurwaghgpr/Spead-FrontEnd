@@ -1,4 +1,4 @@
-import React, { memo, useCallback } from "react";
+import React, { memo, useCallback, useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import useLogout from "../../utils/logout";
@@ -12,7 +12,7 @@ function LoginMenu({ MenuOpen, setIsMenuOpen }) {
 
   const { userImageurl } = userImageSrc(user);
 
-  const emailMasked = useCallback(() => {
+  const emailMasked = useMemo(() => {
     const email = user?.email || "";
     if (email.length < 7) return email;
     return `${email.slice(0, 2)}******${email.slice(6, email.length)}`;
@@ -90,8 +90,8 @@ function LoginMenu({ MenuOpen, setIsMenuOpen }) {
           );
         })}
         {/* Masked email Display */}
-        <div className="border-y py-2 border-0 w-full">
-          <p>{emailMasked()}</p>
+        <div className="border-y py-2 border-0 w-full flex items-center gap-2">
+          <i class="bi bi-envelope-at"></i> <p>{emailMasked}</p>
         </div>
         {/* Logout Button */}
         <button

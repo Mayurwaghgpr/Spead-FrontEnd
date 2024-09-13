@@ -9,7 +9,6 @@ import React, {
 } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setBeforeSubmit } from "../../redux/slices/postSlice";
 import profileIcon from "/ProfOutlook.png";
 import useClickOutside from "../../hooks/useClickOutside";
 import ProfileButton from "../ProfileButton";
@@ -50,14 +49,12 @@ function MainNavBar() {
           </div>
           <div className="flex gap-8 justify-end items-center sm:w-full font-light">
             {location.pathname === "/write" && isLogin && (
-              <div className="flex justify-end items-center">
-                <button
-                  className="bg-sky-100 dark:bg-gray-800 px-3 py-1 text-sm rounded-3xl"
-                  onClick={() => dispatch(setBeforeSubmit(true))}
-                >
-                  Publish
-                </button>
-              </div>
+              <Link
+                to={"/write/publish"}
+                className="bg-sky-100 dark:bg-gray-800 px-3 py-1 text-sm rounded-3xl"
+              >
+                Publish
+              </Link>
             )}
             {location.pathname === "/" && isLogin && (
               <div

@@ -26,6 +26,9 @@ const Profile = lazy(() => import("./pages/userProfile/Profile"));
 const DynamicPostEditor = lazy(
   () => import("./pages/PostEditor/DynamicPostEditor")
 );
+const PostPreviewEditor = lazy(
+  () => import("./pages/PostEditor/component/PostPreviewEditor")
+);
 const FullBlogView = lazy(() => import("./pages/FullBlogView/FullBlogView"));
 const ProfileEditor = lazy(() => import("./pages/userProfile/ProfileEditor"));
 const About = lazy(() => import("./pages/About"));
@@ -134,7 +137,9 @@ function App() {
                 <DynamicPostEditor />
               </ProtectedRoute>
             }
-          />
+          >
+            <Route path="/write/publish" element={<PostPreviewEditor />} />
+          </Route>
           <Route
             path="/setting"
             element={

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Footer from "../component/footer/Footer";
-import image from "../assets/Dashboard.png";
+import image from "../assets/homelight.png";
 import bgvideo from "../assets/107240-678130070_small.mp4";
 import SearchBar from "../component/homeComp/searchBar";
 
@@ -13,7 +13,7 @@ function Home() {
 
   return (
     <>
-      <main className="relative">
+      <main className="relative dark:*:border-[#383838]">
         <div className="relative min-h-[40rem] flex justify-center items-center px-10 sm:py-24 sm:mb-1 py-10 text-start h-full border-inherit">
           <video
             className="w-full animate-fedin1s  absolute object-cover object-center h-full left-0 top-0 -z-1"
@@ -50,16 +50,18 @@ function Home() {
         </div>
 
         <div
-          className={"w-full sm:px-15 lg:px-20 min-h-[40rem] flex items-start"}
+          className={
+            "w-full sm:px-15 lg:px-20 min-h-[40rem] flex items-start *:border-inherit"
+          }
         >
           <article
             id="homeArtical"
-            className={`flex sm:justify-evenly items-center w-full flex-col h-full rounded-xl`}
+            className={`flex sm:justify-evenly items-center w-full flex-col h-full rounded-xl `}
           >
             <div
-              className={`text-center flex justify-center items-center w-[80%]`}
+              className={`text-center flex justify-center items-center w-[80%] border-inherit`}
             >
-              <div className="w-full text-center font-[440] h-full flex flex-col gap-2 items-end mt-10 mb-10 sm:items-center break-words text-2xl sm:text-5xl sm:px-8 z-30">
+              <div className="w-full text-center font-[440] h-full flex flex-col gap-2 items-end mt-10 mb-10 sm:items-center break-words text-2xl sm:text-5xl sm:px-8 z-30 border-inherit">
                 <h1>Explore stories and new ideas</h1>
 
                 {/* <p className="text-xs">
@@ -68,11 +70,11 @@ function Home() {
                 </p> */}
               </div>
             </div>
-            <div className="flex flex-col gap-3 h-full justify-center items-center w-full px-3 z-0 rounded-e-xl">
+            <div className="flex flex-col gap-3 h-full justify-center items-center w-full px-3 z-0 rounded-e-xl border-inherit">
               <SearchBar className={"sm:w-1/2 block"} />
-              <div className="shadow-lg flext justify-center items-center rounded-xl w-full max-w-[800px] border border-inherit overflow-hidden">
+              <div className="shadow-lg flext justify-center items-center rounded-xl w-full max-w-[800px] border  overflow-hidden border-inherit">
                 <img
-                  className="sm:object-cover object-center w-full rounded-xl"
+                  className="sm:object-cover object-center w-full rounded-xl border-inherit"
                   src={image}
                   alt=""
                 />

@@ -56,8 +56,7 @@ body {
 
 
 .loader {
-    width: 48px;
-    height: 48px;
+    size: inherit;
     border-radius: 50%;
     display: inline-block;
     border-top: 3px solid #FFF;

@@ -1,23 +1,21 @@
 import React, { useRef, useState, useCallback, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  setSubmit,
-  setElements,
-  setBeforeSubmit,
-} from "../../../redux/slices/postSlice";
+import { setElements } from "../../../redux/slices/postSlice";
 import { setToast } from "../../../redux/slices/uiSlice";
 import { useMutation, useQueryClient } from "react-query";
 import PostsApis from "../../../Apis/PostsApis";
+import { Link, useNavigate, useOutletContext } from "react-router-dom";
+import Spinner from "../../../component/loaders/Spinner";
 
 const DEFAULT_ELEMENT = { type: "text", data: "", id: uuidv4(), index: 0 };
 
-function PostPreviewEditor({ imageFiles, setImageFiles, handleTextChange }) {
+function PostPreviewEditor() {
+  const [imageFiles, setImageFiles, handleTextChange] = useOutletContext();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [Topic, setTopic] = useState();
-  const { submit, elements, beforeSubmit } = useSelector(
-    (state) => state.posts
-  );
+  const { elements } = useSelector((state) => state.posts);
 
   console.log(imageFiles);
   const { user } = useSelector((state) => state.auth);
@@ -33,18 +31,15 @@ function PostPreviewEditor({ imageFiles, setImageFiles, handleTextChange }) {
           type: "success",
         })
       );
-      dispatch(setBeforeSubmit(false));
       dispatch(setElements([DEFAULT_ELEMENT]));
-      dispatch(setSubmit(false));
     },
     onError: (error) => {
       const errorMessage =
         error.response?.error || "An error occurred. Please try again.";
       dispatch(setToast({ message: errorMessage, type: "error" }));
-      dispatch(setBeforeSubmit(false));
-      dispatch(setSubmit(false));
       dispatch(setElements([DEFAULT_ELEMENT]));
     },
+    onSettled: () => navigate("/"),
   });
   const EditTitleImage = useCallback(
     (id, index, el) => {
@@ -58,27 +53,26 @@ function PostPreviewEditor({ imageFiles, setImageFiles, handleTextChange }) {
       setImageFiles(updatedImageFiles);
       dispatch(setElements(updatedElements));
     },
-    [dispatch, elements, imageFiles, setImageFiles]
+    [dispatch, elements, imageFiles]
   );
 
-  useEffect(() => {
-    if (elements.some((el) => el.data === "")) {
-      dispatch(setSubmit(false));
+  const handeSubmit = useCallback(() => {
+    console.log(elements);
+    if (elements.some((el) => el.data === "" && !el.file)) {
+      return;
     }
 
-    if (submit && !beforeSubmit) {
-      const formData = new FormData();
-      // const textElements = elements.filter((el) => el.type == "image");
-      formData.append("blog", JSON.stringify(elements));
-      formData.append("Topic", Topic);
-      imageFiles.forEach((el, idx) => {
-        formData.append(`image-${el.index}`, el.file);
-        formData.append(`description-${el.index}`, el.data);
-      });
-      // console.log(elements);
-      mutation.mutate(formData);
-    }
-  }, [submit, dispatch, elements, Topic, mutation]);
+    const formData = new FormData();
+    // const textElements = elements.filter((el) => el.type == "image");
+    formData.append("blog", JSON.stringify(elements));
+    formData.append("Topic", Topic);
+    imageFiles.forEach((el, idx) => {
+      formData.append(`image-${el.index}`, el.file);
+      formData.append(`description-${el.index}`, el.data);
+    });
+    // console.log(elements);
+    mutation.mutate(formData);
+  }, [dispatch, elements, Topic, mutation]);
 
   const imageElements = elements?.filter((el) => el.type === "image");
 
@@ -86,7 +80,7 @@ function PostPreviewEditor({ imageFiles, setImageFiles, handleTextChange }) {
     <main className="fixed top-0 right-0 left-0 z-[100] bg-white dark:bg-[#222222] bottom-0 w-full h-screen flex justify-center flex-col gap-5 items-center">
       <div className="w-full max-w-[900px] text-center ">
         <div className="w-full text-end">
-          <button onClick={() => dispatch(setBeforeSubmit(false))}> X</button>
+          <Link to={-1}> X</Link>
         </div>
         <hgroup>
           <h1 className="text-2xl font-light text-black">
@@ -176,43 +170,19 @@ function PostPreviewEditor({ imageFiles, setImageFiles, handleTextChange }) {
           </div>
           <div className="h-full flex px-5 gap-3 items-start">
             <button
-              className={`flex ${
+              onClick={handeSubmit}
+              className={`flex gap-2 ${
                 mutation.isLoading ? "bg-orange-100 text-slate-400" : ""
               } bg-orange-300 px-4 py-2 rounded-lg`}
-              onClick={() => dispatch(setSubmit(true))}
               disabled={mutation.isLoading}
             >
-              {mutation.isLoading && (
-                <svg
-                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-              )}
+              {mutation.isLoading && <Spinner className={" w-5 h-5"} />}
               {mutation.isLoading ? `Submitting...` : "Submit"}
             </button>
 
-            <button
-              className=" bg-slate-200 px-4 py-2 rounded-lg"
-              onClick={() => dispatch(setBeforeSubmit(false))}
-            >
+            <Link className=" bg-slate-200 px-4 py-2 rounded-lg" to={-1}>
               Cancel
-            </button>
+            </Link>
           </div>
         </div>
       </article>

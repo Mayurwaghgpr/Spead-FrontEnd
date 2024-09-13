@@ -22,9 +22,7 @@ function ProfileEditor() {
   const queryClient = useQueryClient();
 
   const { userImageurl, IsuserFromOAth } = userImageSrc(newInfo);
-  console.log(IsuserFromOAth);
 
-  console.log(newInfo);
   const { isLoading, isError, mutate } = useMutation(
     (profileUpdated) => EditeUserProfile(profileUpdated),
     {
@@ -99,7 +97,7 @@ function ProfileEditor() {
       Iname: "username",
       defaultValue: newInfo?.username,
       maxLength: 20,
-      length: `${newInfo?.username?.length} / 20`,
+      length: `${newInfo?.username?.length || 0} / 20`,
     },
     {
       id: uuidv4(),
@@ -107,7 +105,7 @@ function ProfileEditor() {
       Iname: "pronouns",
       defaultValue: newInfo?.pronoun,
       maxLength: 10,
-      length: `${newInfo?.pronouns?.length} / 10`,
+      length: `${newInfo?.pronouns?.length || 0} / 10`,
     },
     {
       id: uuidv4(),
@@ -115,7 +113,7 @@ function ProfileEditor() {
       Iname: "email",
       defaultValue: newInfo?.email,
       maxLength: 30,
-      length: `${newInfo?.email?.length} / 30`,
+      length: `${newInfo?.email?.length || 0} / 30`,
     },
     {
       id: uuidv4(),
@@ -123,7 +121,7 @@ function ProfileEditor() {
       Iname: "bio",
       defaultValue: newInfo?.bio,
       maxLength: 100,
-      length: `${newInfo?.bio?.length} / 100`,
+      length: `${newInfo?.bio?.length || 0} / 100`,
     },
   ];
 
@@ -188,6 +186,7 @@ function ProfileEditor() {
                 disabled={isLoading}
                 maxLength={input.maxLength}
                 onChange={handleChange}
+                defaultValue={input.defaultValue}
               />
               <span className=" flex justify-end">{input.length}</span>
             </>
