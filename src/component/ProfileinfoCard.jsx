@@ -6,7 +6,6 @@ import { createPortal } from "react-dom";
 import { useQuery } from "react-query";
 import userApi from "../Apis/userApi";
 import FollowPeopleLoader from "./loaders/FollowPeopleLoader";
-import { motion } from "framer-motion";
 
 function ProfileinfoCard({ className }) {
   const dispatch = useDispatch();
@@ -36,18 +35,13 @@ function ProfileinfoCard({ className }) {
   };
 
   return createPortal(
-    <motion.div
+    <div
       onClick={() => dispatch(setFollowInfo(""))}
       className={`flex justify-end items-center bg-black z-50 bg-opacity-20 fixed top-0 sm:py-3 left-0  bottom-0 right-0 ${className}`}
     >
-      <motion.div
-        variants={variants}
-        initial="hidden"
-        animate="visible"
-        exit="exit"
-        transition={{ type: "just", stiffness: 300 }}
+      <div
         onClick={(e) => e.stopPropagation()}
-        className={`dark:bg-[#222222] bg-white rounded-xl sm:mx-2 h-full sm:w-[500px] w-full overflow-hidden `}
+        className={`dark:bg-[#222222] animate-slide-in-right bg-white rounded-xl sm:mx-2 h-full sm:w-[500px] w-full overflow-hidden `}
       >
         <div className="relative w-full h-16 p-6 text-center text-2xl">
           <h1>{FollowInfo.Info}</h1>
@@ -84,8 +78,8 @@ function ProfileinfoCard({ className }) {
             ))
           )}
         </div>
-      </motion.div>
-    </motion.div>,
+      </div>
+    </div>,
     document.getElementById("portal")
   );
 }
