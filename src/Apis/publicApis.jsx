@@ -64,7 +64,7 @@ function usePublicApis() {
   const LikePost = async (likedPostId) => {
     try {
       const result = await axios.put(
-        `${BASE_URL}/public/Like`,
+        `${BASE_URL}/public/like`,
         { likedPostId },
         {
           withCredentials: true,
@@ -93,7 +93,7 @@ function usePublicApis() {
   const ArchivePost = async (postId) => {
     try {
       const result = await axios.put(
-        `${BASE_URL}/public/Archive`,
+        `${BASE_URL}/public/archive`,
         { postId },
         { withCredentials: true }
       );
@@ -105,7 +105,7 @@ function usePublicApis() {
   const removePostFromArchive = async (id) => {
     console.log(id);
     try {
-      const result = await axios.delete(`${BASE_URL}/public/Archive?id=${id}`, {
+      const result = await axios.delete(`${BASE_URL}/public/archive?id=${id}`, {
         withCredentials: true,
       });
       console.log({ result });

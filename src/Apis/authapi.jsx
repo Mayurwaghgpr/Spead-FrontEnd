@@ -15,7 +15,7 @@ export const LoginUser = async (signinConfig) => {
 
 export const RegisterUser = async (signUpcofig) => {
   try {
-    const result = await axios.put(`${BASE_URL}/auth/SignUp`, signUpcofig, {
+    const result = await axios.put(`${BASE_URL}/auth/signup`, signUpcofig, {
       withCredentials: true,
     });
     return result.data;
@@ -26,7 +26,7 @@ export const RegisterUser = async (signUpcofig) => {
 
 export const forgotPassword = async (email) => {
   try {
-    const result = await axios.post(`${BASE_URL}/auth/ForgotPassword`, email);
+    const result = await axios.post(`${BASE_URL}/auth/forgotpassword`, email);
     return result.data;
   } catch (error) {
     throw error.response;
@@ -36,7 +36,7 @@ export const forgotPassword = async (email) => {
 export const ResetPasswordApi = async (newpassword, token) => {
   try {
     const result = await axios.put(
-      `${BASE_URL}/auth/ResetPassword/${token}`,
+      `${BASE_URL}/auth/resetpassword/${token}`,
       newpassword
     );
     return result.data;
