@@ -2,9 +2,9 @@ import axios from "axios";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL; // add '/' after BASE_URL
 
-export const LoginUser = async (loginInfo) => {
+export const LoginUser = async (signinConfig) => {
   try {
-    const result = await axios.post(`${BASE_URL}/auth/Login`, loginInfo, {
+    const result = await axios.post(`${BASE_URL}/auth/signin`, signinConfig, {
       withCredentials: true,
     });
     return result.data;
@@ -13,9 +13,9 @@ export const LoginUser = async (loginInfo) => {
   }
 };
 
-export const RegisterUser = async (SignUpInfo) => {
+export const RegisterUser = async (signUpcofig) => {
   try {
-    const result = await axios.put(`${BASE_URL}/auth/SignUp`, SignUpInfo, {
+    const result = await axios.put(`${BASE_URL}/auth/SignUp`, signUpcofig, {
       withCredentials: true,
     });
     return result.data;

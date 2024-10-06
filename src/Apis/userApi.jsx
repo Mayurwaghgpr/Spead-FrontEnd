@@ -5,12 +5,10 @@ function userApi() {
   const BASE_URL = import.meta.env.VITE_BASE_URL;
 
   const getLogInUserData = async () => {
-    console.log("persisted");
     try {
-      const result = await axios.get(`${BASE_URL}/user/loggedInUser`, {
+      const result = await axios.get(`${BASE_URL}/user/details`, {
         withCredentials: true,
       });
-      console.log(result);
       return result.data;
     } catch (error) {
       throw error;
@@ -19,7 +17,7 @@ function userApi() {
 
   const getArchivedPosts = async ({ pageParam }) => {
     try {
-      const result = await axios.get(`${BASE_URL}/user/archivedPosts`, {
+      const result = await axios.get(`${BASE_URL}/user/posts/archived`, {
         withCredentials: true,
         params: {
           page: pageParam,

@@ -61,14 +61,14 @@ function LoginMenu({ MenuOpen, setIsMenuOpen }) {
   ];
   return (
     <div className="fixed z-[100] shadow-lg px-2  right-24 mt-2 rounded-lg dark:bg-[#222222] bg-white  dark:border-[#383838] dark:border">
-      <div className="flex min-w-[17rem] flex-col h-full p-4 gap-3 items-start justify-between dark:*:border-[#383838]">
+      <div className="flex min-w-[17rem] flex-col h-full p-4 gap-3 items-start justify-between *:transition-all *:duration-200 dark:*:border-[#383838]">
         {/* Profile Link */}
         {LoginMenuLinks.map((link) => {
           if (link.lkname === "write" && location.pathname != "/write") {
             return (
               <Link
                 key={link.id}
-                className="flex sm:hidden  justify-start items-center gap-2 w-full"
+                className="flex sm:hidden hover:bg-gray-400 dark:hover:bg-gray-600 px-1 rounded-md  justify-start items-center gap-2 w-full"
                 to={link.stub}
                 onClick={handleProfileClick}
               >
@@ -80,7 +80,7 @@ function LoginMenu({ MenuOpen, setIsMenuOpen }) {
           return (
             <Link
               key={link.id}
-              className="flex justify-start items-center gap-2 w-full"
+              className="flex justify-start hover:bg-gray-100 dark:hover:bg-gray-600 px-1 rounded-md  items-center gap-2 w-full"
               to={link.stub}
               onClick={handleProfileClick}
             >
@@ -90,14 +90,14 @@ function LoginMenu({ MenuOpen, setIsMenuOpen }) {
           );
         })}
         {/* Masked email Display */}
-        <div className="border-y py-2 border-0 w-full flex items-center gap-2">
-          <i class="bi bi-envelope-at"></i> <p>{emailMasked}</p>
+        <div className="border-y py-2 border-0   w-full flex items-center gap-2">
+          <i className="bi bi-envelope-at"></i> <p>{emailMasked}</p>
         </div>
         {/* Logout Button */}
         <button
           onClick={Logout}
           type="button"
-          className="flex gap-2 items-center w-full"
+          className="flex gap-2 items-center w-full hover:bg-gray-100 dark:hover:bg-gray-600 px-1 rounded-md"
         >
           <LuLogOut className="text-lg" />
           Sign out

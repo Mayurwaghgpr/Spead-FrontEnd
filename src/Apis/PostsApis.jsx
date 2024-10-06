@@ -6,7 +6,7 @@ function PostsApis() {
   // Fetch all posts with pagination and filtering by topic
   const fetchDataAll = async ({ pageParam, topic }) => {
     try {
-      const response = await axios.get(`${BASE_URL}/posts/All`, {
+      const response = await axios.get(`${BASE_URL}/posts/all`, {
         params: {
           limit: 3,
           page: pageParam,
@@ -57,7 +57,6 @@ function PostsApis() {
         // localStorage.removeItem("userAccount");
         localStorage.removeItem("AccessToken");
       }
-      console.error("DeletePostApi error:", error);
       throw error;
     }
   };

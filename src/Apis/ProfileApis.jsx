@@ -17,16 +17,13 @@ function useProfileApi() {
   const fetchUserData = async (profileId, pageParam) => {
     console.log(profileId, pageParam);
     try {
-      const response = await axios.get(
-        `${BASE_URL}/user/userData/${profileId}`,
-        {
-          withCredentials: true,
-          params: {
-            limit: 3,
-            page: pageParam,
-          },
-        }
-      );
+      const response = await axios.get(`${BASE_URL}/user/posts/${profileId}`, {
+        withCredentials: true,
+        params: {
+          limit: 3,
+          page: pageParam,
+        },
+      });
       return response.data;
     } catch (error) {
       if (error.response && error.response.status === 401) {
@@ -65,7 +62,7 @@ function useProfileApi() {
     formData.append("bio", newData.bio);
     try {
       const response = await axios.post(
-        `${BASE_URL}/user/EditProfile`,
+        `${BASE_URL}/user/profile/edit`,
         formData,
         {
           headers: {
