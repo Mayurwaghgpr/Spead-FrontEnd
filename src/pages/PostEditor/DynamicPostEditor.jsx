@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setIsScale } from "../../redux/slices/uiSlice";
 import { Outlet } from "react-router-dom";
 
-const InputTypeSelector = lazy(() => import("./component/InputTypeSelector"));
+import InputTypeSelector from "./component/InputTypeSelector";
 
 function DynamicPostEditor() {
   const {

@@ -45,9 +45,9 @@ const ToastContainer = lazy(
   () => import("./component/otherUtilityComp/ToastContainer")
 );
 function App() {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const location = useLocation();
+  // const navigate = useNavigate();
+  // const dispatch = useDispatch();
+  // const location = useLocation();
   const { isLogin } = useSelector((state) => state.auth);
   const { ThemeMode } = useSelector((state) => state.ui);
   const [systemTheme, setSystemTheme] = useState(
@@ -176,7 +176,7 @@ function App() {
         </Routes>
       </Suspense>
       <ConfirmationBox />
-      <ScrollToTopButton />
+      {/* <ScrollToTopButton /> */}
     </>
   );
 }

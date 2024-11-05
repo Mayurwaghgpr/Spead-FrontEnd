@@ -79,18 +79,18 @@ function Viewblogs() {
   return (
     <main className="flex flex-col relative sm:flex-row   justify-end  w-full bottom-0 border-inherit transition-all duration-300 ease-in-out dark:border-[#383838]">
       <div className="flex flex-col items-end dark:bg-[#222222] relative bg-white w-[43rem]  mx-10">
-        <div className="flex transition-all duration-200 dark:border-[#383838] ease-in-out z-[5] bg-inherit border rounded-lg  items-center px-5 py-2  justify-start gap-3 w-full overflow-auto sticky top-20  no-scrollbar">
-          <ul className="flex gap-3 h-full mt-2 border-inherit">
-            <li className="rounded-full capitalize">
+        <div className="flex transition-all text-xl font-medium duration-200 bg-opacity-0 overflow-hidden backdrop-blur-[10px] dark:border-[#383838] ease-in-out z-[5]  border rounded-lg  items-center  justify-start gap-3 w-full  sticky top-20 ">
+          <ul className="flex h-full items-center justify-between overflow-hidden bg-inherit w-full border-inherit">
+            <li className="capitalize p-1.5 bg-inherit flex justify-center w-full hover:bg-gray-500 hover:bg-opacity-30">
               <button
                 className="t-btn"
                 onClick={() => handleTopicClick("All")}
                 aria-label="Select all topics"
               >
-                All
+                Feeds
               </button>
             </li>
-            <li>
+            <li className="capitalize p-1.5 bg-inherit flex justify-center w-full  hover:bg-gray-500  hover:bg-opacity-30">
               <Link to="#" aria-label="Specialization">
                 Specialization
               </Link>

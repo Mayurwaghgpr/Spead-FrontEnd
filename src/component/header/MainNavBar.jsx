@@ -92,7 +92,7 @@ function MainNavBar() {
                   tabIndex="-1"
                   title="Write"
                 >
-                  <i className="bi bi-pen"></i>
+                  <i class="bi bi-feather"></i>
                 </Link>
               )}
             {isLogin && (

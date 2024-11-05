@@ -43,7 +43,6 @@ function FullBlogView() {
       <div className="flex justify-center items-center h-64">Loading...</div>
     );
   }
-  console.log(postFullview);
   return (
     <main className="container mx-auto py-6 mt-16 dark:*:border-[#383838]">
       <article className="max-w-4xl mx-auto p-6 rounded-lg flex flex-col justify-center items-center px-2 ">

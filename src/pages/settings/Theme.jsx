@@ -83,7 +83,7 @@ function Theme({ className }) {
         <ul className={className}>
           {Modes.map((mode) => (
             <li
-              className={`flex justify-start items-center gap-1 w-full p-1 rounded-lg ${
+              className={`flex justify-start items-center cursor-pointer gap-1 w-full p-1 rounded-lg ${
                 ThemeMode === mode.value ? "bg-gray-500 bg-opacity-10" : ""
               }`}
               onClick={() => handeltheme(mode.value)}

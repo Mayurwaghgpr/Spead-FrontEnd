@@ -39,7 +39,7 @@ function PostPreviewEditor() {
       dispatch(setToast({ message: errorMessage, type: "error" }));
       dispatch(setElements([DEFAULT_ELEMENT]));
     },
-    onSettled: () => navigate("/"),
+    onSettled: () => navigate("/", { replace: true }),
   });
   const EditTitleImage = useCallback(
     (id, index, el) => {
